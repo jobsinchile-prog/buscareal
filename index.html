@@ -453,11 +453,9 @@
             gap: 15px;
         }
 
-        /* CHAT */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 70vh;
+        /* CHAT - NUEVO ESTILO PARA INTEGRACIÓN */
+        .chat-section {
+            margin-top: 30px;
             background: white;
             border-radius: var(--border-radius);
             overflow: hidden;
@@ -465,7 +463,7 @@
         }
 
         .chat-header {
-            padding: 20px;
+            padding: 15px 20px;
             background-color: var(--primary);
             color: white;
             display: flex;
@@ -474,19 +472,22 @@
         }
 
         .chat-messages {
-            flex: 1;
+            max-height: 300px;
+            min-height: 200px;
             padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            background-color: #f9f9f9;
         }
 
         .message {
-            max-width: 70%;
-            padding: 12px 16px;
+            max-width: 80%;
+            padding: 10px 14px;
             border-radius: 18px;
             position: relative;
+            word-wrap: break-word;
         }
 
         .message-sent {
@@ -504,24 +505,47 @@
         }
 
         .message-time {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             opacity: 0.7;
             margin-top: 4px;
+            text-align: right;
         }
 
-        .chat-input {
+        .chat-input-area {
             display: flex;
-            padding: 20px;
+            padding: 15px;
             background-color: white;
             border-top: 1px solid var(--gray-light);
         }
 
-        .chat-input input {
+        .chat-input-area input {
             flex: 1;
             padding: 12px;
             border: 1px solid var(--gray-light);
             border-radius: 20px;
             margin-right: 10px;
+        }
+
+        /* DETALLE CON CHAT INTEGRADO */
+        .detalle-con-chat {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 992px) {
+            .detalle-con-chat {
+                flex-direction: row;
+            }
+            
+            .detalle-info {
+                flex: 3;
+            }
+            
+            .chat-lateral {
+                flex: 2;
+                max-width: 400px;
+            }
         }
 
         /* PANEL ADMIN */
@@ -861,9 +885,9 @@
             </div>
         </section>
 
-        <!-- DETALLE SOLICITUD -->
+        <!-- DETALLE SOLICITUD CON CHAT INTEGRADO -->
         <section id="detalle-solicitud" class="view">
-            <div id="detalle-solicitud-content">
+            <div id="detalle-solicitud-content" class="detalle-con-chat">
                 <!-- Se llena dinámicamente -->
             </div>
         </section>
@@ -890,7 +914,7 @@
             </div>
         </section>
 
-        <!-- CHAT -->
+        <!-- CHAT (vista independiente) -->
         <section id="chat" class="view">
             <div id="chat-container">
                 <!-- Se llena dinámicamente -->
@@ -1013,6 +1037,7 @@
         let currentUser = null;
         let deferredPrompt = null;
         const APP_KEY = 'marketplace_inverso_data';
+        let currentChatPropuestaId = null;
         
         // ============================================
         // DATOS INICIALES DE EJEMPLO
@@ -1075,6 +1100,7 @@
                 {
                     id: 1,
                     solicitudId: 2,
+                    propuestaId: 1,
                     participantes: [1, 2],
                     mensajes: [
                         { id: 1, userId: 2, text: "Hola, vi tu solicitud y tengo una propuesta que podría interesarte.", timestamp: new Date(Date.now() - 3600000).toISOString() },
@@ -1404,6 +1430,7 @@
                             <span><strong>💰 Presupuesto:</strong> $${solicitud.presupuesto.toLocaleString()}</span>
                             <span><strong>📍 Zona:</strong> ${solicitud.zona}</span>
                             <span><strong>⏱️ Urgencia:</strong> ${solicitud.urgencia}</span>
+                            ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user.email}</span>` : ''}
                         </div>
                         
                         <p style="margin-bottom: 15px;">${solicitud.descripcion.substring(0, 150)}...</p>
@@ -1438,106 +1465,332 @@
             const solicitud = data.solicitudes.find(s => s.id === id);
             const user = data.users.find(u => u.id === solicitud.userId);
             
+            // Buscar si hay propuestas del vendedor actual para esta solicitud
+            let propuestaVendedor = null;
+            let chatPropuesta = null;
+            
+            if (currentUser.role === 'vendedor') {
+                propuestaVendedor = data.propuestas.find(p => 
+                    p.solicitudId === solicitud.id && p.vendedorId === currentUser.id
+                );
+                
+                if (propuestaVendedor) {
+                    chatPropuesta = data.chats.find(c => 
+                        c.propuestaId === propuestaVendedor.id
+                    );
+                }
+            } else if (currentUser.role === 'comprador') {
+                // Para comprador, buscar el primer chat de esta solicitud
+                chatPropuesta = data.chats.find(c => 
+                    c.solicitudId === solicitud.id
+                );
+            }
+            
             const container = document.getElementById('detalle-solicitud-content');
+            
+            // Construir HTML del chat si existe
+            let chatHTML = '';
+            if (chatPropuesta) {
+                const otroUsuarioId = chatPropuesta.participantes.find(id => id !== currentUser.id);
+                const otroUsuario = data.users.find(u => u.id === otroUsuarioId);
+                const propuesta = data.propuestas.find(p => p.id === chatPropuesta.propuestaId);
+                
+                chatHTML = `
+                    <div class="chat-lateral">
+                        <div class="chat-section">
+                            <div class="chat-header">
+                                <div>
+                                    <h3 style="margin: 0; font-size: 1.1rem;">Chat con ${otroUsuario.email}</h3>
+                                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9rem;">Propuesta: $${propuesta.precio.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-messages" id="chat-messages-detalle">
+                                ${chatPropuesta.mensajes.map(mensaje => {
+                                    const esMio = mensaje.userId === currentUser.id;
+                                    return `
+                                        <div class="message ${esMio ? 'message-sent' : 'message-received'}">
+                                            <div>${mensaje.text}</div>
+                                            <div class="message-time">
+                                                ${new Date(mensaje.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            
+                            <div class="chat-input-area">
+                                <input type="text" id="chat-input-detalle" placeholder="Escribe tu mensaje..." 
+                                       onkeypress="if(event.key === 'Enter') enviarMensajeDetalle(${chatPropuesta.id}, ${solicitud.id})">
+                                <button class="btn btn-primary btn-sm" onclick="enviarMensajeDetalle(${chatPropuesta.id}, ${solicitud.id})">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'vendedor' && !propuestaVendedor) {
+                // Si es vendedor y no ha enviado propuesta, mostrar botón
+                chatHTML = `
+                    <div class="chat-lateral">
+                        <div class="card" style="text-align: center; padding: 40px 20px;">
+                            <div style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;">💬</div>
+                            <h3>No hay chat activo</h3>
+                            <p style="margin: 15px 0 25px 0;">Envía una propuesta para iniciar un chat con el comprador</p>
+                            <button class="btn btn-secondary" onclick="enviarPropuesta(${solicitud.id})">
+                                Enviar Propuesta
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Si es comprador y no hay chat
+                chatHTML = `
+                    <div class="chat-lateral">
+                        <div class="card" style="text-align: center; padding: 40px 20px;">
+                            <div style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;">💬</div>
+                            <h3>No hay chat activo</h3>
+                            <p style="margin: 15px 0 25px 0;">Espera propuestas de vendedores para iniciar un chat</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
             container.innerHTML = `
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-                        <div>
-                            <h2>${solicitud.titulo}</h2>
-                            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                <span class="badge ${solicitud.estado === 'abierto' ? 'badge-success' : solicitud.estado === 'negociando' ? 'badge-warning' : 'badge-danger'}">
-                                    ${solicitud.estado}
-                                </span>
-                                <span class="badge badge-info">${solicitud.tipo}</span>
-                                <span class="badge">${solicitud.urgencia} urgencia</span>
+                <div class="detalle-info">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div>
+                                <h2>${solicitud.titulo}</h2>
+                                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                    <span class="badge ${solicitud.estado === 'abierto' ? 'badge-success' : solicitud.estado === 'negociando' ? 'badge-warning' : 'badge-danger'}">
+                                        ${solicitud.estado}
+                                    </span>
+                                    <span class="badge badge-info">${solicitud.tipo}</span>
+                                    <span class="badge">${solicitud.urgencia} urgencia</span>
+                                </div>
                             </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
-                                $${solicitud.presupuesto.toLocaleString()}
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                                    $${solicitud.presupuesto.toLocaleString()}
+                                </div>
+                                <div style="color: var(--gray); font-size: 0.9rem;">Presupuesto máximo</div>
                             </div>
-                            <div style="color: var(--gray); font-size: 0.9rem;">Presupuesto máximo</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin: 20px 0;">
-                        <h3>Descripción</h3>
-                        <p style="margin-top: 10px; white-space: pre-line;">${solicitud.descripcion}</p>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
-                        <div class="card" style="padding: 15px;">
-                            <div style="font-size: 0.9rem; color: var(--gray);">Zona</div>
-                            <div style="font-weight: 600; margin-top: 5px;">${solicitud.zona}</div>
-                        </div>
-                        <div class="card" style="padding: 15px;">
-                            <div style="font-size: 0.9rem; color: var(--gray);">Fecha de publicación</div>
-                            <div style="font-weight: 600; margin-top: 5px;">${new Date(solicitud.createdAt).toLocaleDateString()}</div>
-                        </div>
-                        <div class="card" style="padding: 15px;">
-                            <div style="font-size: 0.9rem; color: var(--gray);">Publicado por</div>
-                            <div style="font-weight: 600; margin-top: 5px;">${user.email}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 30px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h3>Propuestas (${solicitud.propuestas ? solicitud.propuestas.length : 0})</h3>
-                            ${currentUser.role === 'vendedor' && solicitud.estado === 'abierto' ? `
-                                <button class="btn btn-secondary" onclick="enviarPropuesta(${solicitud.id})">
-                                    Enviar Propuesta
-                                </button>
-                            ` : ''}
                         </div>
                         
-                        <div id="propuestas-solicitud">
-                            ${solicitud.propuestas && solicitud.propuestas.length > 0 ? 
-                                data.propuestas.filter(p => solicitud.propuestas.includes(p.id)).map(propuesta => `
-                                    <div class="propuesta-card" style="margin-bottom: 15px;">
-                                        <div style="display: flex; justify-content: space-between;">
-                                            <div>
-                                                <strong>Precio ofrecido: $${propuesta.precio.toLocaleString()}</strong>
-                                            </div>
-                                            <div class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">
-                                                ${propuesta.estado}
-                                            </div>
-                                        </div>
-                                        <p style="margin: 10px 0;">${propuesta.mensaje}</p>
-                                        <div style="font-size: 0.9rem; color: var(--gray);">
-                                            Enviada: ${new Date(propuesta.createdAt).toLocaleDateString()}
-                                        </div>
-                                        ${currentUser.id === solicitud.userId && solicitud.estado !== 'cerrado' ? `
-                                            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                                                <button class="btn btn-sm btn-success" onclick="aceptarPropuesta(${propuesta.id})">
-                                                    Aceptar
-                                                </button>
-                                                <button class="btn btn-sm btn-outline" onclick="iniciarChat(${propuesta.id})">
-                                                    Chatear
-                                                </button>
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                `).join('') : 
-                                '<p class="empty-state">No hay propuestas aún.</p>'
-                            }
+                        <div style="margin: 20px 0;">
+                            <h3>Descripción</h3>
+                            <p style="margin-top: 10px; white-space: pre-line;">${solicitud.descripcion}</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+                            <div class="card" style="padding: 15px;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Zona</div>
+                                <div style="font-weight: 600; margin-top: 5px;">${solicitud.zona}</div>
+                            </div>
+                            <div class="card" style="padding: 15px;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Fecha de publicación</div>
+                                <div style="font-weight: 600; margin-top: 5px;">${new Date(solicitud.createdAt).toLocaleDateString()}</div>
+                            </div>
+                            <div class="card" style="padding: 15px;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Publicado por</div>
+                                <div style="font-weight: 600; margin-top: 5px;">${user.email}</div>
+                            </div>
+                        </div>
+                        
+                        ${currentUser.role === 'comprador' ? `
+                            <div style="margin-top: 30px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                    <h3>Propuestas (${solicitud.propuestas ? solicitud.propuestas.length : 0})</h3>
+                                </div>
+                                
+                                <div id="propuestas-solicitud">
+                                    ${solicitud.propuestas && solicitud.propuestas.length > 0 ? 
+                                        data.propuestas.filter(p => solicitud.propuestas.includes(p.id)).map(propuesta => {
+                                            const vendedor = data.users.find(u => u.id === propuesta.vendedorId);
+                                            return `
+                                                <div class="propuesta-card" style="margin-bottom: 15px;">
+                                                    <div style="display: flex; justify-content: space-between;">
+                                                        <div>
+                                                            <strong>💰 Precio: $${propuesta.precio.toLocaleString()}</strong>
+                                                            <div style="font-size: 0.9rem; color: var(--gray);">De: ${vendedor.email}</div>
+                                                        </div>
+                                                        <div class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">
+                                                            ${propuesta.estado}
+                                                        </div>
+                                                    </div>
+                                                    <p style="margin: 10px 0;">${propuesta.mensaje}</p>
+                                                    <div style="font-size: 0.9rem; color: var(--gray);">
+                                                        Enviada: ${new Date(propuesta.createdAt).toLocaleDateString()}
+                                                    </div>
+                                                    ${currentUser.id === solicitud.userId && solicitud.estado !== 'cerrado' ? `
+                                                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                                            <button class="btn btn-sm btn-success" onclick="aceptarPropuesta(${propuesta.id})">
+                                                                Aceptar
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline" onclick="iniciarChatVistaCompleta(${propuesta.id})">
+                                                                Chatear
+                                                            </button>
+                                                        </div>
+                                                    ` : ''}
+                                                </div>
+                                            `;
+                                        }).join('') : 
+                                        '<p class="empty-state">No hay propuestas aún.</p>'
+                                    }
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 15px; margin-top: 30px;">
+                            <button class="btn" onclick="showView('solicitudes')">Volver</button>
+                            ${currentUser.id === solicitud.userId ? `
+                                <button class="btn btn-outline" onclick="editarSolicitud(${solicitud.id})">Editar</button>
+                                ${solicitud.estado !== 'cerrado' ? `
+                                    <button class="btn btn-primary" onclick="cambiarEstadoSolicitud(${solicitud.id}, '${solicitud.estado === 'abierto' ? 'negociando' : 'cerrado'}')">
+                                        ${solicitud.estado === 'abierto' ? 'Comenzar Negociación' : 'Cerrar Solicitud'}
+                                    </button>
+                                ` : ''}
+                            ` : ''}
+                            
+                            ${currentUser.role === 'vendedor' && solicitud.estado === 'abierto' && !propuestaVendedor ? `
+                                <button class="btn btn-secondary" onclick="enviarPropuesta(${solicitud.id})">Enviar Propuesta</button>
+                            ` : ''}
                         </div>
                     </div>
+                </div>
+                
+                ${chatHTML}
+            `;
+            
+            showView('detalle-solicitud');
+            
+            // Auto-scroll al final del chat
+            setTimeout(() => {
+                const messagesContainer = document.getElementById('chat-messages-detalle');
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            }, 100);
+        }
+
+        function enviarMensajeDetalle(chatId, solicitudId) {
+            const input = document.getElementById('chat-input-detalle');
+            const texto = input.value.trim();
+            
+            if (!texto) return;
+            
+            const data = getData();
+            const chat = data.chats.find(c => c.id === chatId);
+            
+            if (!chat) return;
+            
+            const nuevoMensaje = {
+                id: chat.mensajes.length + 1,
+                userId: currentUser.id,
+                text: texto,
+                timestamp: new Date().toISOString()
+            };
+            
+            chat.mensajes.push(nuevoMensaje);
+            saveData(data);
+            
+            // Limpiar input y actualizar vista
+            input.value = '';
+            verDetalleSolicitud(solicitudId);
+        }
+
+        function iniciarChatVistaCompleta(propuestaId) {
+            const data = getData();
+            const propuesta = data.propuestas.find(p => p.id === propuestaId);
+            const solicitud = data.solicitudes.find(s => s.id === propuesta.solicitudId);
+            
+            // Buscar chat existente o crear uno nuevo
+            let chat = data.chats.find(c => c.propuestaId === propuestaId);
+            
+            if (!chat) {
+                const compradorId = solicitud.userId;
+                const vendedorId = propuesta.vendedorId;
+                
+                chat = {
+                    id: data.nextIds.chats++,
+                    solicitudId: propuesta.solicitudId,
+                    propuestaId: propuestaId,
+                    participantes: [compradorId, vendedorId],
+                    mensajes: []
+                };
+                data.chats.push(chat);
+                saveData(data);
+            }
+            
+            // Mostrar interfaz de chat completa
+            const container = document.getElementById('chat-container');
+            const otroUsuarioId = chat.participantes.find(id => id !== currentUser.id);
+            const otroUsuario = data.users.find(u => u.id === otroUsuarioId);
+            
+            container.innerHTML = `
+                <div class="chat-container" style="height: 80vh;">
+                    <div class="chat-header">
+                        <div>
+                            <h2 style="margin: 0;">Chat: ${solicitud.titulo}</h2>
+                            <p style="margin: 5px 0 0 0; opacity: 0.9;">Con: ${otroUsuario.email} | Propuesta: $${propuesta.precio.toLocaleString()}</p>
+                        </div>
+                        <button class="btn btn-sm" onclick="verDetalleSolicitud(${solicitud.id})">Volver a detalles</button>
+                    </div>
                     
-                    <div style="display: flex; gap: 15px; margin-top: 30px;">
-                        <button class="btn" onclick="showView('solicitudes')">Volver</button>
-                        ${currentUser.id === solicitud.userId ? `
-                            <button class="btn btn-outline" onclick="editarSolicitud(${solicitud.id})">Editar</button>
-                            ${solicitud.estado !== 'cerrado' ? `
-                                <button class="btn btn-primary" onclick="cambiarEstadoSolicitud(${solicitud.id}, '${solicitud.estado === 'abierto' ? 'negociando' : 'cerrado'}')">
-                                    ${solicitud.estado === 'abierto' ? 'Comenzar Negociación' : 'Cerrar Solicitud'}
-                                </button>
-                            ` : ''}
-                        ` : ''}
+                    <div class="chat-messages" id="chat-messages-full">
+                        ${chat.mensajes.map(mensaje => {
+                            const esMio = mensaje.userId === currentUser.id;
+                            return `
+                                <div class="message ${esMio ? 'message-sent' : 'message-received'}">
+                                    <div>${mensaje.text}</div>
+                                    <div class="message-time">
+                                        ${new Date(mensaje.timestamp).toLocaleString()}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input-full" placeholder="Escribe tu mensaje..." onkeypress="if(event.key === 'Enter') enviarMensajeFull(${chat.id}, ${solicitud.id})">
+                        <button class="btn btn-primary" onclick="enviarMensajeFull(${chat.id}, ${solicitud.id})">Enviar</button>
                     </div>
                 </div>
             `;
             
-            showView('detalle-solicitud');
+            showView('chat');
+            // Auto-scroll al final del chat
+            setTimeout(() => {
+                const messagesContainer = document.getElementById('chat-messages-full');
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            }, 100);
+        }
+
+        function enviarMensajeFull(chatId, solicitudId) {
+            const input = document.getElementById('chat-input-full');
+            const texto = input.value.trim();
+            
+            if (!texto) return;
+            
+            const data = getData();
+            const chat = data.chats.find(c => c.id === chatId);
+            
+            if (!chat) return;
+            
+            const nuevoMensaje = {
+                id: chat.mensajes.length + 1,
+                userId: currentUser.id,
+                text: texto,
+                timestamp: new Date().toISOString()
+            };
+            
+            chat.mensajes.push(nuevoMensaje);
+            saveData(data);
+            
+            // Limpiar input y actualizar chat
+            input.value = '';
+            iniciarChatVistaCompleta(data.propuestas.find(p => p.id === chat.propuestaId)?.id);
         }
 
         // ============================================
@@ -1546,6 +1799,25 @@
         function enviarPropuesta(solicitudId) {
             const data = getData();
             const solicitud = data.solicitudes.find(s => s.id === solicitudId);
+            
+            // Verificar si ya envió propuesta
+            const propuestaExistente = data.propuestas.find(p => 
+                p.solicitudId === solicitudId && p.vendedorId === currentUser.id
+            );
+            
+            if (propuestaExistente) {
+                if (confirm('Ya has enviado una propuesta a esta solicitud. ¿Deseas enviar una nueva?')) {
+                    // Eliminar la propuesta anterior
+                    data.propuestas = data.propuestas.filter(p => p.id !== propuestaExistente.id);
+                    // Eliminar de la lista de propuestas de la solicitud
+                    const index = solicitud.propuestas.indexOf(propuestaExistente.id);
+                    if (index > -1) {
+                        solicitud.propuestas.splice(index, 1);
+                    }
+                } else {
+                    return;
+                }
+            }
             
             const precio = prompt(`Ingresa el precio de tu propuesta para: "${solicitud.titulo}"\nPresupuesto máximo: $${solicitud.presupuesto.toLocaleString()}`);
             if (!precio || isNaN(precio)) {
@@ -1575,9 +1847,27 @@
             if (!solicitud.propuestas) solicitud.propuestas = [];
             solicitud.propuestas.push(nuevaPropuesta.id);
             
+            // Crear chat automáticamente
+            const nuevoChat = {
+                id: data.nextIds.chats++,
+                solicitudId: solicitudId,
+                propuestaId: nuevaPropuesta.id,
+                participantes: [solicitud.userId, currentUser.id],
+                mensajes: [
+                    {
+                        id: 1,
+                        userId: currentUser.id,
+                        text: `Hola, he enviado una propuesta por $${precio}. ${mensaje.substring(0, 50)}...`,
+                        timestamp: new Date().toISOString()
+                    }
+                ]
+            };
+            
+            data.chats.push(nuevoChat);
+            
             saveData(data);
-            showToast('Propuesta enviada exitosamente', 'success');
-            showView('dashboard');
+            showToast('Propuesta enviada exitosamente. Se ha iniciado un chat con el comprador.', 'success');
+            verDetalleSolicitud(solicitudId);
         }
 
         function loadPropuestasRecibidas() {
@@ -1636,8 +1926,8 @@
                             <button class="btn btn-sm btn-success" onclick="aceptarPropuesta(${propuesta.id})">
                                 Aceptar
                             </button>
-                            <button class="btn btn-sm btn-outline" onclick="iniciarChat(${propuesta.id})">
-                                Chatear
+                            <button class="btn btn-sm btn-outline" onclick="verDetalleSolicitud(${solicitud.id})">
+                                Ver Detalles y Chat
                             </button>
                             <button class="btn btn-sm" onclick="rechazarPropuesta(${propuesta.id})">
                                 Rechazar
@@ -1648,105 +1938,64 @@
             }).join('');
         }
 
-        // ============================================
-        // FUNCIONES DE CHAT
-        // ============================================
-        function iniciarChat(propuestaId) {
+        function loadPropuestasEnviadas() {
             const data = getData();
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
-            const solicitud = data.solicitudes.find(s => s.id === propuesta.solicitudId);
+            const container = document.getElementById('propuestas-enviadas-list');
             
-            // Buscar chat existente o crear uno nuevo
-            let chat = data.chats.find(c => 
-                c.solicitudId === propuesta.solicitudId && 
-                c.participantes.includes(currentUser.id) && 
-                c.participantes.includes(propuesta.vendedorId)
-            );
+            if (!container) return;
             
-            if (!chat) {
-                chat = {
-                    id: data.nextIds.chats++,
-                    solicitudId: propuesta.solicitudId,
-                    participantes: [currentUser.id, propuesta.vendedorId],
-                    mensajes: []
-                };
-                data.chats.push(chat);
-                saveData(data);
+            // Solo para vendedores
+            if (currentUser.role !== 'vendedor') {
+                container.innerHTML = '<p class="empty-state">Esta sección es solo para vendedores.</p>';
+                return;
             }
             
-            // Mostrar interfaz de chat
-            const container = document.getElementById('chat-container');
-            const otroUsuarioId = chat.participantes.find(id => id !== currentUser.id);
-            const otroUsuario = data.users.find(u => u.id === otroUsuarioId);
+            const misPropuestas = data.propuestas.filter(p => p.vendedorId === currentUser.id);
             
-            container.innerHTML = `
-                <div class="chat-container">
-                    <div class="chat-header">
-                        <div>
-                            <h3 style="margin: 0;">Chat: ${solicitud.titulo}</h3>
-                            <p style="margin: 5px 0 0 0; opacity: 0.9;">Con: ${otroUsuario.email}</p>
+            if (misPropuestas.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📤</div>
+                        <h3>No has enviado propuestas</h3>
+                        <p>Busca solicitudes activas y envía tu primera propuesta</p>
+                        <button class="btn btn-primary" onclick="showView('solicitudes')">Ver Solicitudes</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = misPropuestas.map(propuesta => {
+                const solicitud = data.solicitudes.find(s => s.id === propuesta.solicitudId);
+                const comprador = data.users.find(u => u.id === solicitud.userId);
+                
+                return `
+                    <div class="propuesta-card">
+                        <div class="propuesta-header">
+                            <div class="propuesta-title">${solicitud.titulo}</div>
+                            <div class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">
+                                ${propuesta.estado}
+                            </div>
                         </div>
-                        <button class="btn btn-sm" onclick="showView('dashboard')">Cerrar</button>
+                        
+                        <div class="propuesta-meta">
+                            <span><strong>💰 Precio ofrecido:</strong> $${propuesta.precio.toLocaleString()}</span>
+                            <span><strong>👤 Comprador:</strong> ${comprador.email}</span>
+                            <span><strong>📅 Fecha:</strong> ${new Date(propuesta.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        
+                        <p><strong>Mi mensaje:</strong> ${propuesta.mensaje}</p>
+                        
+                        <div class="propuesta-actions">
+                            <button class="btn btn-sm btn-outline" onclick="verDetalleSolicitud(${solicitud.id})">
+                                Ver Detalles y Chat
+                            </button>
+                            <button class="btn btn-sm" onclick="editarPropuesta(${propuesta.id})">
+                                Editar
+                            </button>
+                        </div>
                     </div>
-                    
-                    <div class="chat-messages" id="chat-messages">
-                        ${chat.mensajes.map(mensaje => {
-                            const esMio = mensaje.userId === currentUser.id;
-                            return `
-                                <div class="message ${esMio ? 'message-sent' : 'message-received'}">
-                                    <div>${mensaje.text}</div>
-                                    <div class="message-time">
-                                        ${new Date(mensaje.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                    
-                    <div class="chat-input">
-                        <input type="text" id="chat-input-text" placeholder="Escribe tu mensaje..." onkeypress="if(event.key === 'Enter') enviarMensajeChat(${chat.id})">
-                        <button class="btn btn-primary" onclick="enviarMensajeChat(${chat.id})">Enviar</button>
-                    </div>
-                </div>
-            `;
-            
-            showView('chat');
-            // Auto-scroll al final del chat
-            setTimeout(() => {
-                const messagesContainer = document.getElementById('chat-messages');
-                if (messagesContainer) {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-            }, 100);
-        }
-
-        function enviarMensajeChat(chatId) {
-            const input = document.getElementById('chat-input-text');
-            const texto = input.value.trim();
-            
-            if (!texto) return;
-            
-            const data = getData();
-            const chat = data.chats.find(c => c.id === chatId);
-            
-            if (!chat) return;
-            
-            const nuevoMensaje = {
-                id: chat.mensajes.length + 1,
-                userId: currentUser.id,
-                text: texto,
-                timestamp: new Date().toISOString()
-            };
-            
-            chat.mensajes.push(nuevoMensaje);
-            saveData(data);
-            
-            // Limpiar input y actualizar chat
-            input.value = '';
-            iniciarChat(data.propuestas.find(p => 
-                p.solicitudId === chat.solicitudId && 
-                (p.vendedorId === currentUser.id || data.solicitudes.find(s => s.id === chat.solicitudId).userId === currentUser.id)
-            )?.id || 0);
+                `;
+            }).join('');
         }
 
         // ============================================
@@ -1881,13 +2130,19 @@
                 // Solicitudes activas
                 const solicitudesContainer = document.getElementById('dashboard-solicitudes');
                 if (solicitudesActivas.length > 0) {
-                    solicitudesContainer.innerHTML = solicitudesActivas.slice(0, 3).map(solicitud => `
-                        <div class="solicitud-card">
-                            <div class="solicitud-title">${solicitud.titulo}</div>
-                            <div style="margin: 10px 0;"><strong>💰 Presupuesto: $${solicitud.presupuesto.toLocaleString()}</strong></div>
-                            <button class="btn btn-sm btn-secondary" onclick="enviarPropuesta(${solicitud.id})">Enviar Propuesta</button>
-                        </div>
-                    `).join('');
+                    solicitudesContainer.innerHTML = solicitudesActivas.slice(0, 3).map(solicitud => {
+                        const user = data.users.find(u => u.id === solicitud.userId);
+                        return `
+                            <div class="solicitud-card">
+                                <div class="solicitud-title">${solicitud.titulo}</div>
+                                <div style="margin: 10px 0;">
+                                    <div><strong>💰 Presupuesto: $${solicitud.presupuesto.toLocaleString()}</strong></div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">De: ${user.email}</div>
+                                </div>
+                                <button class="btn btn-sm btn-secondary" onclick="verDetalleSolicitud(${solicitud.id})">Ver Detalles</button>
+                            </div>
+                        `;
+                    }).join('');
                 } else {
                     solicitudesContainer.innerHTML = '<div class="empty-state">No hay solicitudes activas disponibles</div>';
                 }
@@ -1902,6 +2157,7 @@
                                 <div><strong>Para:</strong> ${solicitud.titulo}</div>
                                 <div style="margin: 10px 0;"><strong>💰 $${propuesta.precio.toLocaleString()}</strong></div>
                                 <div class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : 'badge-success'}">${propuesta.estado}</div>
+                                <button class="btn btn-sm btn-primary" onclick="verDetalleSolicitud(${solicitud.id})" style="margin-top: 10px;">Ver Detalles</button>
                             </div>
                         `;
                     }).join('');
@@ -2077,11 +2333,7 @@
             showToast('Propuesta aceptada. Estado cambiado a "negociando"', 'success');
             
             // Actualizar vista actual
-            if (document.getElementById('detalle-solicitud').classList.contains('active')) {
-                verDetalleSolicitud(propuesta.solicitudId);
-            } else {
-                loadPropuestasRecibidas();
-            }
+            verDetalleSolicitud(propuesta.solicitudId);
         }
         
         function rechazarPropuesta(id) {
@@ -2100,66 +2352,6 @@
             saveData(data);
             showToast(`Estado cambiado a "${nuevoEstado}"`, 'success');
             verDetalleSolicitud(id);
-        }
-        
-        function loadPropuestasEnviadas() {
-            const data = getData();
-            const container = document.getElementById('propuestas-enviadas-list');
-            
-            if (!container) return;
-            
-            // Solo para vendedores
-            if (currentUser.role !== 'vendedor') {
-                container.innerHTML = '<p class="empty-state">Esta sección es solo para vendedores.</p>';
-                return;
-            }
-            
-            const misPropuestas = data.propuestas.filter(p => p.vendedorId === currentUser.id);
-            
-            if (misPropuestas.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📤</div>
-                        <h3>No has enviado propuestas</h3>
-                        <p>Busca solicitudes activas y envía tu primera propuesta</p>
-                        <button class="btn btn-primary" onclick="showView('solicitudes')">Ver Solicitudes</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = misPropuestas.map(propuesta => {
-                const solicitud = data.solicitudes.find(s => s.id === propuesta.solicitudId);
-                const comprador = data.users.find(u => u.id === solicitud.userId);
-                
-                return `
-                    <div class="propuesta-card">
-                        <div class="propuesta-header">
-                            <div class="propuesta-title">${solicitud.titulo}</div>
-                            <div class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">
-                                ${propuesta.estado}
-                            </div>
-                        </div>
-                        
-                        <div class="propuesta-meta">
-                            <span><strong>💰 Precio ofrecido:</strong> $${propuesta.precio.toLocaleString()}</span>
-                            <span><strong>👤 Comprador:</strong> ${comprador.email}</span>
-                            <span><strong>📅 Fecha:</strong> ${new Date(propuesta.createdAt).toLocaleDateString()}</span>
-                        </div>
-                        
-                        <p><strong>Mi mensaje:</strong> ${propuesta.mensaje}</p>
-                        
-                        <div class="propuesta-actions">
-                            <button class="btn btn-sm btn-outline" onclick="iniciarChat(${propuesta.id})">
-                                Chatear
-                            </button>
-                            <button class="btn btn-sm" onclick="editarPropuesta(${propuesta.id})">
-                                Editar
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
         
         function loadProfile() {
@@ -2254,6 +2446,11 @@
                 const data = getData();
                 // Eliminar propuestas asociadas
                 data.propuestas = data.propuestas.filter(p => p.solicitudId !== id);
+                // Eliminar chats asociados
+                data.chats = data.chats.filter(c => {
+                    const solicitud = data.solicitudes.find(s => s.id === id);
+                    return !solicitud || c.solicitudId !== id;
+                });
                 // Eliminar solicitud
                 data.solicitudes = data.solicitudes.filter(s => s.id !== id);
                 saveData(data);
@@ -2266,6 +2463,8 @@
             if (confirm('¿Eliminar esta propuesta?')) {
                 const data = getData();
                 data.propuestas = data.propuestas.filter(p => p.id !== id);
+                // Eliminar chat asociado
+                data.chats = data.chats.filter(c => c.propuestaId !== id);
                 saveData(data);
                 loadAdminPanel();
                 showToast('Propuesta eliminada', 'success');
