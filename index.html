@@ -2,201 +2,174 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>BuscaReal · Marketplace Inverso</title>
+<title>BuscaReal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{margin:0;font-family:Arial;background:#f4f6f8}
-header{background:#000;color:#fff;padding:12px}
-header b{font-size:18px}
-nav{background:#111;color:#fff;padding:10px}
-nav button{margin-right:6px}
-main{max-width:1000px;margin:auto;padding:20px}
-.card{background:#fff;padding:16px;border-radius:8px;margin-bottom:16px}
-input,select,textarea,button{width:100%;padding:10px;margin-top:8px}
-button{background:#000;color:#fff;border:0;border-radius:6px;cursor:pointer}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:#f4f4f4}
+header{background:#000;color:#fff;padding:15px;font-weight:600}
+nav button{margin-right:10px}
+main{padding:20px}
+.card{background:#fff;border-radius:10px;padding:20px;max-width:900px;margin:auto;margin-bottom:20px}
+button{padding:10px 15px;border:none;border-radius:6px;background:#000;color:#fff;cursor:pointer}
+input,select,textarea{width:100%;padding:10px;margin-top:8px;margin-bottom:15px}
 .hidden{display:none}
+.list{border-bottom:1px solid #ddd;padding:10px 0}
+.badge{padding:4px 8px;border-radius:6px;font-size:12px}
+.ok{background:#c8f7c5}
+.warn{background:#ffeaa7}
+.chat{border:1px solid #ccc;height:200px;overflow:auto;padding:10px;margin-bottom:10px}
+.msg{margin-bottom:5px}
 </style>
 </head>
+
 <body>
 
-<header><b>BuscaReal</b></header>
-<nav id="menu"></nav>
-<main id="app">Cargando…</main>
+<header>
+BuscaReal
+<span id="userInfo"></span>
+</header>
+
+<main id="app"></main>
 
 <script>
-/* ========== BASE ========== */
-const app = document.getElementById("app");
-const menu = document.getElementById("menu");
-
-const load = k => JSON.parse(localStorage.getItem(k)||"null");
-const save = (k,v) => localStorage.setItem(k,JSON.stringify(v));
-
-const db = {
- users: load("users") || [],
- searches: load("searches") || [],
- proposals: load("proposals") || [],
- session: load("session")
+/* ---------- BASE ---------- */
+const db = JSON.parse(localStorage.getItem("buscareal")) || {
+ users: [],
+ searches: [],
+ proposals: [],
+ chats: []
 };
+const save=()=>localStorage.setItem("buscareal",JSON.stringify(db));
+let session = JSON.parse(localStorage.getItem("session"));
 
-/* Admin seed */
-if(!db.users.find(u=>u.role==="admin")){
- db.users.push({id:1,email:"admin@buscareal.cl",pass:"admin",role:"admin",status:"ok"});
- save("users",db.users);
-}
+/* ---------- ROUTER ---------- */
+function render(view){document.getElementById("app").innerHTML=view}
 
-/* ========== RENDER CORE ========== */
-function render(){
- if(!db.session) return landing();
- renderMenu();
- if(db.session.role==="buyer") buyerDashboard();
- if(db.session.role==="seller") sellerDashboard();
- if(db.session.role==="admin") adminPanel();
-}
-
-/* ========== MENU ========== */
-function renderMenu(){
- menu.innerHTML = `
-  ${db.session.email} (${db.session.role})
-  <button onclick="render()">Inicio</button>
-  ${db.session.role==="buyer"?'<button onclick="newSearch()">Publicar búsqueda</button>':""}
-  ${db.session.role==="seller"?'<button onclick="listSearches()">Búsquedas</button>':""}
-  <button onclick="logout()">Salir</button>
- `;
-}
-
-/* ========== LANDING / AUTH ========== */
-function landing(){
- menu.innerHTML="";
- app.innerHTML=`
- <div class="card">
- <h2>Marketplace Inverso</h2>
- <p>Publica lo que buscas. Recibe solo lo que encaja.</p>
- </div>
-
- <div class="card">
- <h3>Login</h3>
- <input id="le" placeholder="email">
- <input id="lp" type="password">
- <button onclick="login()">Entrar</button>
- </div>
-
- <div class="card">
- <h3>Registro</h3>
- <input id="re" placeholder="email">
- <input id="rp" type="password">
- <select id="rr">
-  <option value="buyer">Comprador</option>
-  <option value="seller">Vendedor</option>
- </select>
- <button onclick="register()">Registrar</button>
- </div>`;
-}
-
+/* ---------- AUTH ---------- */
 function login(){
- const u = db.users.find(u=>u.email===le.value && u.pass===lp.value);
- if(!u) return alert("Credenciales inválidas");
- db.session=u; save("session",u); render();
+ const email=document.getElementById("email").value;
+ const role=document.getElementById("role").value;
+ let u=db.users.find(u=>u.email===email);
+ if(!u){u={id:Date.now(),email,role,verified:true,reputation:5};db.users.push(u);save()}
+ session=u;localStorage.setItem("session",JSON.stringify(u));dashboard()
 }
 
-function register(){
- db.users.push({id:Date.now(),email:re.value,pass:rp.value,role:rr.value,status:"ok"});
- save("users",db.users); alert("Cuenta creada");
+function logout(){localStorage.clear();location.reload()}
+
+/* ---------- DASHBOARD ---------- */
+function dashboard(){
+ if(!session) return home();
+ document.getElementById("userInfo").innerHTML=" | "+session.email+" ("+session.role+")";
+ let menu=`
+ <nav>
+ <button onclick="dashboard()">Inicio</button>
+ <button onclick="searches()">Búsquedas</button>
+ ${session.role==="buyer"?'<button onclick="newSearch()">Publicar</button>':''}
+ <button onclick="messages()">Mensajes</button>
+ <button onclick="logout()">Salir</button>
+ </nav>`;
+ render(menu + `<div class="card"><h2>Bienvenido</h2>
+ <p>Reputación: ⭐ ${session.reputation}</p></div>`);
 }
 
-function logout(){ db.session=null; localStorage.removeItem("session"); render(); }
-
-/* ========== BUYER ========== */
-function buyerDashboard(){
- app.innerHTML="<h3>Mis búsquedas</h3>";
- db.searches.filter(s=>s.buyer===db.session.id).forEach(s=>{
- app.innerHTML+=`
- <div class="card">
- <b>${s.type}</b> · ${s.city}<br>
- Presupuesto: ${s.budget}
- <button onclick="viewProposals(${s.id})">Ver propuestas</button>
- </div>`;
- });
+/* ---------- HOME ---------- */
+function home(){
+ render(`<div class="card">
+ <h2>Marketplace Inverso</h2>
+ <p>Publica lo que buscas y recibe propuestas reales.</p>
+ <input id="email" placeholder="Email">
+ <select id="role">
+ <option value="buyer">Comprador</option>
+ <option value="seller">Vendedor</option>
+ </select>
+ <button onclick="login()">Entrar</button>
+ </div>`);
 }
 
+/* ---------- SEARCHES ---------- */
 function newSearch(){
- app.innerHTML=`
- <div class="card">
- <h3>Nueva búsqueda</h3>
- <input id="st" placeholder="Tipo">
- <input id="sc" placeholder="Ubicación">
- <input id="sb" placeholder="Presupuesto">
- <textarea id="sm" placeholder="Mensaje"></textarea>
+ render(`<div class="card">
+ <h2>Nueva Búsqueda</h2>
+ <input id="type" placeholder="Tipo (Depto, Casa)">
+ <input id="loc" placeholder="Ubicación">
+ <input id="budget" placeholder="Presupuesto">
+ <select id="urgency"><option>Alta</option><option>Media</option></select>
  <button onclick="saveSearch()">Publicar</button>
- </div>`;
+ </div>`);
 }
 
 function saveSearch(){
  db.searches.push({
   id:Date.now(),
-  buyer:db.session.id,
-  type:st.value,
-  city:sc.value,
-  budget:sb.value,
-  msg:sm.value
+  buyer:session.email,
+  type:type.value,
+  loc:loc.value,
+  budget:budget.value,
+  urgency:urgency.value,
+  status:"Activa"
  });
- save("searches",db.searches);
- buyerDashboard();
+ save();searches()
 }
 
-function viewProposals(id){
- app.innerHTML="<h3>Propuestas recibidas</h3>";
- db.proposals.filter(p=>p.search===id).forEach(p=>{
- app.innerHTML+=`
- <div class="card">
- ${p.text}<br>
- <small>Vendedor: ${db.users.find(u=>u.id===p.seller).email}</small>
- </div>`;
- });
+function searches(){
+ let list=db.searches.map(s=>`
+ <div class="list">
+ <b>${s.type}</b> - ${s.loc} - ${s.budget}
+ <span class="badge ok">${s.status}</span>
+ ${session.role==="seller"?`<button onclick="propose(${s.id})">Proponer</button>`:""}
+ </div>`).join("");
+ render(`<div class="card"><h2>Búsquedas</h2>${list}</div>`);
 }
 
-/* ========== SELLER ========== */
-function sellerDashboard(){
- listSearches();
+/* ---------- PROPOSALS ---------- */
+function propose(id){
+ render(`<div class="card">
+ <h2>Enviar propuesta</h2>
+ <textarea id="msg"></textarea>
+ <button onclick="sendProp(${id})">Enviar</button>
+ </div>`);
 }
 
-function listSearches(){
- app.innerHTML="<h3>Búsquedas activas</h3>";
- db.searches.forEach(s=>{
- app.innerHTML+=`
- <div class="card">
- <b>${s.type}</b> · ${s.city}<br>
- Presupuesto: ${s.budget}
- <textarea id="p${s.id}" placeholder="Propuesta personalizada"></textarea>
- <button onclick="sendProposal(${s.id})">Enviar propuesta</button>
- </div>`;
- });
-}
-
-function sendProposal(id){
- const txt = document.getElementById("p"+id).value;
- if(!txt) return alert("Mensaje requerido");
+function sendProp(id){
  db.proposals.push({
   id:Date.now(),
   search:id,
-  seller:db.session.id,
-  text:txt
+  seller:session.email,
+  msg:msg.value
  });
- save("proposals",db.proposals);
- alert("Propuesta enviada");
+ save();searches()
 }
 
-/* ========== ADMIN ========== */
-function adminPanel(){
- app.innerHTML="<h3>Admin Panel</h3>";
- db.users.forEach(u=>{
- app.innerHTML+=`
- <div class="card">
- ${u.email} · ${u.role} · ${u.status}
- </div>`;
- });
+/* ---------- CHAT ---------- */
+function messages(){
+ let props=db.proposals.filter(p=>session.role==="seller"?p.seller===session.email:true);
+ let list=props.map(p=>`
+ <div class="list">
+ Propuesta #${p.id}
+ <button onclick="chat(${p.id})">Chat</button>
+ </div>`).join("");
+ render(`<div class="card"><h2>Mensajes</h2>${list}</div>`);
 }
 
-render();
+function chat(id){
+ let chat=db.chats.find(c=>c.id===id)||{id,logs:[]};
+ render(`<div class="card">
+ <div class="chat" id="chatBox">${chat.logs.map(l=>`<div class="msg">${l}</div>`).join("")}</div>
+ <input id="cmsg">
+ <button onclick="sendMsg(${id})">Enviar</button>
+ </div>`);
+}
+
+function sendMsg(id){
+ let chat=db.chats.find(c=>c.id===id);
+ if(!chat){chat={id,logs:[]};db.chats.push(chat)}
+ chat.logs.push(session.email+": "+cmsg.value);
+ save();chat(id)
+}
+
+/* ---------- INIT ---------- */
+session?dashboard():home();
 </script>
 
 </body>
