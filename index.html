@@ -2,124 +2,201 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>BuscaReal</title>
+<title>BuscaReal · Marketplace Inverso</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{margin:0;font-family:Arial;background:#f4f6f8}
 header{background:#000;color:#fff;padding:12px}
-main{max-width:900px;margin:auto;padding:20px}
+header b{font-size:18px}
+nav{background:#111;color:#fff;padding:10px}
+nav button{margin-right:6px}
+main{max-width:1000px;margin:auto;padding:20px}
 .card{background:#fff;padding:16px;border-radius:8px;margin-bottom:16px}
 input,select,textarea,button{width:100%;padding:10px;margin-top:8px}
-button{background:#000;color:#fff;border:0;border-radius:6px}
-.error{color:red;font-weight:bold}
+button{background:#000;color:#fff;border:0;border-radius:6px;cursor:pointer}
+.hidden{display:none}
 </style>
 </head>
 <body>
 
 <header><b>BuscaReal</b></header>
+<nav id="menu"></nav>
 <main id="app">Cargando…</main>
 
 <script>
-(function(){
-  try {
+/* ========== BASE ========== */
+const app = document.getElementById("app");
+const menu = document.getElementById("menu");
 
-    /* ---------- helpers ---------- */
-    const app = document.getElementById("app");
-    const load = k => JSON.parse(localStorage.getItem(k) || "null");
-    const save = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+const load = k => JSON.parse(localStorage.getItem(k)||"null");
+const save = (k,v) => localStorage.setItem(k,JSON.stringify(v));
 
-    /* ---------- db ---------- */
-    const db = {
-      users: load("users") || [],
-      session: load("session")
-    };
+const db = {
+ users: load("users") || [],
+ searches: load("searches") || [],
+ proposals: load("proposals") || [],
+ session: load("session")
+};
 
-    if (!db.users.find(u=>u.role==="admin")) {
-      db.users.push({id:1,email:"admin@buscareal.cl",pass:"admin",role:"admin"});
-      save("users",db.users);
-    }
+/* Admin seed */
+if(!db.users.find(u=>u.role==="admin")){
+ db.users.push({id:1,email:"admin@buscareal.cl",pass:"admin",role:"admin",status:"ok"});
+ save("users",db.users);
+}
 
-    /* ---------- views ---------- */
-    function render(){
-      if(!db.session) return landing();
-      dashboard();
-    }
+/* ========== RENDER CORE ========== */
+function render(){
+ if(!db.session) return landing();
+ renderMenu();
+ if(db.session.role==="buyer") buyerDashboard();
+ if(db.session.role==="seller") sellerDashboard();
+ if(db.session.role==="admin") adminPanel();
+}
 
-    function landing(){
-      app.innerHTML = `
-        <div class="card">
-          <h2>Marketplace Inverso</h2>
-          <p>Publica lo que buscas. Recibe solo lo que encaja.</p>
-        </div>
+/* ========== MENU ========== */
+function renderMenu(){
+ menu.innerHTML = `
+  ${db.session.email} (${db.session.role})
+  <button onclick="render()">Inicio</button>
+  ${db.session.role==="buyer"?'<button onclick="newSearch()">Publicar búsqueda</button>':""}
+  ${db.session.role==="seller"?'<button onclick="listSearches()">Búsquedas</button>':""}
+  <button onclick="logout()">Salir</button>
+ `;
+}
 
-        <div class="card">
-          <h3>Login</h3>
-          <input id="email" placeholder="email">
-          <input id="pass" type="password" placeholder="password">
-          <button id="loginBtn">Entrar</button>
-        </div>
+/* ========== LANDING / AUTH ========== */
+function landing(){
+ menu.innerHTML="";
+ app.innerHTML=`
+ <div class="card">
+ <h2>Marketplace Inverso</h2>
+ <p>Publica lo que buscas. Recibe solo lo que encaja.</p>
+ </div>
 
-        <div class="card">
-          <h3>Registro</h3>
-          <input id="remail" placeholder="email">
-          <input id="rpass" type="password" placeholder="password">
-          <select id="rrole">
-            <option value="buyer">Comprador</option>
-            <option value="seller">Vendedor</option>
-          </select>
-          <button id="regBtn">Registrar</button>
-        </div>
-      `;
+ <div class="card">
+ <h3>Login</h3>
+ <input id="le" placeholder="email">
+ <input id="lp" type="password">
+ <button onclick="login()">Entrar</button>
+ </div>
 
-      document.getElementById("loginBtn").onclick = login;
-      document.getElementById("regBtn").onclick = register;
-    }
+ <div class="card">
+ <h3>Registro</h3>
+ <input id="re" placeholder="email">
+ <input id="rp" type="password">
+ <select id="rr">
+  <option value="buyer">Comprador</option>
+  <option value="seller">Vendedor</option>
+ </select>
+ <button onclick="register()">Registrar</button>
+ </div>`;
+}
 
-    function dashboard(){
-      app.innerHTML = `
-        <div class="card">
-          <h3>Bienvenido</h3>
-          <p>${db.session.email} (${db.session.role})</p>
-          <button id="logoutBtn">Salir</button>
-        </div>
-      `;
-      document.getElementById("logoutBtn").onclick = logout;
-    }
+function login(){
+ const u = db.users.find(u=>u.email===le.value && u.pass===lp.value);
+ if(!u) return alert("Credenciales inválidas");
+ db.session=u; save("session",u); render();
+}
 
-    /* ---------- actions ---------- */
-    function login(){
-      const e = document.getElementById("email").value;
-      const p = document.getElementById("pass").value;
-      const u = db.users.find(u=>u.email===e && u.pass===p);
-      if(!u) return alert("Credenciales inválidas");
-      db.session = u;
-      save("session",u);
-      render();
-    }
+function register(){
+ db.users.push({id:Date.now(),email:re.value,pass:rp.value,role:rr.value,status:"ok"});
+ save("users",db.users); alert("Cuenta creada");
+}
 
-    function register(){
-      const e = document.getElementById("remail").value;
-      const p = document.getElementById("rpass").value;
-      const r = document.getElementById("rrole").value;
-      db.users.push({id:Date.now(),email:e,pass:p,role:r});
-      save("users",db.users);
-      alert("Cuenta creada");
-    }
+function logout(){ db.session=null; localStorage.removeItem("session"); render(); }
 
-    function logout(){
-      db.session = null;
-      localStorage.removeItem("session");
-      render();
-    }
+/* ========== BUYER ========== */
+function buyerDashboard(){
+ app.innerHTML="<h3>Mis búsquedas</h3>";
+ db.searches.filter(s=>s.buyer===db.session.id).forEach(s=>{
+ app.innerHTML+=`
+ <div class="card">
+ <b>${s.type}</b> · ${s.city}<br>
+ Presupuesto: ${s.budget}
+ <button onclick="viewProposals(${s.id})">Ver propuestas</button>
+ </div>`;
+ });
+}
 
-    render();
+function newSearch(){
+ app.innerHTML=`
+ <div class="card">
+ <h3>Nueva búsqueda</h3>
+ <input id="st" placeholder="Tipo">
+ <input id="sc" placeholder="Ubicación">
+ <input id="sb" placeholder="Presupuesto">
+ <textarea id="sm" placeholder="Mensaje"></textarea>
+ <button onclick="saveSearch()">Publicar</button>
+ </div>`;
+}
 
-  } catch (err) {
-    document.getElementById("app").innerHTML =
-      "<div class='error'>ERROR JS: "+err.message+"</div>";
-    console.error(err);
-  }
-})();
+function saveSearch(){
+ db.searches.push({
+  id:Date.now(),
+  buyer:db.session.id,
+  type:st.value,
+  city:sc.value,
+  budget:sb.value,
+  msg:sm.value
+ });
+ save("searches",db.searches);
+ buyerDashboard();
+}
+
+function viewProposals(id){
+ app.innerHTML="<h3>Propuestas recibidas</h3>";
+ db.proposals.filter(p=>p.search===id).forEach(p=>{
+ app.innerHTML+=`
+ <div class="card">
+ ${p.text}<br>
+ <small>Vendedor: ${db.users.find(u=>u.id===p.seller).email}</small>
+ </div>`;
+ });
+}
+
+/* ========== SELLER ========== */
+function sellerDashboard(){
+ listSearches();
+}
+
+function listSearches(){
+ app.innerHTML="<h3>Búsquedas activas</h3>";
+ db.searches.forEach(s=>{
+ app.innerHTML+=`
+ <div class="card">
+ <b>${s.type}</b> · ${s.city}<br>
+ Presupuesto: ${s.budget}
+ <textarea id="p${s.id}" placeholder="Propuesta personalizada"></textarea>
+ <button onclick="sendProposal(${s.id})">Enviar propuesta</button>
+ </div>`;
+ });
+}
+
+function sendProposal(id){
+ const txt = document.getElementById("p"+id).value;
+ if(!txt) return alert("Mensaje requerido");
+ db.proposals.push({
+  id:Date.now(),
+  search:id,
+  seller:db.session.id,
+  text:txt
+ });
+ save("proposals",db.proposals);
+ alert("Propuesta enviada");
+}
+
+/* ========== ADMIN ========== */
+function adminPanel(){
+ app.innerHTML="<h3>Admin Panel</h3>";
+ db.users.forEach(u=>{
+ app.innerHTML+=`
+ <div class="card">
+ ${u.email} · ${u.role} · ${u.status}
+ </div>`;
+ });
+}
+
+render();
 </script>
 
 </body>
