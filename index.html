@@ -1,176 +1,2273 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>BuscaReal</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui;background:#f4f4f4}
-header{background:#000;color:#fff;padding:15px;font-weight:600}
-nav button{margin-right:10px}
-main{padding:20px}
-.card{background:#fff;border-radius:10px;padding:20px;max-width:900px;margin:auto;margin-bottom:20px}
-button{padding:10px 15px;border:none;border-radius:6px;background:#000;color:#fff;cursor:pointer}
-input,select,textarea{width:100%;padding:10px;margin-top:8px;margin-bottom:15px}
-.hidden{display:none}
-.list{border-bottom:1px solid #ddd;padding:10px 0}
-.badge{padding:4px 8px;border-radius:6px;font-size:12px}
-.ok{background:#c8f7c5}
-.warn{background:#ffeaa7}
-.chat{border:1px solid #ccc;height:200px;overflow:auto;padding:10px;margin-bottom:10px}
-.msg{margin-bottom:5px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuscaReal - Marketplace Inverso</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    <style>
+        /* ========== RESET Y BASE ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a8a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--gray-900);
+            background: var(--gray-50);
+            line-height: 1.5;
+        }
+        
+        /* ========== COMPONENTES REUTILIZABLES ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-700);
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border-color: var(--gray-300);
+        }
+        .btn-secondary:hover {
+            background: var(--gray-50);
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+        }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        
+        /* ========== LAYOUT PRINCIPAL ========== */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: var(--primary-900);
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-600);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .main-content {
+            flex: 1;
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .footer {
+            background: var(--gray-800);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+        }
+        
+        /* ========== PANTALLAS ESPECÍFICAS ========== */
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        /* Landing Page */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(to bottom, var(--primary-50), white);
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+        }
+        .hero h1 span {
+            color: var(--primary-600);
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            max-width: 42rem;
+            margin: 0 auto 2rem;
+        }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .step-card {
+            padding: 2rem;
+            text-align: center;
+        }
+        .step-number {
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary-100);
+            color: var(--primary-600);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+        
+        /* Dashboard */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            padding: 1.5rem;
+        }
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            float: left;
+        }
+        .stat-info { overflow: hidden; }
+        .stat-label { color: var(--gray-500); font-size: 0.875rem; }
+        .stat-value { font-size: 2rem; font-weight: bold; color: var(--gray-900); }
+        
+        /* Tabs */
+        .tabs { border-bottom: 1px solid var(--gray-200); }
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray-500);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tab-button.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+        }
+        .tab-content { padding: 1.5rem 0; }
+        
+        /* Listas de búsquedas/propuestas */
+        .search-list, .proposal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .search-item, .proposal-item {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .search-info h4, .proposal-info h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+        .search-meta, .proposal-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Formularios */
+        .form-container {
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.375rem;
+        }
+        .form-helper {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+        
+        /* Chat */
+        .chat-container {
+            display: flex;
+            height: 600px;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .chat-sidebar {
+            width: 300px;
+            border-right: 1px solid var(--gray-200);
+            overflow-y: auto;
+        }
+        .chat-messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .message-input-container {
+            border-top: 1px solid var(--gray-200);
+            padding: 1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .steps { grid-template-columns: 1fr; }
+            .dashboard-stats { grid-template-columns: 1fr; }
+            .chat-container { flex-direction: column; height: 80vh; }
+            .chat-sidebar { width: 100%; height: 200px; }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <a href="#" class="logo" onclick="showScreen('landing'); return false;">
+                    <div class="logo-icon">BR</div>
+                    <span>BuscaReal</span>
+                </a>
+                <nav id="main-nav">
+                    <!-- Dinámico según estado -->
+                </nav>
+            </div>
+        </header>
 
-<header>
-BuscaReal
-<span id="userInfo"></span>
-</header>
+        <!-- Pantallas Principales -->
+        <main class="main-content">
+            <!-- Landing Page -->
+            <div id="landing" class="screen active">
+                <div class="hero">
+                    <h1><span>Publica lo que buscas.</span><br>Recibe solo lo que encaja.</h1>
+                    <p>El primer marketplace inverso de Chile. Los compradores reales publican sus necesidades y los vendedores verificados envían propuestas personalizadas. Cero spam, 100% confianza.</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="showScreen('register')">Comenzar Gratis</button>
+                        <button class="btn btn-secondary" onclick="showScreen('login')">Iniciar Sesión</button>
+                    </div>
+                </div>
 
-<main id="app"></main>
+                <div style="max-width: 64rem; margin: 0 auto; padding: 0 1rem;">
+                    <div class="steps">
+                        <div class="card step-card">
+                            <div class="step-number">1</div>
+                            <h3 style="margin-bottom: 0.5rem;">Regístrate y Verifícate</h3>
+                            <p style="color: var(--gray-600);">Crea tu cuenta con identidad verificada para garantizar transparencia.</p>
+                        </div>
+                        <div class="card step-card">
+                            <div class="step-number">2</div>
+                            <h3 style="margin-bottom: 0.5rem;">Publica tu Búsqueda</h3>
+                            <p style="color: var(--gray-600);">Describe lo que necesitas, tu presupuesto y nivel de urgencia.</p>
+                        </div>
+                        <div class="card step-card">
+                            <div class="step-number">3</div>
+                            <h3 style="margin-bottom: 0.5rem;">Recibe Propuestas</h3>
+                            <p style="color: var(--gray-600);">Compara ofertas personalizadas de vendedores verificados.</p>
+                        </div>
+                    </div>
 
-<script>
-/* ---------- BASE ---------- */
-const db = JSON.parse(localStorage.getItem("buscareal")) || {
- users: [],
- searches: [],
- proposals: [],
- chats: []
-};
-const save=()=>localStorage.setItem("buscareal",JSON.stringify(db));
-let session = JSON.parse(localStorage.getItem("session"));
+                    <div style="text-align: center; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--gray-200);">
+                        <p style="color: var(--gray-500);">
+                            <strong>Modelo 100% verificado • Cero spam • Prioridad a intención real</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-/* ---------- ROUTER ---------- */
-function render(view){document.getElementById("app").innerHTML=view}
+            <!-- Login -->
+            <div id="login" class="screen">
+                <div class="form-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">Inicia sesión en tu cuenta</h2>
+                    <div class="card" style="padding: 2rem;">
+                        <div id="login-error" style="display: none;" class="error-message"></div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="login-email" class="input" placeholder="tu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" id="login-password" class="input" placeholder="••••••••">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="remember-me">
+                                <span>Recordarme</span>
+                            </label>
+                            <a href="#" onclick="alert('Funcionalidad de recuperación en próxima versión'); return false;" style="color: var(--primary-600); text-decoration: none; font-size: 0.875rem;">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">Iniciar Sesión</button>
+                        <div style="text-align: center; margin-top: 1.5rem;">
+                            <p style="color: var(--gray-600);">
+                                ¿No tienes cuenta? <a href="#" onclick="showScreen('register'); return false;" style="color: var(--primary-600); text-decoration: none; font-weight: 500;">Regístrate aquí</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-/* ---------- AUTH ---------- */
-function login(){
- const email=document.getElementById("email").value;
- const role=document.getElementById("role").value;
- let u=db.users.find(u=>u.email===email);
- if(!u){u={id:Date.now(),email,role,verified:true,reputation:5};db.users.push(u);save()}
- session=u;localStorage.setItem("session",JSON.stringify(u));dashboard()
-}
+            <!-- Registro -->
+            <div id="register" class="screen">
+                <div style="max-width: 48rem; margin: 0 auto;">
+                    <div style="margin-bottom: 2rem;">
+                        <a href="#" onclick="showScreen('landing'); return false;" style="color: var(--primary-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                            ← Volver al inicio
+                        </a>
+                        <div style="display: flex; align-items: center; margin-top: 1rem;">
+                            <div style="width: 2.5rem; height: 2.5rem; background: var(--primary-600); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 0.75rem;">
+                                BR
+                            </div>
+                            <div>
+                                <h1 style="font-size: 1.5rem; font-weight: bold;">BuscaReal</h1>
+                                <p style="color: var(--gray-600);">Crea tu cuenta verificada</p>
+                            </div>
+                        </div>
+                    </div>
 
-function logout(){localStorage.clear();location.reload()}
+                    <div id="register-steps">
+                        <!-- Paso 1 -->
+                        <div id="register-step-1" class="register-step">
+                            <h2 style="margin-bottom: 1rem;">Comencemos con tus datos</h2>
+                            <p style="color: var(--gray-600); margin-bottom: 2rem;">Ingresa tu información de contacto para comenzar.</p>
+                            
+                            <div class="card" style="padding: 2rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" id="reg-email" class="input" placeholder="tu@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Teléfono *</label>
+                                    <input type="tel" id="reg-phone" class="input" placeholder="+56 9 1234 5678">
+                                    <p class="form-helper">Solo usaremos este número para verificación de identidad</p>
+                                </div>
+                                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                                    <button class="btn btn-secondary" style="flex: 1;" onclick="showScreen('landing')">Cancelar</button>
+                                    <button class="btn btn-primary" style="flex: 1;" onclick="nextRegisterStep()">Continuar</button>
+                                </div>
+                            </div>
+                        </div>
 
-/* ---------- DASHBOARD ---------- */
-function dashboard(){
- if(!session) return home();
- document.getElementById("userInfo").innerHTML=" | "+session.email+" ("+session.role+")";
- let menu=`
- <nav>
- <button onclick="dashboard()">Inicio</button>
- <button onclick="searches()">Búsquedas</button>
- ${session.role==="buyer"?'<button onclick="newSearch()">Publicar</button>':''}
- <button onclick="messages()">Mensajes</button>
- <button onclick="logout()">Salir</button>
- </nav>`;
- render(menu + `<div class="card"><h2>Bienvenido</h2>
- <p>Reputación: ⭐ ${session.reputation}</p></div>`);
-}
+                        <!-- Paso 2 -->
+                        <div id="register-step-2" class="register-step" style="display: none;">
+                            <h2 style="margin-bottom: 1rem;">Configura tu cuenta</h2>
+                            <p style="color: var(--gray-600); margin-bottom: 2rem;">Selecciona cómo planeas usar BuscaReal.</p>
+                            
+                            <div class="card" style="padding: 2rem;">
+                                <h3 style="margin-bottom: 1rem;">Tipo de cuenta</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                    <div class="account-type" data-type="BUYER" onclick="selectAccountType('BUYER')" style="border: 2px solid var(--gray-200); border-radius: 0.5rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s;">
+                                        <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                            <div style="width: 1rem; height: 1rem; border: 2px solid var(--gray-300); border-radius: 9999px; margin-right: 0.75rem;"></div>
+                                            <h4 style="font-weight: 500;">Comprador</h4>
+                                        </div>
+                                        <p style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Publica lo que necesitas y recibe ofertas personalizadas.</p>
+                                        <ul style="color: var(--gray-500); font-size: 0.875rem; list-style: none; padding-left: 0;">
+                                            <li>✓ Publica búsquedas gratis</li>
+                                            <li>✓ Recibe propuestas personalizadas</li>
+                                            <li>✓ Sistema de reputación protegido</li>
+                                        </ul>
+                                    </div>
+                                    <div class="account-type" data-type="SELLER" onclick="selectAccountType('SELLER')" style="border: 2px solid var(--gray-200); border-radius: 0.5rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s;">
+                                        <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                            <div style="width: 1rem; height: 1rem; border: 2px solid var(--gray-300); border-radius: 9999px; margin-right: 0.75rem;"></div>
+                                            <h4 style="font-weight: 500;">Vendedor</h4>
+                                        </div>
+                                        <p style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.5rem;">Encuentra compradores reales y envía propuestas.</p>
+                                        <ul style="color: var(--gray-500); font-size: 0.875rem; list-style: none; padding-left: 0;">
+                                            <li>✓ Accede a búsquedas reales</li>
+                                            <li>✓ Envía propuestas personalizadas</li>
+                                            <li>✓ Contacto directo con compradores</li>
+                                        </ul>
+                                    </div>
+                                </div>
 
-/* ---------- HOME ---------- */
-function home(){
- render(`<div class="card">
- <h2>Marketplace Inverso</h2>
- <p>Publica lo que buscas y recibe propuestas reales.</p>
- <input id="email" placeholder="Email">
- <select id="role">
- <option value="buyer">Comprador</option>
- <option value="seller">Vendedor</option>
- </select>
- <button onclick="login()">Entrar</button>
- </div>`);
-}
+                                <div class="form-group">
+                                    <label class="form-label">Contraseña *</label>
+                                    <input type="password" id="reg-password" class="input" placeholder="Mínimo 8 caracteres">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirmar contraseña *</label>
+                                    <input type="password" id="reg-confirm" class="input" placeholder="Repite tu contraseña">
+                                </div>
 
-/* ---------- SEARCHES ---------- */
-function newSearch(){
- render(`<div class="card">
- <h2>Nueva Búsqueda</h2>
- <input id="type" placeholder="Tipo (Depto, Casa)">
- <input id="loc" placeholder="Ubicación">
- <input id="budget" placeholder="Presupuesto">
- <select id="urgency"><option>Alta</option><option>Media</option></select>
- <button onclick="saveSearch()">Publicar</button>
- </div>`);
-}
+                                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                                    <button class="btn btn-secondary" style="flex: 1;" onclick="prevRegisterStep()">Atrás</button>
+                                    <button class="btn btn-primary" style="flex: 1;" onclick="nextRegisterStep()">Continuar</button>
+                                </div>
+                            </div>
+                        </div>
 
-function saveSearch(){
- db.searches.push({
-  id:Date.now(),
-  buyer:session.email,
-  type:type.value,
-  loc:loc.value,
-  budget:budget.value,
-  urgency:urgency.value,
-  status:"Activa"
- });
- save();searches()
-}
+                        <!-- Paso 3 -->
+                        <div id="register-step-3" class="register-step" style="display: none;">
+                            <h2 style="margin-bottom: 1rem;">Último paso</h2>
+                            <p style="color: var(--gray-600); margin-bottom: 2rem;">Revisa y acepta nuestros términos.</p>
+                            
+                            <div class="card" style="padding: 2rem;">
+                                <h3 style="margin-bottom: 1rem;">Términos y condiciones</h3>
+                                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 0.5rem; max-height: 240px; overflow-y: auto; margin-bottom: 1.5rem;">
+                                    <h4 style="margin-bottom: 0.5rem;">Términos del servicio BuscaReal</h4>
+                                    <p style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 1rem;">
+                                        Al usar BuscaReal, aceptas nuestros términos y políticas:
+                                    </p>
+                                    <ul style="color: var(--gray-600); font-size: 0.875rem; list-style-position: inside; margin-bottom: 1rem;">
+                                        <li>Verificarás tu identidad con documentos reales</li>
+                                        <li>Publicarás solo búsquedas reales con intención de compra</li>
+                                        <li>No enviarás spam ni contenido inapropiado</li>
+                                        <li>Respetarás la privacidad de otros usuarios</li>
+                                        <li>La plataforma es intermediaria, no garantiza transacciones</li>
+                                        <li>Tus datos personales están protegidos según Ley 19.628</li>
+                                    </ul>
+                                </div>
 
-function searches(){
- let list=db.searches.map(s=>`
- <div class="list">
- <b>${s.type}</b> - ${s.loc} - ${s.budget}
- <span class="badge ok">${s.status}</span>
- ${session.role==="seller"?`<button onclick="propose(${s.id})">Proponer</button>`:""}
- </div>`).join("");
- render(`<div class="card"><h2>Búsquedas</h2>${list}</div>`);
-}
+                                <label style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                    <input type="checkbox" id="accept-terms" style="margin-top: 0.25rem;">
+                                    <span>Acepto los términos y condiciones de BuscaReal</span>
+                                </label>
 
-/* ---------- PROPOSALS ---------- */
-function propose(id){
- render(`<div class="card">
- <h2>Enviar propuesta</h2>
- <textarea id="msg"></textarea>
- <button onclick="sendProp(${id})">Enviar</button>
- </div>`);
-}
+                                <div style="background: var(--primary-50); border: 1px solid var(--primary-200); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                                    <h4 style="color: var(--primary-800); font-size: 0.875rem; margin-bottom: 0.5rem;">🔒 ¿Por qué pedimos verificación?</h4>
+                                    <p style="color: var(--primary-700); font-size: 0.875rem;">
+                                        BuscaReal es una plataforma 100% verificada para garantizar transacciones seguras. 
+                                        La verificación de identidad es obligatoria para todos los usuarios.
+                                    </p>
+                                </div>
 
-function sendProp(id){
- db.proposals.push({
-  id:Date.now(),
-  search:id,
-  seller:session.email,
-  msg:msg.value
- });
- save();searches()
-}
+                                <div style="display: flex; gap: 1rem;">
+                                    <button class="btn btn-secondary" style="flex: 1;" onclick="prevRegisterStep()">Atrás</button>
+                                    <button class="btn btn-success" style="flex: 1;" onclick="handleRegister()">Crear cuenta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-/* ---------- CHAT ---------- */
-function messages(){
- let props=db.proposals.filter(p=>session.role==="seller"?p.seller===session.email:true);
- let list=props.map(p=>`
- <div class="list">
- Propuesta #${p.id}
- <button onclick="chat(${p.id})">Chat</button>
- </div>`).join("");
- render(`<div class="card"><h2>Mensajes</h2>${list}</div>`);
-}
+            <!-- Dashboard Comprador -->
+            <div id="dashboard-buyer" class="screen">
+                <div>
+                    <h1 style="margin-bottom: 1.5rem;">Dashboard Comprador</h1>
+                    
+                    <!-- Stats -->
+                    <div class="dashboard-stats">
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: var(--primary-100); color: var(--primary-600);">
+                                    <span>🔍</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Búsquedas activas</div>
+                                    <div class="stat-value" id="stats-active-searches">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: #d1fae5; color: #065f46;">
+                                    <span>📨</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Propuestas pendientes</div>
+                                    <div class="stat-value" id="stats-pending-proposals">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: #ede9fe; color: #5b21b6;">
+                                    <span>✅</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Compras exitosas</div>
+                                    <div class="stat-value" id="stats-successful">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-function chat(id){
- let chat=db.chats.find(c=>c.id===id)||{id,logs:[]};
- render(`<div class="card">
- <div class="chat" id="chatBox">${chat.logs.map(l=>`<div class="msg">${l}</div>`).join("")}</div>
- <input id="cmsg">
- <button onclick="sendMsg(${id})">Enviar</button>
- </div>`);
-}
+                    <!-- CTA -->
+                    <div style="margin: 2rem 0;">
+                        <button class="btn btn-primary" onclick="showScreen('new-search')">
+                            <span style="margin-right: 0.5rem;">+</span> Publicar nueva búsqueda
+                        </button>
+                    </div>
 
-function sendMsg(id){
- let chat=db.chats.find(c=>c.id===id);
- if(!chat){chat={id,logs:[]};db.chats.push(chat)}
- chat.logs.push(session.email+": "+cmsg.value);
- save();chat(id)
-}
+                    <!-- Tabs -->
+                    <div class="card">
+                        <div class="tabs">
+                            <button class="tab-button active" onclick="switchBuyerTab('searches')">Mis Búsquedas</button>
+                            <button class="tab-button" onclick="switchBuyerTab('proposals')">
+                                Propuestas Recibidas
+                                <span id="proposal-badge" style="display: none; margin-left: 0.5rem;" class="badge badge-info">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <!-- Tab: Mis Búsquedas -->
+                            <div id="buyer-tab-searches">
+                                <div id="buyer-searches-list" class="search-list">
+                                    <!-- Dinámico -->
+                                </div>
+                            </div>
+                            
+                            <!-- Tab: Propuestas -->
+                            <div id="buyer-tab-proposals" style="display: none;">
+                                <div id="buyer-proposals-list" class="proposal-list">
+                                    <!-- Dinámico -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-/* ---------- INIT ---------- */
-session?dashboard():home();
-</script>
+                    <!-- Quick Actions -->
+                    <div class="card" style="margin-top: 2rem; padding: 1.5rem;">
+                        <h3 style="margin-bottom: 1rem;">Acciones rápidas</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="alert('Funcionalidad en desarrollo')">
+                                <span style="margin-right: 0.5rem;">👤</span> Completar verificación
+                            </button>
+                            <button class="btn btn-secondary" onclick="alert('Funcionalidad en desarrollo')">
+                                <span style="margin-right: 0.5rem;">💬</span> Mensajes
+                            </button>
+                            <button class="btn btn-secondary" onclick="alert('Funcionalidad en desarrollo')">
+                                <span style="margin-right: 0.5rem;">⭐</span> Mi reputación
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Dashboard Vendedor -->
+            <div id="dashboard-seller" class="screen">
+                <div>
+                    <h1 style="margin-bottom: 1.5rem;">Dashboard Vendedor</h1>
+                    
+                    <!-- Stats -->
+                    <div class="dashboard-stats">
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: var(--primary-100); color: var(--primary-600);">
+                                    <span>📤</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Propuestas disponibles</div>
+                                    <div class="stat-value" id="seller-proposals-left">5/5</div>
+                                    <div class="stat-label">Hoy</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: #d1fae5; color: #065f46;">
+                                    <span>📈</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Tasa de aceptación</div>
+                                    <div class="stat-value" id="seller-acceptance">0%</div>
+                                    <div class="stat-label" id="seller-accepted-count">0 aceptadas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: #ede9fe; color: #5b21b6;">
+                                    <span>📊</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Total propuestas</div>
+                                    <div class="stat-value" id="seller-total-proposals">0</div>
+                                    <div class="stat-label">Enviadas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div style="display: flex; align-items: center;">
+                                <div class="stat-icon" style="background: #fef3c7; color: #92400e;">
+                                    <span>🔍</span>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Búsquedas activas</div>
+                                    <div class="stat-value" id="seller-active-searches">0</div>
+                                    <div class="stat-label">Disponibles</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="card">
+                        <div class="tabs">
+                            <button class="tab-button active" onclick="switchSellerTab('searches')">
+                                Búsquedas Disponibles
+                                <span id="searches-badge" class="badge badge-info">0</span>
+                            </button>
+                            <button class="tab-button" onclick="switchSellerTab('proposals')">
+                                Mis Propuestas
+                                <span id="my-proposals-badge" class="badge">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <!-- Tab: Búsquedas -->
+                            <div id="seller-tab-searches">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <h3 style="font-size: 1.125rem;">Búsquedas activas de compradores</h3>
+                                    <button class="btn btn-secondary" onclick="loadMoreSearches()">Ver todas →</button>
+                                </div>
+                                <div id="seller-searches-list" class="search-list">
+                                    <!-- Dinámico -->
+                                </div>
+                            </div>
+                            
+                            <!-- Tab: Mis Propuestas -->
+                            <div id="seller-tab-proposals" style="display: none;">
+                                <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Historial de propuestas</h3>
+                                <div id="seller-proposals-list" class="proposal-list">
+                                    <!-- Dinámico -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Herramientas -->
+                    <div class="card" style="margin-top: 2rem; padding: 1.5rem;">
+                        <h3 style="margin-bottom: 1rem;">Herramientas para vendedores</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="alert('Funcionalidad en desarrollo')">
+                                <span style="margin-right: 0.5rem;">✅</span> Verificación avanzada
+                            </button>
+                            <button class="btn btn-secondary" onclick="alert('Funcionalidad en desarrollo')">
+                                <span style="margin-right: 0.5rem;">💬</span> Conversaciones
+                            </button>
+                            <button class="btn btn-secondary" onclick="alert('Funcionalidad en desarrollo')">
+                                <span style="margin-right: 0.5rem;">🚀</span> Mejorar plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nueva Búsqueda -->
+            <div id="new-search" class="screen">
+                <div style="max-width: 64rem; margin: 0 auto;">
+                    <!-- Progress Bar -->
+                    <div style="margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 500;">Paso <span id="current-step">1</span> de 4</span>
+                            <span style="color: var(--gray-500);" id="step-description">Tipo y ubicación</span>
+                        </div>
+                        <div style="height: 0.5rem; background: var(--gray-200); border-radius: 9999px; overflow: hidden;">
+                            <div id="progress-bar" style="height: 100%; background: var(--primary-600); width: 25%; transition: width 0.3s;"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 2rem;">
+                        <h1 id="search-step-title" style="font-size: 1.875rem; margin-bottom: 0.5rem;">¿Qué tipo de propiedad buscas?</h1>
+                        <p id="search-step-desc" style="color: var(--gray-600); margin-bottom: 2rem;">Comienza describiendo el tipo de propiedad y su ubicación.</p>
+
+                        <!-- Paso 1: Tipo y ubicación -->
+                        <div id="search-step-1" class="search-step">
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Tipo de propiedad</h3>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                                    <button class="property-type" data-type="APARTMENT" onclick="selectPropertyType('APARTMENT')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        Departamento
+                                    </button>
+                                    <button class="property-type" data-type="HOUSE" onclick="selectPropertyType('HOUSE')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        Casa
+                                    </button>
+                                    <button class="property-type" data-type="LAND" onclick="selectPropertyType('LAND')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        Terreno
+                                    </button>
+                                    <button class="property-type" data-type="COMMERCIAL" onclick="selectPropertyType('COMMERCIAL')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        Local Comercial
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Título de tu búsqueda *</label>
+                                <input type="text" id="search-title" class="input" placeholder="Ej: Busco departamento de 2 dormitorios en Providencia">
+                                <p class="form-helper">Sé específico para obtener propuestas más relevantes</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Región *</label>
+                                    <select id="search-region" class="input">
+                                        <option value="">Selecciona</option>
+                                        <option value="Metropolitana">Metropolitana</option>
+                                        <option value="Valparaíso">Valparaíso</option>
+                                        <option value="Biobío">Biobío</option>
+                                        <option value="Maule">Maule</option>
+                                        <option value="Araucanía">Araucanía</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Ciudad *</label>
+                                    <input type="text" id="search-city" class="input" placeholder="Ej: Santiago">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Comuna</label>
+                                    <input type="text" id="search-commune" class="input" placeholder="Ej: Providencia">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 2: Características -->
+                        <div id="search-step-2" class="search-step" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Descripción adicional</label>
+                                <textarea id="search-description" class="input" rows="4" placeholder="Describe con más detalle lo que buscas, necesidades específicas, preferencias, etc."></textarea>
+                                <p class="form-helper">Cuanta más información proporciones, más relevantes serán las propuestas</p>
+                            </div>
+
+                            <div style="margin: 2rem 0;">
+                                <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Características importantes</h3>
+                                <p style="color: var(--gray-600); margin-bottom: 1rem;">Selecciona las características que son importantes para ti</p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem;">
+                                    <button class="feature-btn" data-feature="Estacionamiento" onclick="toggleFeature(this)" style="padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 0.375rem; background: white; cursor: pointer; font-size: 0.875rem;">
+                                        Estacionamiento
+                                    </button>
+                                    <button class="feature-btn" data-feature="Piscina" onclick="toggleFeature(this)" style="padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 0.375rem; background: white; cursor: pointer; font-size: 0.875rem;">
+                                        Piscina
+                                    </button>
+                                    <button class="feature-btn" data-feature="Jardín" onclick="toggleFeature(this)" style="padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 0.375rem; background: white; cursor: pointer; font-size: 0.875rem;">
+                                        Jardín
+                                    </button>
+                                    <button class="feature-btn" data-feature="Amoblado" onclick="toggleFeature(this)" style="padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 0.375rem; background: white; cursor: pointer; font-size: 0.875rem;">
+                                        Amoblado
+                                    </button>
+                                    <button class="feature-btn" data-feature="Calefacción" onclick="toggleFeature(this)" style="padding: 0.75rem; border: 1px solid var(--gray-200); border-radius: 0.375rem; background: white; cursor: pointer; font-size: 0.875rem;">
+                                        Calefacción
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Dormitorios</label>
+                                    <select id="search-bedrooms" class="input">
+                                        <option value="">No especificado</option>
+                                        <option value="1">1 dormitorio</option>
+                                        <option value="2">2 dormitorios</option>
+                                        <option value="3">3 dormitorios</option>
+                                        <option value="4">4 o más</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Baños</label>
+                                    <select id="search-bathrooms" class="input">
+                                        <option value="">No especificado</option>
+                                        <option value="1">1 baño</option>
+                                        <option value="2">2 baños</option>
+                                        <option value="3">3 o más</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Metros cuadrados (m²)</label>
+                                    <input type="number" id="search-size" class="input" placeholder="Ej: 80">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 3: Presupuesto -->
+                        <div id="search-step-3" class="search-step" style="display: none;">
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Presupuesto</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Presupuesto mínimo (opcional)</label>
+                                        <div style="position: relative;">
+                                            <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">$</span>
+                                            <input type="number" id="search-budget-min" class="input" style="padding-left: 2rem;" placeholder="Ej: 50.000.000">
+                                        </div>
+                                        <p class="form-helper">El precio más bajo que considerarías</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Presupuesto máximo *</label>
+                                        <div style="position: relative;">
+                                            <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">$</span>
+                                            <input type="number" id="search-budget-max" class="input" style="padding-left: 2rem;" placeholder="Ej: 80.000.000" required>
+                                        </div>
+                                        <p class="form-helper">El precio más alto que puedes pagar</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Nivel de urgencia</h3>
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
+                                    <button class="urgency-btn" data-urgency="LOW" onclick="selectUrgency('LOW')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        <div style="margin-bottom: 0.5rem;">📅</div>
+                                        <div style="font-weight: 500;">Baja</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">sin prisa</div>
+                                    </button>
+                                    <button class="urgency-btn" data-urgency="MEDIUM" onclick="selectUrgency('MEDIUM')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        <div style="margin-bottom: 0.5rem;">⚡</div>
+                                        <div style="font-weight: 500;">Media</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">próximos meses</div>
+                                    </button>
+                                    <button class="urgency-btn" data-urgency="HIGH" onclick="selectUrgency('HIGH')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        <div style="margin-bottom: 0.5rem;">🔥</div>
+                                        <div style="font-weight: 500;">Alta</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">próximo mes</div>
+                                    </button>
+                                    <button class="urgency-btn" data-urgency="URGENT" onclick="selectUrgency('URGENT')" style="padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                                        <div style="margin-bottom: 0.5rem;">🚨</div>
+                                        <div style="font-weight: 500;">Urgente</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">inmediato</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 4: Configuración final -->
+                        <div id="search-step-4" class="search-step" style="display: none;">
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Privacidad y límites</h3>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Límite de propuestas a recibir</label>
+                                        <select id="search-max-proposals" class="input" style="width: auto;">
+                                            <option value="5">5 propuestas</option>
+                                            <option value="10" selected>10 propuestas</option>
+                                            <option value="15">15 propuestas</option>
+                                            <option value="20">20 propuestas</option>
+                                        </select>
+                                        <p class="form-helper">Tu búsqueda se cerrará automáticamente al alcanzar este límite</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Nivel de privacidad</label>
+                                        <select id="search-privacy" class="input" style="width: auto;">
+                                            <option value="FULL">Máxima privacidad</option>
+                                            <option value="PARTIAL" selected>Privacidad moderada</option>
+                                            <option value="MINIMAL">Mínima privacidad</option>
+                                        </select>
+                                        <p class="form-helper">Controla qué información personal ven los vendedores</p>
+                                    </div>
+                                    
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="checkbox" id="search-allow-contact" style="margin-right: 0.5rem;">
+                                        <label for="search-allow-contact">Permitir contacto directo (teléfono/email)</label>
+                                    </div>
+                                    <p style="color: var(--gray-500); font-size: 0.875rem; margin-left: 1.75rem;">
+                                        Los vendedores podrán contactarte directamente después de un tiempo de conversación
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Resumen -->
+                            <div style="background: var(--yellow-50); border: 1px solid var(--yellow-200); border-radius: 0.5rem; padding: 1.5rem; margin: 2rem 0;">
+                                <h4 style="color: var(--yellow-800); margin-bottom: 1rem;">📋 Resumen de tu búsqueda</h4>
+                                <div style="color: var(--yellow-700); font-size: 0.875rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span>Tipo:</span>
+                                        <span id="summary-type" style="font-weight: 500;">Departamento</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span>Ubicación:</span>
+                                        <span id="summary-location" style="font-weight: 500;">Santiago, Metropolitana</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span>Presupuesto:</span>
+                                        <span id="summary-budget" style="font-weight: 500;">$0 - $0</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span>Urgencia:</span>
+                                        <span id="summary-urgency" style="font-weight: 500;">Media</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Características:</span>
+                                        <span id="summary-features" style="font-weight: 500;">0 seleccionadas</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: var(--primary-50); border-radius: 0.5rem; padding: 1.5rem; margin: 2rem 0;">
+                                <h4 style="color: var(--primary-800); margin-bottom: 0.5rem;">🔒 Tu búsqueda es 100% segura</h4>
+                                <ul style="color: var(--primary-700); font-size: 0.875rem; list-style-position: inside;">
+                                    <li>Solo vendedores verificados verán tu búsqueda</li>
+                                    <li>No se mostrará tu información personal públicamente</li>
+                                    <li>Controlas quién puede contactarte</li>
+                                    <li>Puedes pausar o cancelar en cualquier momento</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Navegación -->
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button id="search-prev-btn" class="btn btn-secondary" style="flex: 1;" onclick="prevSearchStep()">Atrás</button>
+                            <button id="search-next-btn" class="btn btn-primary" style="flex: 1;" onclick="nextSearchStep()">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div id="chat-screen" class="screen">
+                <div class="chat-container">
+                    <!-- Sidebar -->
+                    <div class="chat-sidebar">
+                        <div style="padding: 1rem; border-bottom: 1px solid var(--gray-200);">
+                            <h3 style="font-size: 1.125rem;">Conversaciones</h3>
+                        </div>
+                        <div id="conversations-list">
+                            <!-- Dinámico -->
+                        </div>
+                    </div>
+                    
+                    <!-- Mensajes -->
+                    <div class="chat-messages">
+                        <div style="padding: 1rem; border-bottom: 1px solid var(--gray-200);">
+                            <h3 id="chat-with" style="font-size: 1.125rem;">Selecciona una conversación</h3>
+                        </div>
+                        
+                        <div id="messages-list" class="messages-list">
+                            <!-- Mensajes aparecerán aquí -->
+                        </div>
+                        
+                        <div class="message-input-container" style="display: none;" id="message-input-container">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="message-input" class="input" placeholder="Escribe un mensaje..." style="flex: 1;">
+                                <button class="btn btn-primary" onclick="sendMessage()">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p style="margin-bottom: 1rem;">© 2024 BuscaReal - Marketplace Inverso</p>
+                <p style="font-size: 0.875rem; color: var(--gray-400);">
+                    Plataforma 100% verificada • Cero spam • Prioridad a intención real
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========== JAVASCRIPT COMPLETO ========== -->
+    <script>
+        // ========== ESTADO GLOBAL ==========
+        const AppState = {
+            currentUser: null,
+            users: JSON.parse(localStorage.getItem('buscareal_users')) || [],
+            searches: JSON.parse(localStorage.getItem('buscareal_searches')) || [],
+            proposals: JSON.parse(localStorage.getItem('buscareal_proposals')) || [],
+            conversations: JSON.parse(localStorage.getItem('buscareal_conversations')) || [],
+            messages: JSON.parse(localStorage.getItem('buscareal_messages')) || [],
+            
+            // Datos temporales para formularios
+            tempSearch: {
+                type: 'APARTMENT',
+                title: '',
+                region: '',
+                city: '',
+                commune: '',
+                description: '',
+                features: [],
+                bedrooms: '',
+                bathrooms: '',
+                size: '',
+                budgetMin: '',
+                budgetMax: '',
+                urgency: 'MEDIUM',
+                maxProposals: 10,
+                privacyLevel: 'PARTIAL',
+                allowDirectContact: false
+            },
+            
+            tempUser: {
+                email: '',
+                phone: '',
+                password: '',
+                userType: 'BUYER'
+            }
+        };
+
+        // ========== UTILIDADES ==========
+        function saveToLocalStorage() {
+            localStorage.setItem('buscareal_users', JSON.stringify(AppState.users));
+            localStorage.setItem('buscareal_searches', JSON.stringify(AppState.searches));
+            localStorage.setItem('buscareal_proposals', JSON.stringify(AppState.proposals));
+            localStorage.setItem('buscareal_conversations', JSON.stringify(AppState.conversations));
+            localStorage.setItem('buscareal_messages', JSON.stringify(AppState.messages));
+            if (AppState.currentUser) {
+                localStorage.setItem('buscareal_current_user', JSON.stringify(AppState.currentUser));
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const savedUser = localStorage.getItem('buscareal_current_user');
+            if (savedUser) {
+                AppState.currentUser = JSON.parse(savedUser);
+                updateNavigation();
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ========== MANEJO DE PANTALLAS ==========
+        function showScreen(screenId) {
+            // Ocultar todas las pantallas
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Mostrar pantalla solicitada
+            const screen = document.getElementById(screenId);
+            if (screen) {
+                screen.classList.add('active');
+                
+                // Actualizar navegación
+                updateNavigation();
+                
+                // Cargar datos específicos de la pantalla
+                switch(screenId) {
+                    case 'dashboard-buyer':
+                        loadBuyerDashboard();
+                        break;
+                    case 'dashboard-seller':
+                        loadSellerDashboard();
+                        break;
+                    case 'new-search':
+                        resetSearchForm();
+                        break;
+                    case 'chat-screen':
+                        loadConversations();
+                        break;
+                }
+            }
+        }
+
+        function updateNavigation() {
+            const nav = document.getElementById('main-nav');
+            if (!nav) return;
+            
+            if (AppState.currentUser) {
+                nav.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="text-align: right;">
+                            <div style="font-weight: 500;">${AppState.currentUser.email}</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-500);">
+                                ${AppState.currentUser.userType === 'BUYER' ? 'Comprador' : 'Vendedor'}
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="handleLogout()">
+                            Cerrar sesión
+                        </button>
+                    </div>
+                `;
+            } else {
+                nav.innerHTML = `
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-secondary" onclick="showScreen('login')">
+                            Iniciar Sesión
+                        </button>
+                        <button class="btn btn-primary" onclick="showScreen('register')">
+                            Crear Cuenta
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // ========== AUTENTICACIÓN ==========
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showToast('Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            const user = AppState.users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                AppState.currentUser = user;
+                saveToLocalStorage();
+                showToast('¡Sesión iniciada exitosamente!', 'success');
+                
+                if (user.userType === 'BUYER') {
+                    showScreen('dashboard-buyer');
+                } else {
+                    showScreen('dashboard-seller');
+                }
+            } else {
+                showToast('Credenciales inválidas. Verifica tu email y contraseña.', 'error');
+            }
+        }
+
+        function handleRegister() {
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+            const acceptTerms = document.getElementById('accept-terms').checked;
+            
+            // Validaciones
+            if (!email || !phone || !password || !confirm) {
+                showToast('Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showToast('Las contraseñas no coinciden', 'error');
+                return;
+            }
+            
+            if (!acceptTerms) {
+                showToast('Debes aceptar los términos y condiciones', 'error');
+                return;
+            }
+            
+            // Verificar si el usuario ya existe
+            if (AppState.users.some(u => u.email === email)) {
+                showToast('Este email ya está registrado', 'error');
+                return;
+            }
+            
+            // Crear usuario
+            const newUser = {
+                id: Date.now().toString(),
+                email: email,
+                phone: phone,
+                password: password,
+                userType: AppState.tempUser.userType,
+                createdAt: new Date().toISOString(),
+                verificationStatus: 'PENDING',
+                profile: AppState.tempUser.userType === 'BUYER' ? {
+                    fullName: '',
+                    city: '',
+                    region: '',
+                    successfulClosures: 0,
+                    abandonedSearches: 0
+                } : {
+                    businessName: '',
+                    sellerType: 'PARTICULAR',
+                    dailyProposalLimit: 5,
+                    proposalsSentToday: 0,
+                    subscriptionPlan: 'FREE'
+                }
+            };
+            
+            AppState.users.push(newUser);
+            AppState.currentUser = newUser;
+            saveToLocalStorage();
+            
+            showToast('¡Cuenta creada exitosamente!', 'success');
+            
+            // Redirigir según tipo de usuario
+            if (newUser.userType === 'BUYER') {
+                showScreen('dashboard-buyer');
+            } else {
+                showScreen('dashboard-seller');
+            }
+        }
+
+        function selectAccountType(type) {
+            AppState.tempUser.userType = type;
+            
+            // Actualizar UI
+            document.querySelectorAll('.account-type').forEach(el => {
+                if (el.dataset.type === type) {
+                    el.style.borderColor = 'var(--primary-500)';
+                    el.style.backgroundColor = 'var(--primary-50)';
+                    el.querySelector('div > div').style.borderColor = 'var(--primary-500)';
+                    el.querySelector('div > div').style.backgroundColor = 'var(--primary-500)';
+                } else {
+                    el.style.borderColor = 'var(--gray-200)';
+                    el.style.backgroundColor = 'white';
+                    el.querySelector('div > div').style.borderColor = 'var(--gray-300)';
+                    el.querySelector('div > div').style.backgroundColor = 'transparent';
+                }
+            });
+        }
+
+        function handleLogout() {
+            AppState.currentUser = null;
+            localStorage.removeItem('buscareal_current_user');
+            showToast('Sesión cerrada', 'info');
+            showScreen('landing');
+        }
+
+        // ========== REGISTRO PASO A PASO ==========
+        let currentRegisterStep = 1;
+        
+        function nextRegisterStep() {
+            if (currentRegisterStep === 1) {
+                const email = document.getElementById('reg-email').value;
+                const phone = document.getElementById('reg-phone').value;
+                
+                if (!email || !phone) {
+                    showToast('Por favor completa todos los campos', 'error');
+                    return;
+                }
+                
+                // Guardar datos temporales
+                AppState.tempUser.email = email;
+                AppState.tempUser.phone = phone;
+            }
+            
+            if (currentRegisterStep === 2) {
+                const password = document.getElementById('reg-password').value;
+                const confirm = document.getElementById('reg-confirm').value;
+                
+                if (!password || !confirm) {
+                    showToast('Por favor completa todos los campos', 'error');
+                    return;
+                }
+                
+                if (password !== confirm) {
+                    showToast('Las contraseñas no coinciden', 'error');
+                    return;
+                }
+                
+                if (password.length < 8) {
+                    showToast('La contraseña debe tener al menos 8 caracteres', 'error');
+                    return;
+                }
+                
+                AppState.tempUser.password = password;
+            }
+            
+            // Avanzar al siguiente paso
+            document.getElementById(`register-step-${currentRegisterStep}`).style.display = 'none';
+            currentRegisterStep++;
+            document.getElementById(`register-step-${currentRegisterStep}`).style.display = 'block';
+        }
+        
+        function prevRegisterStep() {
+            if (currentRegisterStep > 1) {
+                document.getElementById(`register-step-${currentRegisterStep}`).style.display = 'none';
+                currentRegisterStep--;
+                document.getElementById(`register-step-${currentRegisterStep}`).style.display = 'block';
+            } else {
+                showScreen('landing');
+            }
+        }
+
+        // ========== DASHBOARD COMPRADOR ==========
+        function loadBuyerDashboard() {
+            if (!AppState.currentUser || AppState.currentUser.userType !== 'BUYER') {
+                showScreen('landing');
+                return;
+            }
+            
+            // Calcular estadísticas
+            const activeSearches = AppState.searches.filter(s => 
+                s.buyerId === AppState.currentUser.id && 
+                (s.status === 'ACTIVE' || s.status === 'IN_CONVERSATION')
+            ).length;
+            
+            const pendingProposals = AppState.proposals.filter(p => 
+                p.status === 'PENDING' && 
+                AppState.searches.some(s => s.id === p.searchId && s.buyerId === AppState.currentUser.id)
+            ).length;
+            
+            const successfulSearches = AppState.searches.filter(s => 
+                s.buyerId === AppState.currentUser.id && 
+                s.status === 'CLOSED_SUCCESS'
+            ).length;
+            
+            // Actualizar UI
+            document.getElementById('stats-active-searches').textContent = activeSearches;
+            document.getElementById('stats-pending-proposals').textContent = pendingProposals;
+            document.getElementById('stats-successful').textContent = successfulSearches;
+            
+            // Actualizar badge de propuestas
+            const badge = document.getElementById('proposal-badge');
+            if (pendingProposals > 0) {
+                badge.textContent = pendingProposals;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+            
+            // Cargar búsquedas
+            loadBuyerSearches();
+        }
+        
+        function loadBuyerSearches() {
+            const container = document.getElementById('buyer-searches-list');
+            const buyerSearches = AppState.searches.filter(s => s.buyerId === AppState.currentUser.id);
+            
+            if (buyerSearches.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;">🔍</div>
+                        <h3 style="margin-bottom: 0.5rem;">No tienes búsquedas activas</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Publica tu primera búsqueda y comienza a recibir propuestas.</p>
+                        <button class="btn btn-primary" onclick="showScreen('new-search')">
+                            Crear mi primera búsqueda
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = buyerSearches.map(search => {
+                const proposalsCount = AppState.proposals.filter(p => p.searchId === search.id).length;
+                const statusText = search.status === 'ACTIVE' ? 'Activa' :
+                                  search.status === 'IN_CONVERSATION' ? 'En conversación' :
+                                  search.status === 'CLOSED_SUCCESS' ? 'Exitosa' : 'Cerrada';
+                
+                const statusColor = search.status === 'ACTIVE' ? 'badge-success' :
+                                   search.status === 'IN_CONVERSATION' ? 'badge-info' :
+                                   'badge';
+                
+                return `
+                    <div class="card search-item">
+                        <div style="flex: 1;">
+                            <h4>${search.title}</h4>
+                            <div class="search-meta">
+                                <span>Tipo: <strong>${search.type === 'APARTMENT' ? 'Departamento' : 
+                                                     search.type === 'HOUSE' ? 'Casa' : 
+                                                     search.type === 'LAND' ? 'Terreno' : 'Local Comercial'}</strong></span>
+                                <span>Presupuesto: <strong>$${parseInt(search.budgetMax).toLocaleString()}</strong></span>
+                                <span class="badge ${statusColor}">${statusText}</span>
+                            </div>
+                            <p style="color: var(--gray-600); font-size: 0.875rem; margin-top: 0.5rem;">
+                                ${search.description || 'Sin descripción adicional'}
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="color: var(--gray-500); font-size: 0.875rem;">${proposalsCount} propuestas</p>
+                            <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="viewSearch('${search.id}')">
+                                Ver detalles →
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function switchBuyerTab(tab) {
+            // Actualizar botones de tab
+            document.querySelectorAll('#dashboard-buyer .tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Mostrar contenido correspondiente
+            document.getElementById('buyer-tab-searches').style.display = tab === 'searches' ? 'block' : 'none';
+            document.getElementById('buyer-tab-proposals').style.display = tab === 'proposals' ? 'block' : 'none';
+            
+            if (tab === 'proposals') {
+                loadBuyerProposals();
+            }
+        }
+        
+        function loadBuyerProposals() {
+            const container = document.getElementById('buyer-proposals-list');
+            const buyerProposals = AppState.proposals.filter(p => {
+                const search = AppState.searches.find(s => s.id === p.searchId);
+                return search && search.buyerId === AppState.currentUser.id;
+            });
+            
+            if (buyerProposals.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;">📨</div>
+                        <h3 style="margin-bottom: 0.5rem;">No tienes propuestas aún</h3>
+                        <p style="color: var(--gray-600);">Cuando publiques búsquedas, los vendedores verificados te enviarán propuestas.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = buyerProposals.slice(0, 5).map(proposal => {
+                const seller = AppState.users.find(u => u.id === proposal.sellerId);
+                const search = AppState.searches.find(s => s.id === proposal.searchId);
+                
+                return `
+                    <div class="card proposal-item">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <h4>${seller?.profile?.businessName || 'Vendedor'}</h4>
+                                <span class="badge ${seller?.verificationStatus === 'VERIFIED' ? 'badge-success' : 'badge-warning'}">
+                                    ${seller?.verificationStatus === 'VERIFIED' ? 'Verificado' : 'Pendiente'}
+                                </span>
+                            </div>
+                            <p style="color: var(--gray-600); font-size: 0.875rem; margin-bottom: 0.75rem;">
+                                ${proposal.message.substring(0, 100)}${proposal.message.length > 100 ? '...' : ''}
+                            </p>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <span class="badge ${proposal.status === 'PENDING' ? 'badge-info' : 
+                                                   proposal.status === 'ACCEPTED' ? 'badge-success' : 'badge-danger'}">
+                                    ${proposal.status === 'PENDING' ? 'Pendiente' :
+                                      proposal.status === 'ACCEPTED' ? 'Aceptada' : 'Rechazada'}
+                                </span>
+                                <span style="color: var(--gray-500); font-size: 0.875rem;">
+                                    ${new Date(proposal.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="viewProposal('${proposal.id}')">
+                            Ver propuesta →
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            if (buyerProposals.length > 5) {
+                container.innerHTML += `
+                    <div style="text-align: center; padding: 1rem;">
+                        <button class="btn btn-secondary" onclick="alert('Ver todas las propuestas - Funcionalidad en desarrollo')">
+                            Ver todas las propuestas (${buyerProposals.length})
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // ========== DASHBOARD VENDEDOR ==========
+        function loadSellerDashboard() {
+            if (!AppState.currentUser || AppState.currentUser.userType !== 'SELLER') {
+                showScreen('landing');
+                return;
+            }
+            
+            // Calcular estadísticas
+            const profile = AppState.currentUser.profile;
+            const proposalsRemaining = profile.dailyProposalLimit - profile.proposalsSentToday;
+            
+            const sellerProposals = AppState.proposals.filter(p => p.sellerId === AppState.currentUser.id);
+            const acceptedProposals = sellerProposals.filter(p => p.status === 'ACCEPTED').length;
+            const acceptanceRate = sellerProposals.length > 0 ? 
+                Math.round((acceptedProposals / sellerProposals.length) * 100) : 0;
+            
+            const activeSearches = AppState.searches.filter(s => s.status === 'ACTIVE').length;
+            
+            // Actualizar UI
+            document.getElementById('seller-proposals-left').textContent = 
+                `${proposalsRemaining}/${profile.dailyProposalLimit}`;
+            document.getElementById('seller-acceptance').textContent = `${acceptanceRate}%`;
+            document.getElementById('seller-accepted-count').textContent = `${acceptedProposals} aceptadas`;
+            document.getElementById('seller-total-proposals').textContent = sellerProposals.length;
+            document.getElementById('seller-active-searches').textContent = activeSearches;
+            
+            // Actualizar badges
+            document.getElementById('searches-badge').textContent = activeSearches;
+            document.getElementById('my-proposals-badge').textContent = sellerProposals.length;
+            
+            // Mostrar advertencias si es necesario
+            if (proposalsRemaining <= 2) {
+                showToast(`Te quedan ${proposalsRemaining} propuestas para hoy`, 'warning');
+            }
+            
+            if (proposalsRemaining === 0) {
+                showToast('Has alcanzado tu límite diario de propuestas', 'error');
+            }
+            
+            // Cargar búsquedas disponibles
+            loadSellerSearches();
+        }
+        
+        function loadSellerSearches() {
+            const container = document.getElementById('seller-searches-list');
+            const availableSearches = AppState.searches.filter(s => s.status === 'ACTIVE');
+            
+            if (availableSearches.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;">🔍</div>
+                        <h3 style="margin-bottom: 0.5rem;">No hay búsquedas disponibles</h3>
+                        <p style="color: var(--gray-600);">Los compradores aún no han publicado búsquedas. Vuelve más tarde.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = availableSearches.slice(0, 5).map(search => {
+                const buyer = AppState.users.find(u => u.id === search.buyerId);
+                const proposalsCount = AppState.proposals.filter(p => p.searchId === search.id).length;
+                
+                return `
+                    <div class="card search-item">
+                        <div style="flex: 1;">
+                            <h4>${search.title}</h4>
+                            <div style="display: flex; gap: 1rem; align-items: center; margin: 0.5rem 0;">
+                                <span style="color: var(--gray-600);">
+                                    ${search.type === 'APARTMENT' ? 'Departamento' : 
+                                      search.type === 'HOUSE' ? 'Casa' : 
+                                      search.type === 'LAND' ? 'Terreno' : 'Local Comercial'}
+                                </span>
+                                <span style="color: var(--gray-600);">
+                                    ${search.city}, ${search.region}
+                                </span>
+                                <span class="badge ${search.urgency === 'URGENT' ? 'badge-danger' :
+                                                   search.urgency === 'HIGH' ? 'badge-warning' :
+                                                   search.urgency === 'MEDIUM' ? 'badge-info' : 'badge'}">
+                                    ${search.urgency === 'URGENT' ? 'Urgente' :
+                                     search.urgency === 'HIGH' ? 'Alta' :
+                                     search.urgency === 'MEDIUM' ? 'Media' : 'Baja'}
+                                </span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="width: 0.5rem; height: 0.5rem; border-radius: 9999px; 
+                                             background: ${buyer?.verificationStatus === 'VERIFIED' ? '#10b981' : '#f59e0b'}; 
+                                             margin-right: 0.5rem;"></div>
+                                        <span style="color: var(--gray-600); font-size: 0.875rem;">
+                                            Comprador ${buyer?.verificationStatus === 'VERIFIED' ? 'verificado' : 'pendiente'}
+                                        </span>
+                                    </div>
+                                    <span style="color: var(--gray-600); font-size: 0.875rem;">
+                                        ${proposalsCount} propuestas recibidas
+                                    </span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-secondary" onclick="viewSearchDetail('${search.id}')">
+                                        Ver detalles
+                                    </button>
+                                    <button class="btn btn-primary" onclick="sendProposalToSearch('${search.id}')">
+                                        Enviar propuesta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function switchSellerTab(tab) {
+            // Actualizar botones de tab
+            document.querySelectorAll('#dashboard-seller .tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Mostrar contenido correspondiente
+            document.getElementById('seller-tab-searches').style.display = tab === 'searches' ? 'block' : 'none';
+            document.getElementById('seller-tab-proposals').style.display = tab === 'proposals' ? 'block' : 'none';
+            
+            if (tab === 'proposals') {
+                loadSellerProposals();
+            }
+        }
+        
+        function loadSellerProposals() {
+            const container = document.getElementById('seller-proposals-list');
+            const sellerProposals = AppState.proposals.filter(p => p.sellerId === AppState.currentUser.id);
+            
+            if (sellerProposals.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;">📤</div>
+                        <h3 style="margin-bottom: 0.5rem;">No has enviado propuestas aún</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                            Envía tu primera propuesta a una búsqueda activa para comenzar.
+                        </p>
+                        <button class="btn btn-primary" onclick="switchSellerTab('searches')">
+                            Ver búsquedas disponibles
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = sellerProposals.slice(0, 5).map(proposal => {
+                const search = AppState.searches.find(s => s.id === proposal.searchId);
+                
+                return `
+                    <div class="card proposal-item">
+                        <div style="flex: 1;">
+                            <h4>${search?.title || 'Búsqueda no encontrada'}</h4>
+                            <div style="display: flex; gap: 1rem; align-items: center; margin: 0.5rem 0;">
+                                <span style="color: var(--gray-600);">
+                                    Tipo: <strong>${search?.type === 'APARTMENT' ? 'Departamento' : 
+                                                   search?.type === 'HOUSE' ? 'Casa' : 
+                                                   search?.type === 'LAND' ? 'Terreno' : 'Local Comercial'}</strong>
+                                </span>
+                                <span class="badge ${proposal.status === 'PENDING' ? 'badge-info' :
+                                                   proposal.status === 'ACCEPTED' ? 'badge-success' :
+                                                   proposal.status === 'REJECTED' ? 'badge-danger' : 'badge'}">
+                                    ${proposal.status === 'PENDING' ? 'Pendiente' :
+                                      proposal.status === 'ACCEPTED' ? 'Aceptada' :
+                                      proposal.status === 'REJECTED' ? 'Rechazada' : 'Retirada'}
+                                </span>
+                                <span style="color: var(--gray-600); font-size: 0.875rem;">
+                                    ${new Date(proposal.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="viewProposalDetail('${proposal.id}')">
+                            Ver detalles →
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            if (sellerProposals.length > 5) {
+                container.innerHTML += `
+                    <div style="text-align: center; padding: 1rem;">
+                        <button class="btn btn-secondary" onclick="alert('Ver todas las propuestas - Funcionalidad en desarrollo')">
+                            Ver todas las propuestas (${sellerProposals.length})
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // ========== NUEVA BÚSQUEDA ==========
+        let currentSearchStep = 1;
+        const searchSteps = [
+            { id: 1, title: '¿Qué tipo de propiedad buscas?', desc: 'Comienza describiendo el tipo de propiedad y su ubicación.' },
+            { id: 2, title: 'Características importantes', desc: 'Especifica las características que te importan.' },
+            { id: 3, title: 'Presupuesto y urgencia', desc: 'Define tu presupuesto y nivel de urgencia.' },
+            { id: 4, title: 'Configuración final', desc: 'Configura la privacidad y límites de tu búsqueda.' }
+        ];
+        
+        function resetSearchForm() {
+            currentSearchStep = 1;
+            AppState.tempSearch = {
+                type: 'APARTMENT',
+                title: '',
+                region: '',
+                city: '',
+                commune: '',
+                description: '',
+                features: [],
+                bedrooms: '',
+                bathrooms: '',
+                size: '',
+                budgetMin: '',
+                budgetMax: '',
+                urgency: 'MEDIUM',
+                maxProposals: 10,
+                privacyLevel: 'PARTIAL',
+                allowDirectContact: false
+            };
+            
+            updateSearchStepUI();
+            updateSearchSummary();
+        }
+        
+        function updateSearchStepUI() {
+            // Actualizar título y descripción
+            const step = searchSteps[currentSearchStep - 1];
+            document.getElementById('search-step-title').textContent = step.title;
+            document.getElementById('search-step-desc').textContent = step.desc;
+            
+            // Actualizar progreso
+            document.getElementById('current-step').textContent = currentSearchStep;
+            document.getElementById('step-description').textContent = 
+                currentSearchStep === 1 ? 'Tipo y ubicación' :
+                currentSearchStep === 2 ? 'Características' :
+                currentSearchStep === 3 ? 'Presupuesto y urgencia' : 'Privacidad y límites';
+            
+            document.getElementById('progress-bar').style.width = `${(currentSearchStep / 4) * 100}%`;
+            
+            // Mostrar/ocultar pasos
+            document.querySelectorAll('.search-step').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.getElementById(`search-step-${currentSearchStep}`).style.display = 'block';
+            
+            // Actualizar botones
+            const prevBtn = document.getElementById('search-prev-btn');
+            const nextBtn = document.getElementById('search-next-btn');
+            
+            prevBtn.textContent = currentSearchStep === 1 ? 'Cancelar' : 'Atrás';
+            nextBtn.textContent = currentSearchStep === 4 ? 'Publicar búsqueda' : 'Continuar';
+            nextBtn.className = currentSearchStep === 4 ? 'btn btn-success' : 'btn btn-primary';
+        }
+        
+        function nextSearchStep() {
+            // Validaciones
+            if (currentSearchStep === 1) {
+                if (!AppState.tempSearch.title || !AppState.tempSearch.city || !AppState.tempSearch.region) {
+                    showToast('Por favor completa todos los campos obligatorios', 'error');
+                    return;
+                }
+            }
+            
+            if (currentSearchStep === 3) {
+                if (!AppState.tempSearch.budgetMax) {
+                    showToast('Por favor ingresa un presupuesto máximo', 'error');
+                    return;
+                }
+            }
+            
+            if (currentSearchStep === 4) {
+                publishSearch();
+                return;
+            }
+            
+            currentSearchStep++;
+            updateSearchStepUI();
+            updateSearchSummary();
+        }
+        
+        function prevSearchStep() {
+            if (currentSearchStep > 1) {
+                currentSearchStep--;
+                updateSearchStepUI();
+                updateSearchSummary();
+            } else {
+                showScreen(AppState.currentUser.userType === 'BUYER' ? 'dashboard-buyer' : 'dashboard-seller');
+            }
+        }
+        
+        function selectPropertyType(type) {
+            AppState.tempSearch.type = type;
+            
+            // Actualizar UI
+            document.querySelectorAll('.property-type').forEach(el => {
+                if (el.dataset.type === type) {
+                    el.style.borderColor = 'var(--primary-500)';
+                    el.style.backgroundColor = 'var(--primary-50)';
+                    el.style.color = 'var(--primary-700)';
+                } else {
+                    el.style.borderColor = 'var(--gray-200)';
+                    el.style.backgroundColor = 'white';
+                    el.style.color = 'var(--gray-700)';
+                }
+            });
+            
+            updateSearchSummary();
+        }
+        
+        function toggleFeature(button) {
+            const feature = button.dataset.feature;
+            const index = AppState.tempSearch.features.indexOf(feature);
+            
+            if (index === -1) {
+                AppState.tempSearch.features.push(feature);
+                button.style.borderColor = 'var(--primary-500)';
+                button.style.backgroundColor = 'var(--primary-50)';
+                button.style.color = 'var(--primary-700)';
+            } else {
+                AppState.tempSearch.features.splice(index, 1);
+                button.style.borderColor = 'var(--gray-200)';
+                button.style.backgroundColor = 'white';
+                button.style.color = 'var(--gray-700)';
+            }
+            
+            updateSearchSummary();
+        }
+        
+        function selectUrgency(urgency) {
+            AppState.tempSearch.urgency = urgency;
+            
+            // Actualizar UI
+            document.querySelectorAll('.urgency-btn').forEach(el => {
+                if (el.dataset.urgency === urgency) {
+                    el.style.borderColor = 'var(--primary-500)';
+                    el.style.backgroundColor = 'var(--primary-50)';
+                } else {
+                    el.style.borderColor = 'var(--gray-200)';
+                    el.style.backgroundColor = 'white';
+                }
+            });
+            
+            updateSearchSummary();
+        }
+        
+        function updateSearchSummary() {
+            // Actualizar campos del formulario
+            document.getElementById('search-title').value = AppState.tempSearch.title;
+            document.getElementById('search-region').value = AppState.tempSearch.region;
+            document.getElementById('search-city').value = AppState.tempSearch.city;
+            document.getElementById('search-commune').value = AppState.tempSearch.commune;
+            document.getElementById('search-description').value = AppState.tempSearch.description;
+            document.getElementById('search-bedrooms').value = AppState.tempSearch.bedrooms;
+            document.getElementById('search-bathrooms').value = AppState.tempSearch.bathrooms;
+            document.getElementById('search-size').value = AppState.tempSearch.size;
+            document.getElementById('search-budget-min').value = AppState.tempSearch.budgetMin;
+            document.getElementById('search-budget-max').value = AppState.tempSearch.budgetMax;
+            document.getElementById('search-max-proposals').value = AppState.tempSearch.maxProposals;
+            document.getElementById('search-privacy').value = AppState.tempSearch.privacyLevel;
+            document.getElementById('search-allow-contact').checked = AppState.tempSearch.allowDirectContact;
+            
+            // Actualizar resumen
+            document.getElementById('summary-type').textContent = 
+                AppState.tempSearch.type === 'APARTMENT' ? 'Departamento' :
+                AppState.tempSearch.type === 'HOUSE' ? 'Casa' :
+                AppState.tempSearch.type === 'LAND' ? 'Terreno' : 'Local Comercial';
+            
+            document.getElementById('summary-location').textContent = 
+                `${AppState.tempSearch.city}${AppState.tempSearch.commune ? ', ' + AppState.tempSearch.commune : ''}, ${AppState.tempSearch.region}`;
+            
+            document.getElementById('summary-budget').textContent = 
+                `${AppState.tempSearch.budgetMin ? '$' + parseInt(AppState.tempSearch.budgetMin).toLocaleString() + ' - ' : ''}$${parseInt(AppState.tempSearch.budgetMax || 0).toLocaleString()}`;
+            
+            document.getElementById('summary-urgency').textContent = 
+                AppState.tempSearch.urgency === 'LOW' ? 'Baja' :
+                AppState.tempSearch.urgency === 'MEDIUM' ? 'Media' :
+                AppState.tempSearch.urgency === 'HIGH' ? 'Alta' : 'Urgente';
+            
+            document.getElementById('summary-features').textContent = 
+                `${AppState.tempSearch.features.length} seleccionadas`;
+        }
+        
+        function publishSearch() {
+            // Recoger datos finales del formulario
+            AppState.tempSearch.title = document.getElementById('search-title').value;
+            AppState.tempSearch.region = document.getElementById('search-region').value;
+            AppState.tempSearch.city = document.getElementById('search-city').value;
+            AppState.tempSearch.commune = document.getElementById('search-commune').value;
+            AppState.tempSearch.description = document.getElementById('search-description').value;
+            AppState.tempSearch.bedrooms = document.getElementById('search-bedrooms').value;
+            AppState.tempSearch.bathrooms = document.getElementById('search-bathrooms').value;
+            AppState.tempSearch.size = document.getElementById('search-size').value;
+            AppState.tempSearch.budgetMin = document.getElementById('search-budget-min').value;
+            AppState.tempSearch.budgetMax = document.getElementById('search-budget-max').value;
+            AppState.tempSearch.maxProposals = document.getElementById('search-max-proposals').value;
+            AppState.tempSearch.privacyLevel = document.getElementById('search-privacy').value;
+            AppState.tempSearch.allowDirectContact = document.getElementById('search-allow-contact').checked;
+            
+            // Validar
+            if (!AppState.tempSearch.title || !AppState.tempSearch.city || !AppState.tempSearch.region || !AppState.tempSearch.budgetMax) {
+                showToast('Por favor completa todos los campos obligatorios', 'error');
+                return;
+            }
+            
+            // Crear búsqueda
+            const newSearch = {
+                id: Date.now().toString(),
+                buyerId: AppState.currentUser.id,
+                ...AppState.tempSearch,
+                status: 'ACTIVE',
+                proposalsReceived: 0,
+                createdAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 días
+            };
+            
+            AppState.searches.push(newSearch);
+            saveToLocalStorage();
+            
+            showToast('¡Búsqueda publicada exitosamente!', 'success');
+            showScreen('dashboard-buyer');
+        }
+
+        // ========== CHAT ==========
+        function loadConversations() {
+            const container = document.getElementById('conversations-list');
+            const userConversations = AppState.conversations.filter(c => 
+                c.buyerId === AppState.currentUser.id || c.sellerId === AppState.currentUser.id
+            );
+            
+            if (userConversations.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+                        <p>No tienes conversaciones activas</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = userConversations.map(conv => {
+                const otherUserId = AppState.currentUser.id === conv.buyerId ? conv.sellerId : conv.buyerId;
+                const otherUser = AppState.users.find(u => u.id === otherUserId);
+                const search = AppState.searches.find(s => s.id === conv.searchId);
+                const lastMessage = AppState.messages
+                    .filter(m => m.conversationId === conv.id)
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+                
+                return `
+                    <div class="conversation-item" onclick="openConversation('${conv.id}')" 
+                         style="padding: 1rem; border-bottom: 1px solid var(--gray-200); cursor: pointer; transition: background 0.2s;"
+                         onmouseover="this.style.background='var(--gray-50)'" 
+                         onmouseout="this.style.background='white'">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <div style="font-weight: 500; margin-bottom: 0.25rem;">
+                                    ${otherUser?.profile?.businessName || otherUser?.email || 'Usuario'}
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.25rem;">
+                                    ${search?.title || 'Búsqueda'}
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--gray-500);">
+                                    ${lastMessage ? (lastMessage.content.substring(0, 50) + (lastMessage.content.length > 50 ? '...' : '')) : 'Sin mensajes'}
+                                </div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">
+                                ${lastMessage ? new Date(lastMessage.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function openConversation(conversationId) {
+            const conversation = AppState.conversations.find(c => c.id === conversationId);
+            if (!conversation) return;
+            
+            const otherUserId = AppState.currentUser.id === conversation.buyerId ? conversation.sellerId : conversation.buyerId;
+            const otherUser = AppState.users.find(u => u.id === otherUserId);
+            const search = AppState.searches.find(s => s.id === conversation.searchId);
+            
+            // Actualizar encabezado
+            document.getElementById('chat-with').textContent = 
+                `Chat: ${otherUser?.profile?.businessName || otherUser?.email || 'Usuario'} - ${search?.title || 'Búsqueda'}`;
+            
+            // Mostrar mensajes
+            const messagesContainer = document.getElementById('messages-list');
+            const conversationMessages = AppState.messages
+                .filter(m => m.conversationId === conversationId)
+                .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            
+            messagesContainer.innerHTML = conversationMessages.map(msg => {
+                const isCurrentUser = msg.senderId === AppState.currentUser.id;
+                
+                return `
+                    <div style="display: flex; ${isCurrentUser ? 'justify-content: flex-end' : 'justify-content: flex-start'}; margin-bottom: 0.75rem;">
+                        <div style="max-width: 70%;">
+                            <div style="background: ${isCurrentUser ? 'var(--primary-600)' : 'var(--gray-100)'}; 
+                                 color: ${isCurrentUser ? 'white' : 'var(--gray-900)'};
+                                 padding: 0.75rem 1rem; 
+                                 border-radius: 1rem;
+                                 ${isCurrentUser ? 'border-bottom-right-radius: 0.25rem;' : 'border-bottom-left-radius: 0.25rem;'}">
+                                ${msg.content}
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; text-align: ${isCurrentUser ? 'right' : 'left'};">
+                                ${new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Mostrar input
+            document.getElementById('message-input-container').style.display = 'block';
+            document.getElementById('message-input').focus();
+            
+            // Guardar conversación activa
+            window.activeConversationId = conversationId;
+            
+            // Scroll al final
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message || !window.activeConversationId) return;
+            
+            const conversation = AppState.conversations.find(c => c.id === window.activeConversationId);
+            if (!conversation) return;
+            
+            // Crear mensaje
+            const newMessage = {
+                id: Date.now().toString(),
+                conversationId: window.activeConversationId,
+                senderId: AppState.currentUser.id,
+                receiverId: AppState.currentUser.id === conversation.buyerId ? conversation.sellerId : conversation.buyerId,
+                content: message,
+                createdAt: new Date().toISOString(),
+                readAt: null
+            };
+            
+            AppState.messages.push(newMessage);
+            saveToLocalStorage();
+            
+            // Limpiar input
+            input.value = '';
+            
+            // Actualizar chat
+            openConversation(window.activeConversationId);
+        }
+
+        // ========== FUNCIONES AUXILIARES ==========
+        function viewSearch(searchId) {
+            showToast(`Viendo búsqueda ${searchId} - Funcionalidad en desarrollo`, 'info');
+        }
+        
+        function viewProposal(proposalId) {
+            showToast(`Viendo propuesta ${proposalId} - Funcionalidad en desarrollo`, 'info');
+        }
+        
+        function sendProposalToSearch(searchId) {
+            if (!AppState.currentUser || AppState.currentUser.userType !== 'SELLER') {
+                showToast('Solo los vendedores pueden enviar propuestas', 'error');
+                return;
+            }
+            
+            // Verificar límite diario
+            const profile = AppState.currentUser.profile;
+            if (profile.proposalsSentToday >= profile.dailyProposalLimit) {
+                showToast('Has alcanzado tu límite diario de propuestas', 'error');
+                return;
+            }
+            
+            const message = prompt('Escribe tu propuesta al comprador:');
+            if (!message) return;
+            
+            // Crear propuesta
+            const newProposal = {
+                id: Date.now().toString(),
+                searchId: searchId,
+                sellerId: AppState.currentUser.id,
+                message: message,
+                propertyDetails: {
+                    address: 'Dirección del inmueble',
+                    price: 0,
+                    size: 0,
+                    description: 'Propiedad disponible'
+                },
+                attachments: [],
+                status: 'PENDING',
+                viewedByBuyer: false,
+                buyerResponded: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            AppState.proposals.push(newProposal);
+            
+            // Actualizar contador del vendedor
+            profile.proposalsSentToday++;
+            
+            // Actualizar contador de búsqueda
+            const search = AppState.searches.find(s => s.id === searchId);
+            if (search) {
+                search.proposalsReceived++;
+                if (search.proposalsReceived === 1) {
+                    search.status = 'IN_CONVERSATION';
+                    
+                    // Crear conversación automática
+                    const newConversation = {
+                        id: Date.now().toString(),
+                        searchId: searchId,
+                        buyerId: search.buyerId,
+                        sellerId: AppState.currentUser.id,
+                        isActive: true,
+                        buyerApprovedContact: false,
+                        sellerApprovedContact: false,
+                        createdAt: new Date().toISOString(),
+                        lastMessageAt: new Date().toISOString()
+                    };
+                    
+                    AppState.conversations.push(newConversation);
+                }
+            }
+            
+            saveToLocalStorage();
+            showToast('¡Propuesta enviada exitosamente!', 'success');
+            loadSellerDashboard();
+        }
+
+        // ========== INICIALIZACIÓN ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos guardados
+            loadFromLocalStorage();
+            
+            // Inicializar eventos de formularios
+            document.getElementById('search-title')?.addEventListener('input', function(e) {
+                AppState.tempSearch.title = e.target.value;
+            });
+            
+            document.getElementById('search-region')?.addEventListener('change', function(e) {
+                AppState.tempSearch.region = e.target.value;
+                updateSearchSummary();
+            });
+            
+            document.getElementById('search-city')?.addEventListener('input', function(e) {
+                AppState.tempSearch.city = e.target.value;
+                updateSearchSummary();
+            });
+            
+            // Permitir enviar mensajes con Enter
+            document.getElementById('message-input')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Estilos CSS dinámicos
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+                .error-message {
+                    background: #fee2e2;
+                    border: 1px solid #fecaca;
+                    color: #991b1b;
+                    padding: 0.75rem 1rem;
+                    border-radius: 0.375rem;
+                    margin-bottom: 1rem;
+                }
+                .success-message {
+                    background: #d1fae5;
+                    border: 1px solid #a7f3d0;
+                    color: #065f46;
+                    padding: 0.75rem 1rem;
+                    border-radius: 0.375rem;
+                    margin-bottom: 1rem;
+                }
+                .register-step { display: none; }
+                .search-step { display: none; }
+                .conversation-item:hover { background: var(--gray-50); }
+            `;
+            document.head.appendChild(style);
+            
+            // Mostrar pantalla inicial
+            if (AppState.currentUser) {
+                if (AppState.currentUser.userType === 'BUYER') {
+                    showScreen('dashboard-buyer');
+                } else {
+                    showScreen('dashboard-seller');
+                }
+            } else {
+                showScreen('landing');
+            }
+        });
+    </script>
 </body>
 </html>
