@@ -1013,6 +1013,67 @@
             gap: 20px;
         }
 
+        /* NUEVOS ESTILOS PARA FILTROS INMOBILIARIOS */
+        .filter-category {
+            background: var(--primary-light);
+            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .filter-category-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .characteristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .characteristic-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--gray-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .characteristic-checkbox:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .characteristic-checkbox input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .price-range {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .price-range input {
+            flex: 1;
+        }
+
+        .price-range-separator {
+            color: var(--gray);
+            font-weight: 600;
+        }
+
         /* PANEL ADMIN */
         .admin-section {
             margin-bottom: 50px;
@@ -1190,6 +1251,10 @@
             .detalle-sidebar {
                 width: 400px;
             }
+            
+            .characteristics-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
         }
 
         @media (min-width: 992px) {
@@ -1199,6 +1264,10 @@
             
             .detalle-sidebar {
                 width: 450px;
+            }
+            
+            .filters-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -1484,13 +1553,14 @@
                 <div class="filters-grid">
                     <div>
                         <label>Tipo</label>
-                        <select id="filter-tipo" class="form-control">
+                        <select id="filter-tipo" class="form-control" onchange="toggleFiltrosEspecificos()">
                             <option value="">Todos los tipos</option>
-                            <option value="auto">Auto</option>
-                            <option value="inmueble">Inmueble</option>
-                            <option value="tecnologia">Tecnología</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="otros">Otros</option>
+                            <option value="inmueble">🏠 Inmueble</option>
+                            <option value="auto">🚗 Automotor</option>
+                            <option value="motos">🏍️ Motos</option>
+                            <option value="tecnologia">💻 Tecnología</option>
+                            <option value="servicios">🔧 Servicios</option>
+                            <option value="otros">📦 Otros</option>
                         </select>
                     </div>
                     <div>
@@ -1518,6 +1588,139 @@
                         </select>
                     </div>
                 </div>
+                
+                <!-- FILTROS ESPECÍFICOS PARA INMUEBLES -->
+                <div id="inmueble-filters" class="hidden">
+                    <div class="filter-category">
+                        <div class="filter-category-title">
+                            <span>🏢</span>
+                            <span>Filtros Específicos para Inmuebles</span>
+                        </div>
+                        <div class="filters-grid">
+                            <div>
+                                <label>Operación</label>
+                                <select id="filter-inmueble-operacion" class="form-control">
+                                    <option value="">Todas las operaciones</option>
+                                    <option value="venta">Venta</option>
+                                    <option value="arriendo">Arriendo</option>
+                                    <option value="arriendo_temporal">Arriendo Temporal</option>
+                                    <option value="proyecto_nuevo">Proyecto Nuevo</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Tipo de Inmueble</label>
+                                <select id="filter-inmueble-tipo" class="form-control">
+                                    <option value="">Todos los tipos</option>
+                                    <option value="departamento">Departamento</option>
+                                    <option value="casa">Casa</option>
+                                    <option value="oficina">Oficina</option>
+                                    <option value="local_comercial">Local Comercial</option>
+                                    <option value="terreno">Terreno</option>
+                                    <option value="parcela">Parcela</option>
+                                    <option value="bodega">Bodega</option>
+                                    <option value="estacionamiento">Estacionamiento</option>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="agricola">Agrícola</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Región</label>
+                                <select id="filter-inmueble-region" class="form-control" onchange="cargarComunasFiltro()">
+                                    <option value="">Todas las regiones</option>
+                                    <!-- Se llena dinámicamente -->
+                                </select>
+                            </div>
+                            <div>
+                                <label>Comuna</label>
+                                <select id="filter-inmueble-comuna" class="form-control">
+                                    <option value="">Todas las comunas</option>
+                                    <!-- Se llena dinámicamente -->
+                                </select>
+                            </div>
+                            <div>
+                                <label>Dormitorios</label>
+                                <select id="filter-inmueble-dormitorios" class="form-control">
+                                    <option value="">Cualquier cantidad</option>
+                                    <option value="0">Studio</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5 o más</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Baños</label>
+                                <select id="filter-inmueble-banos" class="form-control">
+                                    <option value="">Cualquier cantidad</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4 o más</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Superficie útil (m²)</label>
+                                <div class="price-range">
+                                    <input type="number" id="filter-inmueble-sup-util-min" class="form-control" placeholder="Mín">
+                                    <span class="price-range-separator">a</span>
+                                    <input type="number" id="filter-inmueble-sup-util-max" class="form-control" placeholder="Máx">
+                                </div>
+                            </div>
+                            <div>
+                                <label>Superficie total (m²)</label>
+                                <div class="price-range">
+                                    <input type="number" id="filter-inmueble-sup-total-min" class="form-control" placeholder="Mín">
+                                    <span class="price-range-separator">a</span>
+                                    <input type="number" id="filter-inmueble-sup-total-max" class="form-control" placeholder="Máx">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- CARACTERÍSTICAS -->
+                        <div class="filter-category" style="margin-top: 20px;">
+                            <div class="filter-category-title">
+                                <span>⭐</span>
+                                <span>Características</span>
+                            </div>
+                            <div class="characteristics-grid">
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-estacionamiento" value="estacionamiento">
+                                    <span>Estacionamiento</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-bodega" value="bodega">
+                                    <span>Bodega</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-terraza" value="terraza">
+                                    <span>Terraza</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-piscina" value="piscina">
+                                    <span>Piscina</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-quincho" value="quincho">
+                                    <span>Quincho</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-areas_verdes" value="areas_verdes">
+                                    <span>Áreas Verdes</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-gimnasio" value="gimnasio">
+                                    <span>Gimnasio</span>
+                                </label>
+                                <label class="characteristic-checkbox">
+                                    <input type="checkbox" id="filter-inmueble-seguridad" value="seguridad">
+                                    <span>Seguridad 24/7</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div style="text-align: right; margin-top: 20px;">
                     <button class="btn btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
                 </div>
@@ -1569,11 +1772,12 @@
                         <label>Tipo de aviso</label>
                         <select id="filter-propuesta-tipo" class="form-control">
                             <option value="">Todos los tipos</option>
-                            <option value="auto">Auto</option>
-                            <option value="inmueble">Inmueble</option>
-                            <option value="tecnologia">Tecnología</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="otros">Otros</option>
+                            <option value="inmueble">🏠 Inmueble</option>
+                            <option value="auto">🚗 Automotor</option>
+                            <option value="motos">🏍️ Motos</option>
+                            <option value="tecnologia">💻 Tecnología</option>
+                            <option value="servicios">🔧 Servicios</option>
+                            <option value="otros">📦 Otros</option>
                         </select>
                     </div>
                     <div>
@@ -1782,39 +1986,181 @@
                 
                 <div class="form-group">
                     <label for="aviso-tipo">Tipo *</label>
-                    <select id="aviso-tipo" class="form-control" required>
+                    <select id="aviso-tipo" class="form-control" required onchange="toggleCamposEspecificos()">
                         <option value="">Selecciona un tipo</option>
-                        <option value="auto">Auto</option>
-                        <option value="inmueble">Inmueble</option>
-                        <option value="tecnologia">Tecnología</option>
-                        <option value="servicios">Servicios</option>
-                        <option value="otros">Otros</option>
+                        <option value="inmueble">🏠 Inmueble</option>
+                        <option value="auto">🚗 Automotor</option>
+                        <option value="motos">🏍️ Motos</option>
+                        <option value="tecnologia">💻 Tecnología</option>
+                        <option value="servicios">🔧 Servicios</option>
+                        <option value="otros">📦 Otros</option>
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="aviso-descripcion">Descripción detallada *</label>
-                    <textarea id="aviso-descripcion" class="form-control form-textarea" placeholder="Describe exactamente lo que buscas, características importantes, preferencias, etc." required></textarea>
+                <!-- CAMPOS ESPECÍFICOS PARA INMUEBLES -->
+                <div id="campos-inmueble" class="hidden">
+                    <div class="form-group">
+                        <label for="aviso-operacion">Operación *</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="operacion" value="venta" checked>
+                                <div class="radio-custom"></div>
+                                <span>Venta</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="operacion" value="arriendo">
+                                <div class="radio-custom"></div>
+                                <span>Arriendo</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="operacion" value="arriendo_temporal">
+                                <div class="radio-custom"></div>
+                                <span>Arriendo Temporal</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="operacion" value="proyecto_nuevo">
+                                <div class="radio-custom"></div>
+                                <span>Proyecto Nuevo</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-tipo-inmueble">Tipo de Inmueble *</label>
+                        <select id="aviso-tipo-inmueble" class="form-control">
+                            <option value="departamento">Departamento</option>
+                            <option value="casa">Casa</option>
+                            <option value="oficina">Oficina</option>
+                            <option value="local_comercial">Local Comercial</option>
+                            <option value="terreno">Terreno</option>
+                            <option value="parcela">Parcela</option>
+                            <option value="bodega">Bodega</option>
+                            <option value="estacionamiento">Estacionamiento</option>
+                            <option value="industrial">Industrial</option>
+                            <option value="agricola">Agrícola</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-region">Región *</label>
+                        <select id="aviso-region" class="form-control" onchange="cargarComunas()">
+                            <option value="">Selecciona una región</option>
+                            <!-- Se llena dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-comuna">Comuna *</label>
+                        <select id="aviso-comuna" class="form-control" onchange="cargarBarrios()">
+                            <option value="">Selecciona una comuna</option>
+                            <!-- Se llena dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-barrio">Barrio (opcional)</label>
+                        <select id="aviso-barrio" class="form-control">
+                            <option value="">Selecciona un barrio</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-dormitorios">Dormitorios *</label>
+                        <select id="aviso-dormitorios" class="form-control">
+                            <option value="0">Studio</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5 o más</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-banos">Baños *</label>
+                        <select id="aviso-banos" class="form-control">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4 o más</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-superficie-util">Superficie útil (m²) *</label>
+                        <input type="number" id="aviso-superficie-util" class="form-control" min="0" step="1" placeholder="Ej: 80">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-superficie-total">Superficie total (m²) *</label>
+                        <input type="number" id="aviso-superficie-total" class="form-control" min="0" step="1" placeholder="Ej: 100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Características (opcional)</label>
+                        <div class="characteristics-grid">
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="estacionamiento">
+                                <span>Estacionamiento</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="bodega">
+                                <span>Bodega</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="terraza">
+                                <span>Terraza</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="piscina">
+                                <span>Piscina</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="quincho">
+                                <span>Quincho</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="areas_verdes">
+                                <span>Áreas Verdes</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="gimnasio">
+                                <span>Gimnasio</span>
+                            </label>
+                            <label class="characteristic-checkbox">
+                                <input type="checkbox" name="aviso-caracteristicas" value="seguridad">
+                                <span>Seguridad 24/7</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="aviso-presupuesto">Presupuesto máximo (USD) *</label>
-                    <input type="number" id="aviso-presupuesto" class="form-control" min="0" step="100" placeholder="Ej: 50000" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aviso-zona">Zona o ubicación *</label>
-                    <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Centro ciudad, Zona norte, Online, etc." required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aviso-urgencia">Nivel de urgencia *</label>
-                    <select id="aviso-urgencia" class="form-control" required>
-                        <option value="baja">Baja (1-3 meses)</option>
-                        <option value="media" selected>Media (2-4 semanas)</option>
-                        <option value="alta">Alta (1 semana)</option>
-                        <option value="inmediata">Inmediata (1-3 días)</option>
-                    </select>
+                <!-- CAMPOS GENERALES (para otros tipos) -->
+                <div id="campos-generales">
+                    <div class="form-group">
+                        <label for="aviso-descripcion">Descripción detallada *</label>
+                        <textarea id="aviso-descripcion" class="form-control form-textarea" placeholder="Describe exactamente lo que buscas, características importantes, preferencias, etc." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-presupuesto">Presupuesto máximo (USD) *</label>
+                        <input type="number" id="aviso-presupuesto" class="form-control" min="0" step="100" placeholder="Ej: 50000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-zona">Zona o ubicación *</label>
+                        <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Centro ciudad, Zona norte, Online, etc.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-urgencia">Nivel de urgencia *</label>
+                        <select id="aviso-urgencia" class="form-control" required>
+                            <option value="baja">Baja (1-3 meses)</option>
+                            <option value="media" selected>Media (2-4 semanas)</option>
+                            <option value="alta">Alta (1 semana)</option>
+                            <option value="inmediata">Inmediata (1-3 días)</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div style="display: flex; gap: 15px; margin-top: 30px;">
@@ -1941,6 +2287,173 @@
         let unreadMessages = 0;
 
         // ============================================
+        // DATOS GEOGRÁFICOS DE CHILE
+        // ============================================
+        const chileData = {
+            regiones: [
+                { id: 1, nombre: 'Arica y Parinacota' },
+                { id: 2, nombre: 'Tarapacá' },
+                { id: 3, nombre: 'Antofagasta' },
+                { id: 4, nombre: 'Atacama' },
+                { id: 5, nombre: 'Coquimbo' },
+                { id: 6, nombre: 'Valparaíso' },
+                { id: 7, nombre: 'Metropolitana de Santiago' },
+                { id: 8, nombre: 'O\'Higgins' },
+                { id: 9, nombre: 'Maule' },
+                { id: 10, nombre: 'Ñuble' },
+                { id: 11, nombre: 'Biobío' },
+                { id: 12, nombre: 'La Araucanía' },
+                { id: 13, nombre: 'Los Ríos' },
+                { id: 14, nombre: 'Los Lagos' },
+                { id: 15, nombre: 'Aysén' },
+                { id: 16, nombre: 'Magallanes' }
+            ],
+            comunas: {
+                1: ['Arica', 'Camarones', 'Putre', 'General Lagos'],
+                2: ['Iquique', 'Alto Hospicio', 'Pozo Almonte', 'Camiña', 'Colchane', 'Huara', 'Pica'],
+                3: ['Antofagasta', 'Mejillones', 'Sierra Gorda', 'Taltal', 'Calama', 'Ollagüe', 'San Pedro de Atacama', 'Tocopilla', 'María Elena'],
+                4: ['Copiapó', 'Caldera', 'Tierra Amarilla', 'Chañaral', 'Diego de Almagro', 'Vallenar', 'Alto del Carmen', 'Freirina', 'Huasco'],
+                5: ['La Serena', 'Coquimbo', 'Andacollo', 'La Higuera', 'Paiguano', 'Vicuña', 'Illapel', 'Canela', 'Los Vilos', 'Salamanca', 'Ovalle', 'Combarbalá', 'Monte Patria', 'Punitaqui', 'Río Hurtado'],
+                6: ['Valparaíso', 'Casablanca', 'Concón', 'Juan Fernández', 'Puchuncaví', 'Quintero', 'Viña del Mar', 'Isla de Pascua', 'Los Andes', 'Calle Larga', 'Rinconada', 'San Esteban', 'La Ligua', 'Cabildo', 'Papudo', 'Petorca', 'Zapallar', 'Quillota', 'Calera', 'Hijuelas', 'La Cruz', 'Nogales', 'San Antonio', 'Algarrobo', 'Cartagena', 'El Quisco', 'El Tabo', 'Santo Domingo', 'San Felipe', 'Catemu', 'Llaillay', 'Panquehue', 'Putaendo', 'Santa María', 'Quilpué', 'Limache', 'Olmué', 'Villa Alemana'],
+                7: ['Santiago', 'Cerrillos', 'Cerro Navia', 'Conchalí', 'El Bosque', 'Estación Central', 'Huechuraba', 'Independencia', 'La Cisterna', 'La Florida', 'La Granja', 'La Pintana', 'La Reina', 'Las Condes', 'Lo Barnechea', 'Lo Espejo', 'Lo Prado', 'Macul', 'Maipú', 'Ñuñoa', 'Pedro Aguirre Cerda', 'Peñalolén', 'Providencia', 'Pudahuel', 'Quilicura', 'Quinta Normal', 'Recoleta', 'Renca', 'San Joaquín', 'San Miguel', 'San Ramón', 'Vitacura', 'Puente Alto', 'Pirque', 'San José de Maipo', 'Colina', 'Lampa', 'Tiltil', 'San Bernardo', 'Buin', 'Calera de Tango', 'Paine', 'Melipilla', 'Alhué', 'Curacaví', 'María Pinto', 'San Pedro', 'Talagante', 'El Monte', 'Isla de Maipo', 'Padre Hurtado', 'Peñaflor'],
+                8: ['Rancagua', 'Codegua', 'Coinco', 'Coltauco', 'Doñihue', 'Graneros', 'Las Cabras', 'Machalí', 'Malloa', 'Mostazal', 'Olivar', 'Peumo', 'Pichidegua', 'Quinta de Tilcoco', 'Rengo', 'Requínoa', 'San Vicente', 'Pichilemu', 'La Estrella', 'Litueche', 'Marchihue', 'Navidad', 'San Fernando', 'Chépica', 'Chimbarongo', 'Lolol', 'Nancagua', 'Palmilla', 'Peralillo', 'Placilla', 'Pumanque', 'Santa Cruz'],
+                9: ['Talca', 'Constitución', 'Curepto', 'Empedrado', 'Maule', 'Pelarco', 'Pencahue', 'Río Claro', 'San Clemente', 'San Rafael', 'Cauquenes', 'Chanco', 'Pelluhue', 'Curicó', 'Hualañé', 'Licantén', 'Molina', 'Rauco', 'Romeral', 'Sagrada Familia', 'Teno', 'Vichuquén', 'Linares', 'Colbún', 'Longaví', 'Parral', 'Retiro', 'San Javier', 'Villa Alegre', 'Yerbas Buenas'],
+                10: ['Chillán', 'Bulnes', 'Chillán Viejo', 'El Carmen', 'Pemuco', 'Pinto', 'Quillón', 'San Ignacio', 'Yungay', 'Quirihue', 'Cobquecura', 'Coelemu', 'Ninhue', 'Portezuelo', 'Ránquil', 'Treguaco', 'San Carlos', 'Coihueco', 'Ñiquén', 'San Fabián', 'San Nicolás'],
+                11: ['Concepción', 'Coronel', 'Chiguayante', 'Florida', 'Hualqui', 'Lota', 'Penco', 'San Pedro de la Paz', 'Santa Juana', 'Talcahuano', 'Tomé', 'Hualpén', 'Lebu', 'Arauco', 'Cañete', 'Contulmo', 'Curanilahue', 'Los Álamos', 'Tirúa', 'Los Ángeles', 'Antuco', 'Cabrero', 'Laja', 'Mulchén', 'Nacimiento', 'Negrete', 'Quilaco', 'Quilleco', 'San Rosendo', 'Santa Bárbara', 'Tucapel', 'Yumbel', 'Alto Biobío'],
+                12: ['Temuco', 'Carahue', 'Cunco', 'Curarrehue', 'Freire', 'Galvarino', 'Gorbea', 'Lautaro', 'Loncoche', 'Melipeuco', 'Nueva Imperial', 'Padre Las Casas', 'Perquenco', 'Pitrufquén', 'Pucón', 'Saavedra', 'Teodoro Schmidt', 'Toltén', 'Vilcún', 'Villarrica', 'Cholchol', 'Angol', 'Collipulli', 'Curacautín', 'Ercilla', 'Lonquimay', 'Los Sauces', 'Lumaco', 'Purén', 'Renaico', 'Traiguén', 'Victoria'],
+                13: ['Valdivia', 'Corral', 'Lanco', 'Los Lagos', 'Máfil', 'Mariquina', 'Paillaco', 'Panguipulli', 'La Unión', 'Futrono', 'Lago Ranco', 'Río Bueno'],
+                14: ['Puerto Montt', 'Calbuco', 'Cochamó', 'Fresia', 'Frutillar', 'Los Muermos', 'Llanquihue', 'Maullín', 'Puerto Varas', 'Castro', 'Ancud', 'Chonchi', 'Curaco de Vélez', 'Dalcahue', 'Puqueldón', 'Queilén', 'Quellón', 'Quemchi', 'Quinchao', 'Osorno', 'Puerto Octay', 'Purranque', 'Puyehue', 'Río Negro', 'San Juan de la Costa', 'San Pablo', 'Chaitén', 'Futaleufú', 'Hualaihué', 'Palena'],
+                15: ['Coihaique', 'Lago Verde', 'Aysén', 'Cisnes', 'Guaitecas', 'Cochrane', 'O\'Higgins', 'Tortel', 'Chile Chico', 'Río Ibáñez'],
+                16: ['Punta Arenas', 'Laguna Blanca', 'Río Verde', 'San Gregorio', 'Cabo de Hornos', 'Antártica', 'Porvenir', 'Primavera', 'Timaukel', 'Natales', 'Torres del Paine']
+            ],
+            barrios: {
+                'Santiago': ['Centro Histórico', 'Barrio Brasil', 'Barrio Lastarria', 'Barrio Yungay', 'Barrio República', 'Barrio Concha y Toro'],
+                'Providencia': ['Barrio Italia', 'Barrio Bellavista', 'Barrio Suecia', 'Barrio Parque Bustamante', 'Barrio El Aguilucho'],
+                'Las Condes': ['Barrio El Golf', 'Barrio San Damián', 'Barrio Los Dominicos', 'Barrio La Pirámide', 'Barrio Manquehue'],
+                'Ñuñoa': ['Barrio Plaza Ñuñoa', 'Barrio Italia', 'Barrio Irarrázaval', 'Barrio Villa Frei'],
+                'Vitacura': ['Barrio Alonso de Córdova', 'Barrio Sanhattan', 'Barrio El Golf', 'Barrio Santa María'],
+                'Valparaíso': ['Cerro Alegre', 'Cerro Concepción', 'Playa Ancha', 'Cerro Florida', 'Cerro Barón'],
+                'Viña del Mar': ['Reñaca', 'Miramar', 'Agua Santa', 'Forestal', 'Miraflores'],
+                'Concepción': ['Centro', 'Barrio Universitario', 'Barrio Estación', 'Barrio Collao', 'Barrio Laguna Redonda']
+            }
+        };
+
+        // ============================================
+        // FUNCIONES GEOGRÁFICAS
+        // ============================================
+        function cargarRegiones(selectId) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+            
+            select.innerHTML = '<option value="">Selecciona una región</option>';
+            chileData.regiones.forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.nombre;
+                option.textContent = region.nombre;
+                select.appendChild(option);
+            });
+        }
+
+        function cargarComunas(regionSelectId, comunaSelectId) {
+            const regionSelect = document.getElementById(regionSelectId);
+            const comunaSelect = document.getElementById(comunaSelectId);
+            
+            if (!regionSelect || !comunaSelect) return;
+            
+            const regionNombre = regionSelect.value;
+            const region = chileData.regiones.find(r => r.nombre === regionNombre);
+            
+            comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+            
+            if (!region) return;
+            
+            const comunas = chileData.comunas[region.id] || [];
+            comunas.forEach(comuna => {
+                const option = document.createElement('option');
+                option.value = comuna;
+                option.textContent = comuna;
+                comunaSelect.appendChild(option);
+            });
+            
+            // Limpiar barrios
+            const barrioSelect = comunaSelectId === 'aviso-comuna' ? 
+                document.getElementById('aviso-barrio') : 
+                document.getElementById('filter-inmueble-barrio');
+            
+            if (barrioSelect) {
+                barrioSelect.innerHTML = '<option value="">Selecciona un barrio</option>';
+            }
+        }
+
+        function cargarBarrios(comunaSelectId, barrioSelectId) {
+            const comunaSelect = document.getElementById(comunaSelectId);
+            const barrioSelect = document.getElementById(barrioSelectId);
+            
+            if (!comunaSelect || !barrioSelect) return;
+            
+            const comunaNombre = comunaSelect.value;
+            const barrios = chileData.barrios[comunaNombre] || [];
+            
+            barrioSelect.innerHTML = '<option value="">Selecciona un barrio</option>';
+            
+            barrios.forEach(barrio => {
+                const option = document.createElement('option');
+                option.value = barrio;
+                option.textContent = barrio;
+                barrioSelect.appendChild(option);
+            });
+        }
+
+        // ============================================
+        // FUNCIONES DE FORMULARIO DINÁMICO
+        // ============================================
+        function toggleCamposEspecificos() {
+            const tipo = document.getElementById('aviso-tipo').value;
+            const camposInmueble = document.getElementById('campos-inmueble');
+            const camposGenerales = document.getElementById('campos-generales');
+            const zonaInput = document.getElementById('aviso-zona');
+            
+            // Ocultar todos los campos específicos primero
+            camposInmueble.classList.add('hidden');
+            
+            // Mostrar campos según el tipo
+            if (tipo === 'inmueble') {
+                camposInmueble.classList.remove('hidden');
+                
+                // Cambiar placeholder del input zona para inmuebles
+                if (zonaInput) {
+                    zonaInput.placeholder = "Se completará automáticamente con región y comuna";
+                }
+                
+                // Cargar regiones si no están cargadas
+                if (document.getElementById('aviso-region').options.length <= 1) {
+                    cargarRegiones('aviso-region');
+                }
+            } else {
+                // Para otros tipos, mostrar placeholder general
+                if (zonaInput) {
+                    zonaInput.placeholder = "Ej: Centro ciudad, Zona norte, Online, etc.";
+                }
+            }
+        }
+
+        function toggleFiltrosEspecificos() {
+            const tipo = document.getElementById('filter-tipo').value;
+            const filtrosInmueble = document.getElementById('inmueble-filters');
+            
+            if (tipo === 'inmueble') {
+                filtrosInmueble.classList.remove('hidden');
+                
+                // Cargar regiones en el filtro si no están cargadas
+                if (document.getElementById('filter-inmueble-region').options.length <= 1) {
+                    cargarRegiones('filter-inmueble-region');
+                }
+            } else {
+                filtrosInmueble.classList.add('hidden');
+            }
+        }
+
+        // ============================================
         // DATOS INICIALES DE EJEMPLO (MEJORADOS)
         // ============================================
         const initialData = {
@@ -2015,20 +2528,58 @@
                     id: 2, 
                     userId: 1, 
                     tipo: "inmueble", 
-                    titulo: "Apartamento 3 habitaciones cerca de universidad", 
+                    titulo: "Departamento 3 habitaciones cerca de universidad", 
                     descripcion: "Busco apartamento para familia de 4, mínimo 3 habitaciones, 2 baños. Preferiblemente en edificio con áreas verdes y seguridad 24/7.\n\nCaracterísticas deseadas:\n- Mínimo 90m²\n- Cocina integral\n- Parqueadero incluido\n- Aire acondicionado\n- Cerca de transporte público\n- Acepto condominio",
                     presupuesto: 250000, 
-                    zona: "Zona Norte, Sector Universitario", 
+                    zona: "Región Metropolitana, Santiago", 
                     urgencia: "baja", 
                     estado: "negociando",
                     createdAt: new Date(Date.now() - 86400000).toISOString(),
                     updatedAt: new Date().toISOString(),
                     propuestas: [3],
                     vistas: 28,
-                    destacado: false
+                    destacado: false,
+                    // Campos específicos para inmuebles
+                    operacion: "venta",
+                    tipoInmueble: "departamento",
+                    region: "Metropolitana de Santiago",
+                    comuna: "Santiago",
+                    barrio: "Centro Histórico",
+                    dormitorios: 3,
+                    banos: 2,
+                    superficieUtil: 95,
+                    superficieTotal: 110,
+                    caracteristicas: ["estacionamiento", "areas_verdes", "seguridad"]
                 },
                 { 
                     id: 3, 
+                    userId: 1, 
+                    tipo: "inmueble", 
+                    titulo: "Casa con terreno amplio en sector residencial", 
+                    descripcion: "Busco casa con terreno amplio mínimo 300m², 4 dormitorios, 3 baños, para familia numerosa. Preferiblemente con piscina y quincho.\n\nRequisitos:\n- Sector residencial tranquilo\n- Buen acceso a servicios\n- Preferiblemente con jardín\n- Cocina amplia\n- Garage para 2 vehículos",
+                    presupuesto: 450000, 
+                    zona: "Región Metropolitana, Las Condes", 
+                    urgencia: "media", 
+                    estado: "abierto",
+                    createdAt: new Date(Date.now() - 172800000).toISOString(),
+                    updatedAt: new Date(Date.now() - 86400000).toISOString(),
+                    propuestas: [],
+                    vistas: 42,
+                    destacado: true,
+                    // Campos específicos para inmuebles
+                    operacion: "venta",
+                    tipoInmueble: "casa",
+                    region: "Metropolitana de Santiago",
+                    comuna: "Las Condes",
+                    barrio: "Barrio El Golf",
+                    dormitorios: 4,
+                    banos: 3,
+                    superficieUtil: 180,
+                    superficieTotal: 350,
+                    caracteristicas: ["estacionamiento", "piscina", "quincho", "areas_verdes", "seguridad"]
+                },
+                { 
+                    id: 4, 
                     userId: 1, 
                     tipo: "tecnologia", 
                     titulo: "Laptop gamer con RTX 3070 y buen rendimiento", 
@@ -2037,11 +2588,38 @@
                     zona: "Envío nacional", 
                     urgencia: "alta", 
                     estado: "abierto",
-                    createdAt: new Date(Date.now() - 172800000).toISOString(),
-                    updatedAt: new Date(Date.now() - 86400000).toISOString(),
+                    createdAt: new Date(Date.now() - 259200000).toISOString(),
+                    updatedAt: new Date(Date.now() - 172800000).toISOString(),
                     propuestas: [],
                     vistas: 42,
                     destacado: true
+                },
+                { 
+                    id: 5, 
+                    userId: 2, 
+                    tipo: "inmueble", 
+                    titulo: "Oficina en zona céntrica para equipo de 10 personas", 
+                    descripcion: "Necesito oficina para equipo de trabajo, mínimo 5 oficinas individuales, sala de reuniones, recepción. Preferiblemente en edificio corporativo con buena conectividad.\n\nRequisitos:\n- Mínimo 120m²\n- Aire acondicionado central\n- Conexión de fibra óptica\n- Estacionamientos para visitas\n- Cerca de metro/transporte",
+                    presupuesto: 3000, 
+                    zona: "Región Metropolitana, Providencia", 
+                    urgencia: "inmediata", 
+                    estado: "abierto",
+                    createdAt: new Date(Date.now() - 43200000).toISOString(),
+                    updatedAt: new Date(Date.now() - 43200000).toISOString(),
+                    propuestas: [],
+                    vistas: 18,
+                    destacado: false,
+                    // Campos específicos para inmuebles
+                    operacion: "arriendo",
+                    tipoInmueble: "oficina",
+                    region: "Metropolitana de Santiago",
+                    comuna: "Providencia",
+                    barrio: "Barrio Italia",
+                    dormitorios: 5,
+                    banos: 2,
+                    superficieUtil: 125,
+                    superficieTotal: 125,
+                    caracteristicas: ["estacionamiento", "gimnasio", "seguridad"]
                 }
             ],
             propuestas: [
@@ -2149,7 +2727,7 @@
                     userId: 1,
                     type: "propuesta_nueva",
                     title: "Nueva propuesta recibida",
-                    message: "María Vendedora envió una propuesta a tu aviso 'Apartamento 3 habitaciones'",
+                    message: "María Vendedora envió una propuesta a tu aviso 'Departamento 3 habitaciones'",
                     data: { avisoId: 2, propuestaId: 3 },
                     read: false,
                     createdAt: new Date(Date.now() - 3600000).toISOString()
@@ -2177,7 +2755,7 @@
             ],
             nextIds: {
                 users: 5,
-                avisos: 4,
+                avisos: 6,
                 propuestas: 4,
                 chats: 3,
                 notifications: 4
@@ -2515,13 +3093,21 @@
         }
 
         // ============================================
-        // FUNCIONES DE AVISOS
+        // FUNCIONES DE AVISOS (MEJORADAS CON INMUEBLES)
         // ============================================
         function showCreateAvisoModal() {
             if (currentUser?.role !== 'comprador') {
                 showToast('Solo los compradores pueden crear avisos', 'warning');
                 return;
             }
+            
+            // Resetear formulario y campos
+            document.getElementById('create-aviso-form').reset();
+            document.getElementById('campos-inmueble').classList.add('hidden');
+            
+            // Cargar regiones
+            cargarRegiones('aviso-region');
+            
             showModal('create-aviso-modal');
         }
 
@@ -2529,10 +3115,19 @@
             event.preventDefault();
             
             const data = getData();
+            const tipo = document.getElementById('aviso-tipo').value;
+            
+            // Validar tipo
+            if (!tipo) {
+                showToast('Selecciona un tipo de aviso', 'error');
+                return;
+            }
+            
+            // Crear objeto base del aviso
             const nuevoAviso = {
                 id: data.nextIds.avisos++,
                 userId: currentUser.id,
-                tipo: document.getElementById('aviso-tipo').value,
+                tipo: tipo,
                 titulo: document.getElementById('aviso-titulo').value,
                 descripcion: document.getElementById('aviso-descripcion').value,
                 presupuesto: parseInt(document.getElementById('aviso-presupuesto').value),
@@ -2546,6 +3141,33 @@
                 destacado: false
             };
             
+            // Si es inmueble, agregar campos específicos
+            if (tipo === 'inmueble') {
+                const operacion = document.querySelector('input[name="operacion"]:checked');
+                nuevoAviso.operacion = operacion ? operacion.value : 'venta';
+                nuevoAviso.tipoInmueble = document.getElementById('aviso-tipo-inmueble').value;
+                nuevoAviso.region = document.getElementById('aviso-region').value;
+                nuevoAviso.comuna = document.getElementById('aviso-comuna').value;
+                nuevoAviso.barrio = document.getElementById('aviso-barrio').value;
+                nuevoAviso.dormitorios = parseInt(document.getElementById('aviso-dormitorios').value);
+                nuevoAviso.banos = parseInt(document.getElementById('aviso-banos').value);
+                nuevoAviso.superficieUtil = parseInt(document.getElementById('aviso-superficie-util').value);
+                nuevoAviso.superficieTotal = parseInt(document.getElementById('aviso-superficie-total').value);
+                
+                // Características (checkboxes)
+                const caracteristicasCheckboxes = document.querySelectorAll('input[name="aviso-caracteristicas"]:checked');
+                nuevoAviso.caracteristicas = Array.from(caracteristicasCheckboxes).map(cb => cb.value);
+                
+                // Actualizar zona con ubicación jerárquica
+                nuevoAviso.zona = `${nuevoAviso.region}, ${nuevoAviso.comuna}`;
+            }
+            
+            // Validar campos requeridos
+            if (!nuevoAviso.titulo || !nuevoAviso.descripcion || !nuevoAviso.presupuesto || !nuevoAviso.zona) {
+                showToast('Completa todos los campos obligatorios', 'error');
+                return;
+            }
+            
             data.avisos.push(nuevoAviso);
             
             // Actualizar contador del usuario
@@ -2554,28 +3176,31 @@
             
             saveData(data);
             
-            // Crear notificación para vendedores
-            const vendedores = data.users.filter(u => u.role === 'vendedor');
-            vendedores.forEach(vendedor => {
-                data.notifications.push({
-                    id: data.nextIds.notifications++,
-                    userId: vendedor.id,
-                    type: "aviso_nuevo",
-                    title: "Nuevo aviso publicado",
-                    message: `${user.name || user.email} publicó: "${nuevoAviso.titulo}"`,
-                    data: { avisoId: nuevoAviso.id },
-                    read: false,
-                    createdAt: new Date().toISOString()
+            // Crear notificación para vendedores (solo si es inmueble)
+            if (tipo === 'inmueble') {
+                const vendedores = data.users.filter(u => u.role === 'vendedor');
+                vendedores.forEach(vendedor => {
+                    data.notifications.push({
+                        id: data.nextIds.notifications++,
+                        userId: vendedor.id,
+                        type: "aviso_nuevo",
+                        title: "Nuevo aviso inmobiliario publicado",
+                        message: `${user.name || user.email} busca: "${nuevoAviso.titulo}" en ${nuevoAviso.comuna}`,
+                        data: { avisoId: nuevoAviso.id },
+                        read: false,
+                        createdAt: new Date().toISOString()
+                    });
                 });
-            });
-            
-            saveData(data);
+                
+                saveData(data);
+            }
             
             closeModal('create-aviso-modal');
             showToast('¡Aviso publicado exitosamente! Los vendedores ya pueden verlo.', 'success');
             
             // Resetear formulario
             document.getElementById('create-aviso-form').reset();
+            document.getElementById('campos-inmueble').classList.add('hidden');
             
             // Redirigir al detalle del aviso
             currentAvisoId = nuevoAviso.id;
@@ -2598,7 +3223,7 @@
                 avisos = data.avisos.filter(a => a.userId !== currentUser.id && a.estado === 'abierto');
             }
             
-            // Aplicar filtros
+            // Aplicar filtros generales
             const tipo = document.getElementById('filter-tipo')?.value;
             const presupuesto = document.getElementById('filter-presupuesto')?.value;
             const estado = document.getElementById('filter-estado')?.value;
@@ -2609,12 +3234,84 @@
             if (estado) avisos = avisos.filter(a => a.estado === estado);
             if (urgencia) avisos = avisos.filter(a => a.urgencia === urgencia);
             
+            // Aplicar filtros específicos para inmuebles si están activos
+            if (tipo === 'inmueble' && document.getElementById('inmueble-filters') && 
+                !document.getElementById('inmueble-filters').classList.contains('hidden')) {
+                
+                const operacion = document.getElementById('filter-inmueble-operacion')?.value;
+                const tipoInmueble = document.getElementById('filter-inmueble-tipo')?.value;
+                const region = document.getElementById('filter-inmueble-region')?.value;
+                const comuna = document.getElementById('filter-inmueble-comuna')?.value;
+                const dormitorios = document.getElementById('filter-inmueble-dormitorios')?.value;
+                const banos = document.getElementById('filter-inmueble-banos')?.value;
+                const supUtilMin = document.getElementById('filter-inmueble-sup-util-min')?.value;
+                const supUtilMax = document.getElementById('filter-inmueble-sup-util-max')?.value;
+                const supTotalMin = document.getElementById('filter-inmueble-sup-total-min')?.value;
+                const supTotalMax = document.getElementById('filter-inmueble-sup-total-max')?.value;
+                
+                // Filtrar por operación
+                if (operacion) {
+                    avisos = avisos.filter(a => a.operacion === operacion);
+                }
+                
+                // Filtrar por tipo de inmueble
+                if (tipoInmueble) {
+                    avisos = avisos.filter(a => a.tipoInmueble === tipoInmueble);
+                }
+                
+                // Filtrar por región
+                if (region) {
+                    avisos = avisos.filter(a => a.region === region);
+                }
+                
+                // Filtrar por comuna
+                if (comuna) {
+                    avisos = avisos.filter(a => a.comuna === comuna);
+                }
+                
+                // Filtrar por dormitorios
+                if (dormitorios) {
+                    avisos = avisos.filter(a => a.dormitorios === parseInt(dormitorios));
+                }
+                
+                // Filtrar por baños
+                if (banos) {
+                    avisos = avisos.filter(a => a.banos === parseInt(banos));
+                }
+                
+                // Filtrar por superficie útil
+                if (supUtilMin) {
+                    avisos = avisos.filter(a => a.superficieUtil >= parseInt(supUtilMin));
+                }
+                if (supUtilMax) {
+                    avisos = avisos.filter(a => a.superficieUtil <= parseInt(supUtilMax));
+                }
+                
+                // Filtrar por superficie total
+                if (supTotalMin) {
+                    avisos = avisos.filter(a => a.superficieTotal >= parseInt(supTotalMin));
+                }
+                if (supTotalMax) {
+                    avisos = avisos.filter(a => a.superficieTotal <= parseInt(supTotalMax));
+                }
+                
+                // Filtrar por características (checkboxes)
+                const caracteristicasCheckboxes = document.querySelectorAll('#inmueble-filters input[type="checkbox"]:checked');
+                if (caracteristicasCheckboxes.length > 0) {
+                    const caracteristicasSeleccionadas = Array.from(caracteristicasCheckboxes).map(cb => cb.value);
+                    avisos = avisos.filter(a => {
+                        if (!a.caracteristicas || a.caracteristicas.length === 0) return false;
+                        return caracteristicasSeleccionadas.every(car => a.caracteristicas.includes(car));
+                    });
+                }
+            }
+            
             if (avisos.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📝</div>
                         <h3>No hay avisos</h3>
-                        <p>${currentUser.role === 'comprador' ? 'Crea tu primer aviso para empezar' : 'No hay avisos disponibles en este momento'}</p>
+                        <p>${currentUser.role === 'comprador' ? 'Crea tu primer aviso para empezar' : 'No hay avisos disponibles con los filtros actuales'}</p>
                         ${currentUser.role === 'comprador' ? 
                             '<button class="btn btn-primary" onclick="showCreateAvisoModal()">Crear Mi Primer Aviso</button>' : 
                             '<button class="btn btn-outline" onclick="limpiarFiltros()">Limpiar Filtros</button>'
@@ -2633,20 +3330,35 @@
                 
                 // Formatear urgencia
                 const urgenciaText = {
-                    'baja': 'Baja',
-                    'media': 'Media',
-                    'alta': 'Alta',
+                    'baja': '🟢 Baja',
+                    'media': '🟡 Media',
+                    'alta': '🔴 Alta',
                     'inmediata': '🔥 Inmediata'
                 }[aviso.urgencia] || aviso.urgencia;
                 
-                // Formatear tipo
-                const tipoText = {
-                    'auto': '🚗 Auto',
-                    'inmueble': '🏠 Inmueble',
-                    'tecnologia': '💻 Tecnología',
-                    'servicios': '🔧 Servicios',
-                    'otros': '📦 Otros'
-                }[aviso.tipo] || aviso.tipo;
+                // Formatear tipo con icono
+                const tipoIcon = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'motos': '🏍️',
+                    'tecnologia': '💻',
+                    'servicios': '🔧',
+                    'otros': '📦'
+                }[aviso.tipo] || '📋';
+                
+                // Información específica para inmuebles
+                let infoEspecifica = '';
+                if (aviso.tipo === 'inmueble') {
+                    infoEspecifica = `
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0;">
+                            <span class="badge badge-light">${aviso.operacion}</span>
+                            <span class="badge badge-light">${aviso.tipoInmueble}</span>
+                            ${aviso.dormitorios > 0 ? `<span class="badge badge-light">🛏️ ${aviso.dormitorios}</span>` : ''}
+                            <span class="badge badge-light">🚿 ${aviso.banos}</span>
+                            <span class="badge badge-light">📐 ${aviso.superficieUtil}m²</span>
+                        </div>
+                    `;
+                }
                 
                 return `
                     <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})">
@@ -2659,7 +3371,7 @@
                                                       aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
                                         ${aviso.estado}
                                     </span>
-                                    <span class="badge badge-light">${tipoText}</span>
+                                    <span class="badge badge-light">${tipoIcon} ${aviso.tipo}</span>
                                     ${aviso.destacado ? '<span class="badge badge-warning">⭐ Destacado</span>' : ''}
                                 </div>
                             </div>
@@ -2671,8 +3383,10 @@
                             </div>
                         </div>
                         
+                        ${infoEspecifica}
+                        
                         <div class="aviso-meta">
-                            <span><strong>📍 Zona:</strong> ${aviso.zona}</span>
+                            <span><strong>📍 Ubicación:</strong> ${aviso.zona}</span>
                             <span><strong>⏱️ Urgencia:</strong> ${urgenciaText}</span>
                             <span><strong>💬 Propuestas:</strong> ${propuestasCount}</span>
                             ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user.name || user.email}</span>` : ''}
@@ -2744,17 +3458,88 @@
                 'inmediata': '🔥 Inmediata'
             }[aviso.urgencia] || aviso.urgencia;
             
-            // Formatear tipo
-            const tipoText = {
-                'auto': '🚗 Auto',
-                'inmueble': '🏠 Inmueble',
-                'tecnologia': '💻 Tecnología',
-                'servicios': '🔧 Servicios',
-                'otros': '📦 Otros'
-            }[aviso.tipo] || aviso.tipo;
+            // Formatear tipo con icono
+            const tipoIcon = {
+                'inmueble': '🏠',
+                'auto': '🚗',
+                'motos': '🏍️',
+                'tecnologia': '💻',
+                'servicios': '🔧',
+                'otros': '📦'
+            }[aviso.tipo] || '📋';
             
             // Determinar si el usuario actual es el creador del aviso
             const esCreador = aviso.userId === currentUser.id;
+            
+            // Información específica para inmuebles
+            let infoInmueble = '';
+            if (aviso.tipo === 'inmueble') {
+                const operacionText = {
+                    'venta': 'Venta',
+                    'arriendo': 'Arriendo',
+                    'arriendo_temporal': 'Arriendo Temporal',
+                    'proyecto_nuevo': 'Proyecto Nuevo'
+                }[aviso.operacion] || aviso.operacion;
+                
+                infoInmueble = `
+                    <div class="detalle-meta-grid">
+                        <div class="meta-card">
+                            <div class="meta-label">Operación</div>
+                            <div class="meta-value">${operacionText}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">Tipo de Inmueble</div>
+                            <div class="meta-value">${aviso.tipoInmueble}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">Ubicación</div>
+                            <div class="meta-value">${aviso.region}, ${aviso.comuna}</div>
+                        </div>
+                        ${aviso.barrio ? `
+                        <div class="meta-card">
+                            <div class="meta-label">Barrio</div>
+                            <div class="meta-value">${aviso.barrio}</div>
+                        </div>
+                        ` : ''}
+                        <div class="meta-card">
+                            <div class="meta-label">Dormitorios</div>
+                            <div class="meta-value">${aviso.dormitorios === 0 ? 'Studio' : aviso.dormitorios}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">Baños</div>
+                            <div class="meta-value">${aviso.banos}</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">Superficie útil</div>
+                            <div class="meta-value">${aviso.superficieUtil} m²</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-label">Superficie total</div>
+                            <div class="meta-value">${aviso.superficieTotal} m²</div>
+                        </div>
+                        ${aviso.caracteristicas && aviso.caracteristicas.length > 0 ? `
+                        <div class="meta-card" style="grid-column: span 2;">
+                            <div class="meta-label">Características</div>
+                            <div class="meta-value">
+                                ${aviso.caracteristicas.map(c => {
+                                    const icon = {
+                                        'estacionamiento': '🚗',
+                                        'bodega': '📦',
+                                        'terraza': '🌿',
+                                        'piscina': '🏊',
+                                        'quincho': '🍖',
+                                        'areas_verdes': '🌳',
+                                        'gimnasio': '💪',
+                                        'seguridad': '🔒'
+                                    }[c] || '✅';
+                                    return `<span class="badge badge-light" style="margin-right: 5px;">${icon} ${c}</span>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
             
             container.innerHTML = `
                 <div class="detalle-info">
@@ -2768,7 +3553,7 @@
                                                       aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
                                         ${aviso.estado.toUpperCase()}
                                     </span>
-                                    <span class="badge badge-info">${tipoText}</span>
+                                    <span class="badge badge-info">${tipoIcon} ${aviso.tipo}</span>
                                     <span class="badge badge-light">${urgenciaText}</span>
                                     ${aviso.destacado ? '<span class="badge badge-warning">⭐ Destacado</span>' : ''}
                                     <span class="badge badge-light">👁️ ${aviso.vistas || 0} vistas</span>
@@ -2782,24 +3567,7 @@
                             </div>
                         </div>
                         
-                        <div class="detalle-meta-grid">
-                            <div class="meta-card">
-                                <div class="meta-label">Publicado por</div>
-                                <div class="meta-value">${user.name || user.email}</div>
-                            </div>
-                            <div class="meta-card">
-                                <div class="meta-label">Fecha de publicación</div>
-                                <div class="meta-value">${new Date(aviso.createdAt).toLocaleDateString()}</div>
-                            </div>
-                            <div class="meta-card">
-                                <div class="meta-label">Última actualización</div>
-                                <div class="meta-value">${new Date(aviso.updatedAt).toLocaleDateString()}</div>
-                            </div>
-                            <div class="meta-card">
-                                <div class="meta-label">Zona/Ubicación</div>
-                                <div class="meta-value">${aviso.zona}</div>
-                            </div>
-                        </div>
+                        ${infoInmueble}
                         
                         <div class="detalle-description">
                             ${aviso.descripcion.replace(/\n/g, '<br>')}
@@ -3068,6 +3836,68 @@
         }
 
         // ============================================
+        // FUNCIONES DE FILTROS
+        // ============================================
+        function toggleFilters() {
+            const filters = document.getElementById('filters-container');
+            filters.classList.toggle('hidden');
+        }
+
+        function togglePropuestasFilters() {
+            const filters = document.getElementById('propuestas-filters');
+            filters.classList.toggle('hidden');
+        }
+
+        function aplicarFiltros() {
+            showToast('Filtros aplicados correctamente', 'success');
+            loadAvisos();
+        }
+
+        function aplicarPropuestasFiltros() {
+            showToast('Filtros aplicados correctamente', 'success');
+            loadPropuestas();
+        }
+
+        function limpiarFiltros() {
+            // Resetear todos los filtros
+            document.getElementById('filter-tipo').value = '';
+            document.getElementById('filter-presupuesto').value = '';
+            document.getElementById('filter-estado').value = '';
+            document.getElementById('filter-urgencia').value = '';
+            
+            // Limpiar filtros específicos de inmuebles
+            const inmuebleFilters = document.getElementById('inmueble-filters');
+            if (inmuebleFilters) {
+                inmuebleFilters.classList.add('hidden');
+                document.getElementById('filter-inmueble-operacion').value = '';
+                document.getElementById('filter-inmueble-tipo').value = '';
+                document.getElementById('filter-inmueble-region').value = '';
+                document.getElementById('filter-inmueble-comuna').value = '';
+                document.getElementById('filter-inmueble-dormitorios').value = '';
+                document.getElementById('filter-inmueble-banos').value = '';
+                document.getElementById('filter-inmueble-sup-util-min').value = '';
+                document.getElementById('filter-inmueble-sup-util-max').value = '';
+                document.getElementById('filter-inmueble-sup-total-min').value = '';
+                document.getElementById('filter-inmueble-sup-total-max').value = '';
+                
+                // Desmarcar checkboxes de características
+                const checkboxes = document.querySelectorAll('#inmueble-filters input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+            }
+            
+            showToast('Filtros limpiados', 'info');
+            loadAvisos();
+        }
+
+        function limpiarPropuestasFiltros() {
+            document.getElementById('filter-propuesta-estado').value = '';
+            document.getElementById('filter-propuesta-tipo').value = '';
+            document.getElementById('filter-propuesta-orden').value = 'fecha';
+            showToast('Filtros limpiados', 'info');
+            loadPropuestas();
+        }
+
+        // ============================================
         // FUNCIONES DE PROPUESTAS
         // ============================================
         function mostrarEnviarPropuesta(avisoId) {
@@ -3286,6 +4116,16 @@
                 
                 if (!aviso || !otroUsuario) return '';
                 
+                // Icono según tipo
+                const tipoIcon = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'motos': '🏍️',
+                    'tecnologia': '💻',
+                    'servicios': '🔧',
+                    'otros': '📦'
+                }[aviso.tipo] || '📋';
+                
                 return `
                     <div class="propuesta-card" onclick="verPropuestaDetalle(${propuesta.id}, ${aviso.id})">
                         <div class="propuesta-header">
@@ -3298,7 +4138,7 @@
                                         ${propuesta.estado}
                                     </span>
                                     <span class="badge badge-light">
-                                        ${currentUser.role === 'comprador' ? 'De:' : 'Para:'} ${otroUsuario.name || otroUsuario.email}
+                                        ${tipoIcon} ${aviso.tipo}
                                     </span>
                                 </div>
                             </div>
@@ -3347,7 +4187,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE CHAT
+        // FUNCIONES DE CHAT (MANTENIDAS)
         // ============================================
         function abrirChat(chatId, avisoId) {
             const data = getData();
@@ -3576,6 +4416,16 @@
                 
                 if (!otroUsuario || !aviso) return '';
                 
+                // Icono según tipo
+                const tipoIcon = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'motos': '🏍️',
+                    'tecnologia': '💻',
+                    'servicios': '🔧',
+                    'otros': '📦'
+                }[aviso.tipo] || '📋';
+                
                 return `
                     <div class="card" style="cursor: pointer;" onclick="abrirChat(${chat.id}, ${aviso.id})">
                         <div style="display: flex; align-items: center; gap: 20px;">
@@ -3589,7 +4439,7 @@
                                             ${otroUsuario.name || otroUsuario.email}
                                         </div>
                                         <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 8px;">
-                                            ${aviso.titulo.substring(0, 50)}...
+                                            ${tipoIcon} ${aviso.titulo.substring(0, 50)}...
                                         </div>
                                         <div style="font-size: 0.95rem; color: var(--dark);">
                                             ${chat.lastMessage.substring(0, 80)}...
@@ -3967,25 +4817,38 @@
                 const avisosContainer = document.getElementById('dashboard-avisos');
                 const avisosRecientes = misAvisos.slice(0, 4);
                 
-                avisosContainer.innerHTML = avisosRecientes.length > 0 ? avisosRecientes.map(aviso => `
-                    <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})">
-                        <div class="aviso-title">${aviso.titulo.substring(0, 40)}...</div>
-                        <div style="display: flex; gap: 10px; margin: 15px 0;">
-                            <span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : 
-                                              aviso.estado === 'negociando' ? 'badge-warning' : 
-                                              aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
-                                ${aviso.estado}
-                            </span>
-                            <span class="badge badge-light">$${aviso.presupuesto.toLocaleString()}</span>
+                avisosContainer.innerHTML = avisosRecientes.length > 0 ? avisosRecientes.map(aviso => {
+                    // Icono según tipo
+                    const tipoIcon = {
+                        'inmueble': '🏠',
+                        'auto': '🚗',
+                        'motos': '🏍️',
+                        'tecnologia': '💻',
+                        'servicios': '🔧',
+                        'otros': '📦'
+                    }[aviso.tipo] || '📋';
+                    
+                    return `
+                        <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})">
+                            <div class="aviso-title">${aviso.titulo.substring(0, 40)}...</div>
+                            <div style="display: flex; gap: 10px; margin: 15px 0;">
+                                <span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : 
+                                                  aviso.estado === 'negociando' ? 'badge-warning' : 
+                                                  aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
+                                    ${aviso.estado}
+                                </span>
+                                <span class="badge badge-light">${tipoIcon} ${aviso.tipo}</span>
+                                <span class="badge badge-light">$${aviso.presupuesto.toLocaleString()}</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
+                                ${aviso.propuestas?.length || 0} propuestas
+                            </div>
+                            <button class="btn btn-sm btn-primary btn-block" onclick="event.stopPropagation(); verDetalleAviso(${aviso.id})">
+                                Ver Detalles
+                            </button>
                         </div>
-                        <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
-                            ${aviso.propuestas?.length || 0} propuestas
-                        </div>
-                        <button class="btn btn-sm btn-primary btn-block" onclick="event.stopPropagation(); verDetalleAviso(${aviso.id})">
-                            Ver Detalles
-                        </button>
-                    </div>
-                `).join('') : '<div class="empty-state" style="padding: 30px;">No tienes avisos activos</div>';
+                    `;
+                }).join('') : '<div class="empty-state" style="padding: 30px;">No tienes avisos activos</div>';
                 
                 // Propuestas recientes
                 const propuestasContainer = document.getElementById('dashboard-propuestas');
@@ -3994,9 +4857,20 @@
                 propuestasContainer.innerHTML = propuestasRecientes.length > 0 ? propuestasRecientes.map(propuesta => {
                     const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
                     const vendedor = data.users.find(u => u.id === propuesta.vendedorId);
+                    
+                    // Icono según tipo
+                    const tipoIcon = {
+                        'inmueble': '🏠',
+                        'auto': '🚗',
+                        'motos': '🏍️',
+                        'tecnologia': '💻',
+                        'servicios': '🔧',
+                        'otros': '📦'
+                    }[aviso.tipo] || '📋';
+                    
                     return `
                         <div class="propuesta-card" onclick="verDetalleAviso(${aviso.id})">
-                            <div style="font-weight: 700; margin-bottom: 10px;">${aviso.titulo.substring(0, 30)}...</div>
+                            <div style="font-weight: 700; margin-bottom: 10px;">${tipoIcon} ${aviso.titulo.substring(0, 30)}...</div>
                             <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 10px;">
                                 $${propuesta.precio.toLocaleString()}
                             </div>
@@ -4029,15 +4903,37 @@
                 
                 avisosContainer.innerHTML = avisosRecientes.length > 0 ? avisosRecientes.map(aviso => {
                     const user = data.users.find(u => u.id === aviso.userId);
+                    
+                    // Icono según tipo
+                    const tipoIcon = {
+                        'inmueble': '🏠',
+                        'auto': '🚗',
+                        'motos': '🏍️',
+                        'tecnologia': '💻',
+                        'servicios': '🔧',
+                        'otros': '📦'
+                    }[aviso.tipo] || '📋';
+                    
+                    // Información específica para inmuebles
+                    let infoExtra = '';
+                    if (aviso.tipo === 'inmueble') {
+                        infoExtra = `
+                            <div style="font-size: 0.9rem; color: var(--gray); margin: 8px 0;">
+                                ${aviso.tipoInmueble} en ${aviso.comuna}
+                            </div>
+                        `;
+                    }
+                    
                     return `
                         <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})">
                             <div class="aviso-title">${aviso.titulo.substring(0, 40)}...</div>
+                            ${infoExtra}
                             <div style="margin: 15px 0;">
                                 <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">
                                     $${aviso.presupuesto.toLocaleString()}
                                 </div>
                                 <div style="font-size: 0.9rem; color: var(--gray);">
-                                    De: ${user.name || user.email}
+                                    ${tipoIcon} De: ${user.name || user.email}
                                 </div>
                             </div>
                             <button class="btn btn-sm btn-secondary btn-block" onclick="event.stopPropagation(); mostrarEnviarPropuesta(${aviso.id})">
@@ -4053,9 +4949,20 @@
                 
                 propuestasContainer.innerHTML = propuestasRecientes.length > 0 ? propuestasRecientes.map(propuesta => {
                     const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
+                    
+                    // Icono según tipo
+                    const tipoIcon = {
+                        'inmueble': '🏠',
+                        'auto': '🚗',
+                        'motos': '🏍️',
+                        'tecnologia': '💻',
+                        'servicios': '🔧',
+                        'otros': '📦'
+                    }[aviso.tipo] || '📋';
+                    
                     return `
                         <div class="propuesta-card" onclick="verDetalleAviso(${aviso.id})">
-                            <div style="font-weight: 700; margin-bottom: 10px;">${aviso.titulo.substring(0, 30)}...</div>
+                            <div style="font-weight: 700; margin-bottom: 10px;">${tipoIcon} ${aviso.titulo.substring(0, 30)}...</div>
                             <div style="display: flex; gap: 10px; margin: 10px 0;">
                                 <span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : 
                                                   propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">
@@ -4093,6 +5000,11 @@
             
             // Calcular rating promedio
             const rating = currentUser.rating || 5.0;
+            
+            // Calcular estadísticas por tipo de aviso
+            const avisosInmuebles = data.avisos.filter(a => a.userId === currentUser.id && a.tipo === 'inmueble').length;
+            const avisosAutos = data.avisos.filter(a => a.userId === currentUser.id && a.tipo === 'auto').length;
+            const avisosMotos = data.avisos.filter(a => a.userId === currentUser.id && a.tipo === 'motos').length;
             
             container.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap;">
@@ -4140,6 +5052,34 @@
                         <div style="color: var(--gray); font-weight: 600;">Conversaciones</div>
                     </div>
                 </div>
+                
+                ${currentUser.role === 'comprador' && avisosCount > 0 ? `
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="margin-bottom: 25px; font-size: 1.5rem;">Distribución de Avisos por Categoría</h3>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            ${avisosInmuebles > 0 ? `
+                                <div class="badge badge-info" style="font-size: 1rem; padding: 10px 20px;">
+                                    🏠 Inmuebles: ${avisosInmuebles}
+                                </div>
+                            ` : ''}
+                            ${avisosAutos > 0 ? `
+                                <div class="badge badge-info" style="font-size: 1rem; padding: 10px 20px;">
+                                    🚗 Automotor: ${avisosAutos}
+                                </div>
+                            ` : ''}
+                            ${avisosMotos > 0 ? `
+                                <div class="badge badge-info" style="font-size: 1rem; padding: 10px 20px;">
+                                    🏍️ Motos: ${avisosMotos}
+                                </div>
+                            ` : ''}
+                            ${avisosCount - (avisosInmuebles + avisosAutos + avisosMotos) > 0 ? `
+                                <div class="badge badge-info" style="font-size: 1rem; padding: 10px 20px;">
+                                    📦 Otros: ${avisosCount - (avisosInmuebles + avisosAutos + avisosMotos)}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                ` : ''}
                 
                 <div style="margin-top: 40px;">
                     <h3 style="margin-bottom: 25px; font-size: 1.5rem;">Información de la cuenta</h3>
@@ -4269,11 +5209,21 @@
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
+                // Icono según tipo
+                const tipoIcon = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'motos': '🏍️',
+                    'tecnologia': '💻',
+                    'servicios': '🔧',
+                    'otros': '📦'
+                }[aviso.tipo] || '📋';
+                
                 return `
                     <tr>
                         <td>${aviso.id}</td>
                         <td>${aviso.titulo.substring(0, 40)}...</td>
-                        <td><span class="badge badge-info">${aviso.tipo}</span></td>
+                        <td><span class="badge badge-info">${tipoIcon} ${aviso.tipo}</span></td>
                         <td>${user.email}</td>
                         <td>$${aviso.presupuesto.toLocaleString()}</td>
                         <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : 'badge-danger'}">${aviso.estado}</span></td>
@@ -4367,6 +5317,14 @@
         function generarReporte() {
             const data = getData();
             
+            // Estadísticas por tipo de aviso
+            const avisosInmuebles = data.avisos.filter(a => a.tipo === 'inmueble').length;
+            const avisosAutos = data.avisos.filter(a => a.tipo === 'auto').length;
+            const avisosMotos = data.avisos.filter(a => a.tipo === 'motos').length;
+            const avisosTecnologia = data.avisos.filter(a => a.tipo === 'tecnologia').length;
+            const avisosServicios = data.avisos.filter(a => a.tipo === 'servicios').length;
+            const avisosOtros = data.avisos.filter(a => a.tipo === 'otros').length;
+            
             const reporte = {
                 fecha: new Date().toISOString(),
                 estadisticas: {
@@ -4378,7 +5336,15 @@
                     totalChats: data.chats.length,
                     avisosActivos: data.avisos.filter(a => a.estado === 'abierto').length,
                     avisosNegociando: data.avisos.filter(a => a.estado === 'negociando').length,
-                    avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length
+                    avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length,
+                    avisosPorTipo: {
+                        inmuebles: avisosInmuebles,
+                        autos: avisosAutos,
+                        motos: avisosMotos,
+                        tecnologia: avisosTecnologia,
+                        servicios: avisosServicios,
+                        otros: avisosOtros
+                    }
                 },
                 usuarios: data.users.map(u => ({
                     id: u.id,
@@ -4430,43 +5396,6 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
-        }
-
-        function toggleFilters() {
-            const filters = document.getElementById('filters-container');
-            filters.classList.toggle('hidden');
-        }
-
-        function togglePropuestasFilters() {
-            const filters = document.getElementById('propuestas-filters');
-            filters.classList.toggle('hidden');
-        }
-
-        function aplicarFiltros() {
-            showToast('Filtros aplicados', 'success');
-            loadAvisos();
-        }
-
-        function aplicarPropuestasFiltros() {
-            showToast('Filtros aplicados', 'success');
-            loadPropuestas();
-        }
-
-        function limpiarFiltros() {
-            document.getElementById('filter-tipo').value = '';
-            document.getElementById('filter-presupuesto').value = '';
-            document.getElementById('filter-estado').value = '';
-            document.getElementById('filter-urgencia').value = '';
-            showToast('Filtros limpiados', 'info');
-            loadAvisos();
-        }
-
-        function limpiarPropuestasFiltros() {
-            document.getElementById('filter-propuesta-estado').value = '';
-            document.getElementById('filter-propuesta-tipo').value = '';
-            document.getElementById('filter-propuesta-orden').value = 'fecha';
-            showToast('Filtros limpiados', 'info');
-            loadPropuestas();
         }
 
         function scrollToFeatures() {
@@ -4610,6 +5539,9 @@
             if (!currentUser) {
                 showView('landing');
             }
+            
+            // Cargar regiones en los filtros
+            cargarRegiones('filter-inmueble-region');
             
             // Configurar actualización automática cada 30 segundos
             setInterval(() => {
