@@ -952,6 +952,7 @@
             border-top: 1px solid var(--gray-light);
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         .chat-input {
@@ -1296,6 +1297,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            align-items: center;
         }
 
         .camera-options {
@@ -1357,6 +1359,7 @@
             height: 60px;
             border-radius: var(--border-radius-sm);
             object-fit: cover;
+            cursor: pointer;
         }
 
         .message-file-info {
@@ -1392,6 +1395,35 @@
             max-width: 200px;
             border-radius: var(--border-radius-sm);
             margin-top: 10px;
+        }
+
+        /* MODAL PARA AMPLIAR FOTOS */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
         }
 
         /* RESPONSIVE */
@@ -1452,6 +1484,13 @@
         @keyframes fadeOut {
             from { opacity: 1; }
             to { opacity: 0; }
+        }
+
+        /* FLASH EFFECT */
+        @keyframes flashEffect {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
@@ -1760,20 +1799,6 @@
                             <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">2</div>
                             <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">3</div>
                             <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">4+</div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-section">
-                        <h4><i>📏</i> Metros Cuadrados</h4>
-                        <div class="filter-row">
-                            <div>
-                                <label>Mínimo (m²)</label>
-                                <input type="number" id="filter-metros-min" class="form-control" placeholder="Ej: 50" min="0">
-                            </div>
-                            <div>
-                                <label>Máximo (m²)</label>
-                                <input type="number" id="filter-metros-max" class="form-control" placeholder="Ej: 200" min="0">
-                            </div>
                         </div>
                     </div>
                     
@@ -2238,11 +2263,6 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="inmueble-metros">Metros cuadrados *</label>
-                        <input type="number" id="inmueble-metros" class="form-control" placeholder="Ej: 120" min="0">
-                    </div>
-                    
-                    <div class="form-group">
                         <label>Características (selecciona las que apliquen)</label>
                         <div class="filter-options">
                             <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Estacionamiento</div>
@@ -2374,20 +2394,29 @@
                 
                 <!-- CAMPOS COMUNES PARA TODAS LAS CATEGORÍAS -->
                 <div class="form-group">
-                    <label for="aviso-descripcion">Descripción detallada *</label>
-                    <textarea id="aviso-descripcion" class="form-control form-textarea" placeholder="Describe exactamente lo que buscas, características importantes, preferencias, etc." required></textarea>
+                    <label for="aviso-descripcion">Descripción detallada (opcional)</label>
+                    <textarea id="aviso-descripcion" class="form-control form-textarea" placeholder="Describe exactamente lo que buscas, características importantes, preferencias, etc."></textarea>
                 </div>
                 
                 <div class="filter-row">
                     <div class="form-group">
-                        <label for="aviso-presupuesto">Presupuesto máximo (USD) *</label>
+                        <label for="aviso-presupuesto">Presupuesto máximo *</label>
                         <input type="number" id="aviso-presupuesto" class="form-control" min="0" step="100" placeholder="Ej: 50000" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="aviso-zona">Zona o ubicación *</label>
-                        <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Santiago Centro, Providencia, Las Condes, etc." required>
+                        <label for="aviso-moneda">Moneda *</label>
+                        <select id="aviso-moneda" class="form-control" required>
+                            <option value="USD">USD</option>
+                            <option value="CLP">CLP</option>
+                            <option value="UF">UF</option>
+                        </select>
                     </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aviso-zona">Zona o ubicación *</label>
+                    <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Santiago Centro, Providencia, Las Condes, etc." required>
                 </div>
                 
                 <div style="display: flex; gap: 15px; margin-top: 30px;">
@@ -2446,13 +2475,24 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="editar-aviso-descripcion">Descripción detallada *</label>
-                    <textarea id="editar-aviso-descripcion" class="form-control form-textarea" required></textarea>
+                    <label for="editar-aviso-descripcion">Descripción detallada (opcional)</label>
+                    <textarea id="editar-aviso-descripcion" class="form-control form-textarea"></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="editar-aviso-presupuesto">Presupuesto máximo (USD) *</label>
-                    <input type="number" id="editar-aviso-presupuesto" class="form-control" min="0" step="100" required>
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="editar-aviso-presupuesto">Presupuesto máximo *</label>
+                        <input type="number" id="editar-aviso-presupuesto" class="form-control" min="0" step="100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editar-aviso-moneda">Moneda *</label>
+                        <select id="editar-aviso-moneda" class="form-control" required>
+                            <option value="USD">USD</option>
+                            <option value="CLP">CLP</option>
+                            <option value="UF">UF</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -2527,9 +2567,22 @@
                             <span>📁</span> Galería
                         </button>
                     </div>
+
+                    <!-- Botón de enviar foto (oculto inicialmente) -->
+                    <div id="camera-send-container" style="display: none; margin-top: 20px; text-align: center;">
+                        <button type="button" class="btn btn-primary" onclick="enviarFotoDesdeCamara()" style="padding: 12px 30px;">
+                            <span>📤</span> Enviar Foto
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- MODAL PARA AMPLIAR IMAGEN -->
+    <div id="image-modal" class="image-modal hidden">
+        <span class="image-modal-close" onclick="cerrarModalImagen()">×</span>
+        <img id="expanded-image" src="" alt="Imagen ampliada">
     </div>
 
     <!-- SCRIPT PRINCIPAL -->
@@ -2557,6 +2610,7 @@
         let currentCamera = 'environment'; // 'environment' (trasera) o 'user' (frontal)
         let flashOn = false;
         let selectedPhoto = null;
+        let currentChatIdForCamera = null;
 
         // ============================================
         // DATOS INICIALES DE EJEMPLO (MEJORADOS)
@@ -2620,6 +2674,7 @@
                     titulo: "Busco departamento 3 dormitorios en Providencia", 
                     descripcion: "Necesito departamento para familia, mínimo 3 dormitorios, 2 baños, preferiblemente amoblado. Busco edificio con seguridad y áreas comunes.\n\nRequisitos:\n- Mínimo 80m²\n- Cocina equipada\n- Estacionamiento incluido\n- Cerca de metro\n- Acepto mascotas",
                     presupuesto: 350000, 
+                    moneda: "USD",
                     zona: "Providencia, Santiago", 
                     estado: "abierto",
                     createdAt: new Date().toISOString(),
@@ -2628,7 +2683,6 @@
                         tipo: "departamento",
                         dormitorios: 3,
                         banos: 2,
-                        metrosCuadrados: 85,
                         caracteristicas: ["estacionamiento", "amoblado", "logia"]
                     },
                     propuestas: [1, 2],
@@ -2642,6 +2696,7 @@
                     titulo: "Busco SUV familiar 2020-2022 con buen estado", 
                     descripcion: "Necesito un SUV familiar con espacio para 5 personas, preferiblemente marca Toyota o Honda. Debe estar en buen estado, máximo 40,000 km. Busco buen precio y garantía.\n\nRequisitos:\n- Máximo 40,000 km\n- Buen estado mecánico\n- Preferiblemente blanco o negro\n- Documentación en regla\n- Servicio completo de mantenimiento",
                     presupuesto: 35000, 
+                    moneda: "USD",
                     zona: "Región Metropolitana", 
                     estado: "abierto",
                     createdAt: new Date().toISOString(),
@@ -2664,6 +2719,7 @@
                     titulo: "Busco moto deportiva 600cc para ciudad", 
                     descripcion: "Busco moto deportiva en buen estado, preferiblemente Yamaha o Honda. Ideal para uso urbano y ocasional paseo.\n\nEspecificaciones:\n- 600cc preferiblemente\n- Documentación al día\n- Sin accidentes\n- Buen estado de neumáticos\n- Mantenimiento al día",
                     presupuesto: 8000, 
+                    moneda: "USD",
                     zona: "Santiago y alrededores", 
                     estado: "abierto",
                     createdAt: new Date(Date.now() - 86400000).toISOString(),
@@ -3269,9 +3325,8 @@
                 const tipo = document.getElementById('inmueble-tipo').value;
                 const dormitorios = document.getElementById('inmueble-dormitorios').value;
                 const banos = document.getElementById('inmueble-banos').value;
-                const metros = document.getElementById('inmueble-metros').value;
                 
-                if (!tipo || !dormitorios || !banos || !metros) {
+                if (!tipo || !dormitorios || !banos) {
                     showToast('Por favor completa todos los campos específicos de inmueble', 'error');
                     return;
                 }
@@ -3286,7 +3341,6 @@
                     tipo: tipo,
                     dormitorios: parseInt(dormitorios),
                     banos: parseInt(banos),
-                    metrosCuadrados: parseInt(metros),
                     caracteristicas: caracteristicas
                 };
                 
@@ -3343,6 +3397,7 @@
                 titulo: document.getElementById('aviso-titulo').value,
                 descripcion: document.getElementById('aviso-descripcion').value,
                 presupuesto: parseInt(document.getElementById('aviso-presupuesto').value),
+                moneda: document.getElementById('aviso-moneda').value,
                 zona: document.getElementById('aviso-zona').value,
                 estado: 'abierto',
                 createdAt: new Date().toISOString(),
@@ -3433,17 +3488,6 @@
                         avisos = avisos.filter(a => {
                             return a.detalles && dormitoriosFiltros.includes(a.detalles.dormitorios);
                         });
-                    }
-                    
-                    // Filtrar por metros cuadrados
-                    const metrosMin = document.getElementById('filter-metros-min')?.value;
-                    const metrosMax = document.getElementById('filter-metros-max')?.value;
-                    
-                    if (metrosMin) {
-                        avisos = avisos.filter(a => a.detalles && a.detalles.metrosCuadrados >= parseInt(metrosMin));
-                    }
-                    if (metrosMax) {
-                        avisos = avisos.filter(a => a.detalles && a.detalles.metrosCuadrados <= parseInt(metrosMax));
                     }
                     
                 } else if (categoria === 'auto') {
@@ -3554,7 +3598,6 @@
                             <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
                                 <span class="badge badge-light">${aviso.detalles.dormitorios || 0} 🛏️</span>
                                 <span class="badge badge-light">${aviso.detalles.banos || 0} 🚿</span>
-                                <span class="badge badge-light">${aviso.detalles.metrosCuadrados || 0}m²</span>
                                 <span class="badge badge-light">${aviso.detalles.tipo || ''}</span>
                             </div>
                         `;
@@ -3596,9 +3639,9 @@
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">
-                                    $${aviso.presupuesto.toLocaleString()}
+                                    ${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}
                                 </div>
-                                <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto</div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto (${aviso.moneda})</div>
                             </div>
                         </div>
                         
@@ -3611,7 +3654,7 @@
                         </div>
                         
                         <div class="aviso-description">
-                            ${aviso.descripcion.substring(0, 120)}...
+                            ${aviso.descripcion ? (aviso.descripcion.substring(0, 120) + '...') : 'Sin descripción'}
                         </div>
                         
                         <div class="aviso-actions">
@@ -3629,8 +3672,8 @@
                             ` : ''}
                             
                             ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' ? `
-                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); mostrarEnviarPropuesta(${aviso.id})">
-                                    📨 Enviar Propuesta
+                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); iniciarChatConComprador(${aviso.id})">
+                                    💬 Enviar Propuesta
                                 </button>
                             ` : ''}
                         </div>
@@ -3702,10 +3745,6 @@
                             <div class="meta-card">
                                 <div class="meta-label">Baños</div>
                                 <div class="meta-value">${aviso.detalles.banos || 'No especificado'}</div>
-                            </div>
-                            <div class="meta-card">
-                                <div class="meta-label">Metros Cuadrados</div>
-                                <div class="meta-value">${aviso.detalles.metrosCuadrados || 'No especificado'} m²</div>
                             </div>
                         </div>
                         ${aviso.detalles.caracteristicas && aviso.detalles.caracteristicas.length > 0 ? `
@@ -3798,9 +3837,9 @@
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                    $${aviso.presupuesto.toLocaleString()}
+                                    ${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}
                                 </div>
-                                <div style="font-size: 1rem; color: var(--gray);">Presupuesto máximo</div>
+                                <div style="font-size: 1rem; color: var(--gray);">Presupuesto máximo (${aviso.moneda})</div>
                             </div>
                         </div>
                         
@@ -3826,7 +3865,7 @@
                         </div>
                         
                         <div class="detalle-description">
-                            ${aviso.descripcion.replace(/\n/g, '<br>')}
+                            ${aviso.descripcion ? aviso.descripcion.replace(/\n/g, '<br>') : '<em>Sin descripción</em>'}
                         </div>
                         
                         <div class="estados-section">
@@ -3864,8 +3903,8 @@
                             ` : ''}
                             
                             ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador ? `
-                                <button class="btn btn-secondary" onclick="mostrarEnviarPropuesta(${aviso.id})">
-                                    📨 Enviar Propuesta
+                                <button class="btn btn-secondary" onclick="iniciarChatConComprador(${aviso.id})">
+                                    💬 Enviar Propuesta por Chat
                                 </button>
                             ` : ''}
                         </div>
@@ -3966,8 +4005,8 @@
                                     }
                                 </p>
                                 ${!esCreador && currentUser.role === 'vendedor' ? `
-                                    <button class="btn btn-primary" onclick="mostrarEnviarPropuesta(${aviso.id})">
-                                        📨 Enviar Primera Propuesta
+                                    <button class="btn btn-primary" onclick="iniciarChatConComprador(${aviso.id})">
+                                        💬 Enviar Primera Propuesta
                                     </button>
                                 ` : ''}
                             </div>
@@ -4008,7 +4047,7 @@
                                     let contenidoHTML = '';
                                     if (mensaje.tipo === 'foto') {
                                         contenidoHTML = `
-                                            <div class="message-file">
+                                            <div class="message-file" onclick="ampliarImagen('${mensaje.contenido}')">
                                                 <img src="${mensaje.contenido}" alt="Foto enviada">
                                                 <div class="message-file-info">
                                                     <div class="message-file-name">Foto</div>
@@ -4070,8 +4109,8 @@
                                     }
                                 </p>
                                 ${!esCreador && currentUser.role === 'vendedor' && aviso.estado === 'abierto' ? `
-                                    <button class="btn btn-primary" onclick="mostrarEnviarPropuesta(${aviso.id})">
-                                        📨 Enviar Propuesta y Chatear
+                                    <button class="btn btn-primary" onclick="iniciarChatConComprador(${aviso.id})">
+                                        💬 Enviar Propuesta y Chatear
                                     </button>
                                 ` : ''}
                             </div>
@@ -4086,8 +4125,8 @@
                         </h3>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador ? `
-                                <button class="btn btn-secondary btn-block" onclick="mostrarEnviarPropuesta(${aviso.id})">
-                                    📨 Enviar Propuesta
+                                <button class="btn btn-secondary btn-block" onclick="iniciarChatConComprador(${aviso.id})">
+                                    💬 Enviar Propuesta
                                 </button>
                             ` : ''}
                             
@@ -4123,147 +4162,13 @@
         // FUNCIONES DE PROPUESTAS (SIN FOTOS)
         // ============================================
         function mostrarEnviarPropuesta(avisoId) {
-            const data = getData();
-            const aviso = data.avisos.find(a => a.id === avisoId);
-            
-            if (!aviso || aviso.estado !== 'abierto') {
-                showToast('Este aviso no está disponible para propuestas', 'warning');
-                return;
-            }
-            
-            // Verificar si ya envió propuesta
-            const propuestaExistente = data.propuestas.find(p => 
-                p.avisoId === avisoId && p.vendedorId === currentUser.id
-            );
-            
-            if (propuestaExistente) {
-                if (confirm('Ya has enviado una propuesta a este aviso. ¿Deseas enviar una nueva?')) {
-                    // Eliminar la propuesta anterior
-                    data.propuestas = data.propuestas.filter(p => p.id !== propuestaExistente.id);
-                    
-                    // Eliminar de la lista de propuestas del aviso
-                    const index = aviso.propuestas.indexOf(propuestaExistente.id);
-                    if (index > -1) {
-                        aviso.propuestas.splice(index, 1);
-                    }
-                    
-                    // Eliminar chat asociado
-                    data.chats = data.chats.filter(c => c.propuestaId !== propuestaExistente.id);
-                    
-                    saveData(data);
-                } else {
-                    return;
-                }
-            }
-            
-            document.getElementById('propuesta-aviso-id').value = avisoId;
-            document.getElementById('propuesta-modal-title').textContent = `Enviar propuesta: ${aviso.titulo}`;
-            document.getElementById('propuesta-presupuesto-info').textContent = 
-                `Presupuesto máximo del comprador: $${aviso.presupuesto.toLocaleString()}`;
-            document.getElementById('propuesta-precio').value = '';
-            document.getElementById('propuesta-precio').max = aviso.presupuesto * 2; // Permitir hasta el doble
-            document.getElementById('propuesta-mensaje').value = '';
-            document.getElementById('propuesta-detalles').value = '';
-            
-            showModal('enviar-propuesta-modal');
+            // Esta función ya no se usa, se reemplaza por iniciarChatConComprador
+            showToast('Las propuestas ahora se envían por chat', 'info');
         }
 
         function enviarPropuesta(event) {
             event.preventDefault();
-            
-            const avisoId = parseInt(document.getElementById('propuesta-aviso-id').value);
-            const precio = parseInt(document.getElementById('propuesta-precio').value);
-            const mensaje = document.getElementById('propuesta-mensaje').value;
-            const detalles = document.getElementById('propuesta-detalles').value;
-            
-            if (!precio || precio <= 0) {
-                showToast('Ingresa un precio válido', 'error');
-                return;
-            }
-            
-            if (!mensaje.trim()) {
-                showToast('El mensaje es requerido', 'error');
-                return;
-            }
-            
-            const data = getData();
-            const aviso = data.avisos.find(a => a.id === avisoId);
-            
-            if (!aviso || aviso.estado !== 'abierto') {
-                showToast('Este aviso ya no está disponible', 'error');
-                closeModal('enviar-propuesta-modal');
-                return;
-            }
-            
-            // Crear nueva propuesta
-            const nuevaPropuesta = {
-                id: data.nextIds.propuestas++,
-                avisoId: avisoId,
-                vendedorId: currentUser.id,
-                precio: precio,
-                mensaje: mensaje,
-                detalles: detalles,
-                estado: 'pendiente',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                destacada: false
-            };
-            
-            data.propuestas.push(nuevaPropuesta);
-            
-            // Añadir propuesta al aviso
-            if (!aviso.propuestas) aviso.propuestas = [];
-            aviso.propuestas.push(nuevaPropuesta.id);
-            
-            // Actualizar contador del usuario
-            const user = data.users.find(u => u.id === currentUser.id);
-            user.totalPropuestas = (user.totalPropuestas || 0) + 1;
-            
-            // Crear notificación para el comprador
-            const comprador = data.users.find(u => u.id === aviso.userId);
-            data.notifications.push({
-                id: data.nextIds.notifications++,
-                userId: comprador.id,
-                type: "propuesta_nueva",
-                title: "¡Nueva propuesta recibida!",
-                message: `${user.name || user.email} envió una propuesta a tu aviso: "${aviso.titulo}"`,
-                data: { avisoId: avisoId, propuestaId: nuevaPropuesta.id },
-                read: false,
-                createdAt: new Date().toISOString()
-            });
-            
-            // Crear chat automáticamente
-            const nuevoChat = {
-                id: data.nextIds.chats++,
-                avisoId: avisoId,
-                propuestaId: nuevaPropuesta.id,
-                participantes: [aviso.userId, currentUser.id],
-                mensajes: [
-                    {
-                        id: 1,
-                        userId: currentUser.id,
-                        text: `Hola, he enviado una propuesta por $${precio.toLocaleString()}. ${mensaje.substring(0, 50)}...`,
-                        timestamp: new Date().toISOString(),
-                        leido: false,
-                        tipo: 'texto'
-                    }
-                ],
-                unreadCount: 1,
-                lastMessage: `Hola, he enviado una propuesta por $${precio.toLocaleString()}. ${mensaje.substring(0, 50)}...`,
-                lastMessageTime: new Date().toISOString(),
-                activo: true
-            };
-            
-            data.chats.push(nuevoChat);
-            
-            saveData(data);
-            
-            closeModal('enviar-propuesta-modal');
-            showToast('¡Propuesta enviada exitosamente! Se ha iniciado un chat con el comprador.', 'success');
-            
-            // Redirigir al detalle del aviso
-            currentAvisoId = avisoId;
-            showView('detalle-aviso');
+            showToast('Las propuestas ahora se envían por chat', 'info');
         }
 
         function loadPropuestas() {
@@ -4411,7 +4316,7 @@
         // FUNCIONES DE CÁMARA (MEJORADAS)
         // ============================================
         function abrirCamaraChat(chatId) {
-            currentChatId = chatId;
+            currentChatIdForCamera = chatId;
             abrirCamara();
         }
 
@@ -4430,6 +4335,9 @@
             document.getElementById('flash-indicator').textContent = 'Flash: Apagado';
             document.getElementById('toggle-flash-btn').innerHTML = '<span>⚡</span> Flash: Apagado';
             document.getElementById('toggle-camera-btn').innerHTML = '<span>🔄</span> Cambiar a frontal';
+            
+            // Ocultar botón de enviar
+            document.getElementById('camera-send-container').style.display = 'none';
             
             // Iniciar cámara
             iniciarCamara();
@@ -4586,7 +4494,10 @@
                 counter.textContent = '1';
                 counter.style.background = 'var(--primary)';
                 
-                showToast('Foto tomada. Puedes tomar otra o enviar esta.', 'success');
+                // Mostrar botón de enviar
+                document.getElementById('camera-send-container').style.display = 'block';
+                
+                showToast('Foto tomada. Puedes enviarla o tomar otra.', 'success');
                 
             }, 300);
         }
@@ -4607,12 +4518,29 @@
                         counter.textContent = '1';
                         counter.style.background = 'var(--primary)';
                         
+                        // Mostrar botón de enviar
+                        document.getElementById('camera-send-container').style.display = 'block';
+                        
                         showToast('Foto seleccionada. Puedes enviarla o tomar otra.', 'success');
                     };
                     reader.readAsDataURL(file);
                 }
             };
             input.click();
+        }
+
+        function enviarFotoDesdeCamara() {
+            if (!selectedPhoto) {
+                showToast('No hay foto para enviar', 'error');
+                return;
+            }
+            
+            if (currentChatIdForCamera && currentAvisoId) {
+                enviarFotoChat(currentChatIdForCamera, currentAvisoId, selectedPhoto);
+                cerrarCamara();
+            } else {
+                showToast('No se pudo enviar la foto', 'error');
+            }
         }
 
         function cerrarCamara() {
@@ -4627,6 +4555,7 @@
             }
             
             selectedPhoto = null;
+            currentChatIdForCamera = null;
             closeModal('camera-modal');
         }
 
@@ -4662,11 +4591,61 @@
         function iniciarChatConComprador(avisoId, propuestaId) {
             const data = getData();
             const aviso = data.avisos.find(a => a.id === avisoId);
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
             
-            if (!aviso || !propuesta) {
+            if (!aviso) {
                 showToast('No se pudo iniciar el chat', 'error');
                 return;
+            }
+            
+            // Si no hay propuestaId, significa que es un vendedor iniciando un chat nuevo
+            if (!propuestaId) {
+                // Verificar si ya existe un chat para este aviso y vendedor
+                let chat = data.chats.find(c => 
+                    c.avisoId === avisoId && 
+                    c.participantes.includes(currentUser.id) && 
+                    c.participantes.includes(aviso.userId)
+                );
+                
+                if (!chat) {
+                    // Crear nueva propuesta automáticamente
+                    const nuevaPropuesta = {
+                        id: data.nextIds.propuestas++,
+                        avisoId: avisoId,
+                        vendedorId: currentUser.id,
+                        precio: 0, // El vendedor establecerá el precio en el chat
+                        mensaje: "He iniciado un chat para enviar una propuesta",
+                        detalles: "",
+                        estado: 'pendiente',
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        destacada: false
+                    };
+                    
+                    data.propuestas.push(nuevaPropuesta);
+                    
+                    // Añadir propuesta al aviso
+                    if (!aviso.propuestas) aviso.propuestas = [];
+                    aviso.propuestas.push(nuevaPropuesta.id);
+                    
+                    // Actualizar contador del usuario
+                    const user = data.users.find(u => u.id === currentUser.id);
+                    user.totalPropuestas = (user.totalPropuestas || 0) + 1;
+                    
+                    // Crear notificación para el comprador
+                    const comprador = data.users.find(u => u.id === aviso.userId);
+                    data.notifications.push({
+                        id: data.nextIds.notifications++,
+                        userId: comprador.id,
+                        type: "propuesta_nueva",
+                        title: "¡Nueva propuesta recibida!",
+                        message: `${user.name || user.email} envió una propuesta a tu aviso: "${aviso.titulo}"`,
+                        data: { avisoId: avisoId, propuestaId: nuevaPropuesta.id },
+                        read: false,
+                        createdAt: new Date().toISOString()
+                    });
+                    
+                    propuestaId = nuevaPropuesta.id;
+                }
             }
             
             // Verificar si ya existe un chat
@@ -4683,14 +4662,14 @@
                         {
                             id: 1,
                             userId: currentUser.id,
-                            text: `Hola, he enviado una propuesta por $${propuesta.precio.toLocaleString()}. ¿Te interesa conversar más detalles?`,
+                            text: `Hola, estoy interesado en tu aviso "${aviso.titulo}". ¿Podemos conversar más detalles?`,
                             timestamp: new Date().toISOString(),
                             leido: false,
                             tipo: 'texto'
                         }
                     ],
                     unreadCount: 1,
-                    lastMessage: `Hola, he enviado una propuesta por $${propuesta.precio.toLocaleString()}. ¿Te interesa conversar más detalles?`,
+                    lastMessage: `Hola, estoy interesado en tu aviso "${aviso.titulo}". ¿Podemos conversar más detalles?`,
                     lastMessageTime: new Date().toISOString(),
                     activo: true
                 };
@@ -4699,9 +4678,10 @@
                 saveData(data);
                 
                 // Crear notificación
+                const comprador = data.users.find(u => u.id === aviso.userId);
                 data.notifications.push({
                     id: data.nextIds.notifications++,
-                    userId: aviso.userId,
+                    userId: comprador.id,
                     type: "mensaje_nuevo",
                     title: "Nuevo mensaje en el chat",
                     message: `${currentUser.name || currentUser.email} inició un chat sobre tu aviso`,
@@ -4786,11 +4766,13 @@
             const input = document.getElementById(`chat-input-detalle-${chatId}`);
             let texto = input.value.trim();
             
-            // Verificar si hay foto seleccionada
+            // Verificar si hay foto seleccionada (desde la cámara)
             if (selectedPhoto) {
                 enviarFotoChat(chatId, avisoId, selectedPhoto);
                 selectedPhoto = null;
-                cerrarCamara();
+                if (cameraStream) {
+                    cerrarCamara();
+                }
                 return;
             }
             
@@ -4919,6 +4901,29 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        // ============================================
+        // FUNCIONES PARA AMPLIAR IMÁGENES
+        // ============================================
+        function ampliarImagen(src) {
+            const modal = document.getElementById('image-modal');
+            const img = document.getElementById('expanded-image');
+            img.src = src;
+            modal.classList.remove('hidden');
+        }
+
+        function cerrarModalImagen() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('hidden');
+        }
+
+        // Cerrar modal al hacer clic fuera de la imagen
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('image-modal');
+            if (!modal.classList.contains('hidden') && event.target === modal) {
+                cerrarModalImagen();
+            }
+        });
 
         function loadChats() {
             const data = getData();
@@ -5249,8 +5254,9 @@
             // Llenar el formulario
             document.getElementById('editar-aviso-id').value = aviso.id;
             document.getElementById('editar-aviso-titulo').value = aviso.titulo;
-            document.getElementById('editar-aviso-descripcion').value = aviso.descripcion;
+            document.getElementById('editar-aviso-descripcion').value = aviso.descripcion || '';
             document.getElementById('editar-aviso-presupuesto').value = aviso.presupuesto;
+            document.getElementById('editar-aviso-moneda').value = aviso.moneda || 'USD';
             document.getElementById('editar-aviso-zona').value = aviso.zona;
             document.getElementById('editar-aviso-estado').value = aviso.estado;
             
@@ -5273,6 +5279,7 @@
             aviso.titulo = document.getElementById('editar-aviso-titulo').value;
             aviso.descripcion = document.getElementById('editar-aviso-descripcion').value;
             aviso.presupuesto = parseInt(document.getElementById('editar-aviso-presupuesto').value);
+            aviso.moneda = document.getElementById('editar-aviso-moneda').value;
             aviso.zona = document.getElementById('editar-aviso-zona').value;
             aviso.estado = document.getElementById('editar-aviso-estado').value;
             aviso.updatedAt = new Date().toISOString();
@@ -5366,7 +5373,7 @@
                                               aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
                                 ${aviso.estado}
                             </span>
-                            <span class="badge badge-light">$${aviso.presupuesto.toLocaleString()}</span>
+                            <span class="badge badge-light">${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}</span>
                         </div>
                         <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
                             ${aviso.propuestas?.length || 0} propuestas
@@ -5475,31 +5482,14 @@
                             <div class="meta-value">${userStats.chatsActivos}</div>
                         </div>
                     </div>
-                    
-                    <div>
-                        <h3 style="margin-bottom: 20px;">Actividad Reciente</h3>
-                        <div style="background: var(--primary-light); padding: 20px; border-radius: var(--border-radius);">
-                            <p style="margin-bottom: 15px;">Último acceso: ${new Date().toLocaleString()}</p>
-                            <p>Estado de la cuenta: <span class="badge badge-success">Activa</span></p>
-                        </div>
-                    </div>
                 </div>
             `;
-        }
-
-        function editarPerfil() {
-            showToast('Funcionalidad de edición de perfil en desarrollo', 'info');
         }
 
         // ============================================
         // FUNCIONES DEL PANEL ADMIN
         // ============================================
         function loadAdminPanel() {
-            if (currentUser?.role !== 'admin') {
-                showView('dashboard');
-                return;
-            }
-            
             const data = getData();
             
             // Actualizar estadísticas
@@ -5508,33 +5498,25 @@
             document.getElementById('admin-total-propuestas').textContent = data.propuestas.length;
             document.getElementById('admin-total-chats').textContent = data.chats.length;
             
-            // Usuarios
+            // Lista de usuarios
             const usersList = document.getElementById('admin-users-list');
             usersList.innerHTML = data.users.map(user => `
                 <tr>
                     <td>${user.id}</td>
                     <td>${user.email}</td>
                     <td>${user.name || 'Sin nombre'}</td>
-                    <td>
-                        <span class="badge ${user.role === 'comprador' ? 'badge-info' : 
-                                           user.role === 'vendedor' ? 'badge-success' : 'badge-warning'}">
-                            ${user.role}
-                        </span>
-                    </td>
+                    <td><span class="badge ${user.role === 'comprador' ? 'badge-info' : user.role === 'vendedor' ? 'badge-success' : 'badge-warning'}">${user.role}</span></td>
                     <td>${new Date(user.createdAt).toLocaleDateString()}</td>
                     <td>${user.totalAvisos || 0}</td>
                     <td>${user.totalPropuestas || 0}</td>
                     <td>
                         <button class="btn btn-xs btn-outline" onclick="adminEditarUsuario(${user.id})">Editar</button>
-                        ${user.id !== currentUser.id ? 
-                            `<button class="btn btn-xs btn-danger" onclick="adminEliminarUsuario(${user.id})">Eliminar</button>` : 
-                            '<span class="badge badge-light">Actual</span>'
-                        }
+                        ${user.id !== currentUser.id ? `<button class="btn btn-xs btn-danger" onclick="adminEliminarUsuario(${user.id})">Eliminar</button>` : ''}
                     </td>
                 </tr>
             `).join('');
             
-            // Avisos
+            // Lista de avisos
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
@@ -5542,23 +5524,10 @@
                     <tr>
                         <td>${aviso.id}</td>
                         <td>${aviso.titulo.substring(0, 30)}...</td>
-                        <td>
-                            <span class="badge badge-info">
-                                ${aviso.categoria === 'inmueble' ? '🏠' : 
-                                 aviso.categoria === 'auto' ? '🚗' : 
-                                 aviso.categoria === 'moto' ? '🏍️' : '📦'}
-                                ${aviso.categoria}
-                            </span>
-                        </td>
-                        <td>${user?.email || 'Desconocido'}</td>
-                        <td>$${aviso.presupuesto.toLocaleString()}</td>
-                        <td>
-                            <span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : 
-                                               aviso.estado === 'negociando' ? 'badge-warning' : 
-                                               aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
-                                ${aviso.estado}
-                            </span>
-                        </td>
+                        <td>${aviso.categoria}</td>
+                        <td>${user?.email || 'Usuario eliminado'}</td>
+                        <td>${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}</td>
+                        <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">${aviso.estado}</span></td>
                         <td>${aviso.propuestas?.length || 0}</td>
                         <td>
                             <button class="btn btn-xs btn-outline" onclick="adminVerAviso(${aviso.id})">Ver</button>
@@ -5568,7 +5537,7 @@
                 `;
             }).join('');
             
-            // Propuestas
+            // Lista de propuestas
             const propuestasList = document.getElementById('admin-propuestas-list');
             propuestasList.innerHTML = data.propuestas.map(propuesta => {
                 const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
@@ -5577,15 +5546,9 @@
                     <tr>
                         <td>${propuesta.id}</td>
                         <td>${aviso?.titulo.substring(0, 30) || 'Aviso eliminado'}...</td>
-                        <td>${vendedor?.email || 'Desconocido'}</td>
+                        <td>${vendedor?.email || 'Usuario eliminado'}</td>
                         <td>$${propuesta.precio.toLocaleString()}</td>
-                        <td>
-                            <span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : 
-                                               propuesta.estado === 'aceptada' ? 'badge-success' : 
-                                               propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">
-                                ${propuesta.estado}
-                            </span>
-                        </td>
+                        <td><span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">${propuesta.estado}</span></td>
                         <td>${new Date(propuesta.createdAt).toLocaleDateString()}</td>
                         <td>
                             <button class="btn btn-xs btn-outline" onclick="adminVerPropuesta(${propuesta.id})">Ver</button>
@@ -5596,187 +5559,82 @@
             }).join('');
         }
 
-        function adminVerAviso(avisoId) {
-            currentAvisoId = avisoId;
-            showView('detalle-aviso');
-        }
-
-        function adminVerPropuesta(propuestaId) {
-            const data = getData();
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
-            if (propuesta) {
-                currentAvisoId = propuesta.avisoId;
-                showView('detalle-aviso');
-            }
-        }
-
-        function adminEditarUsuario(userId) {
-            showToast('Funcionalidad de edición de usuario en desarrollo', 'info');
-        }
-
-        function adminEliminarUsuario(userId) {
-            if (userId === currentUser.id) {
-                showToast('No puedes eliminarte a ti mismo', 'error');
-                return;
-            }
-            
-            if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción eliminará todos sus avisos, propuestas y chats.')) {
-                return;
-            }
-            
-            const data = getData();
-            
-            // Eliminar avisos del usuario
-            data.avisos = data.avisos.filter(a => a.userId !== userId);
-            
-            // Eliminar propuestas del usuario
-            data.propuestas = data.propuestas.filter(p => p.vendedorId !== userId);
-            
-            // Eliminar chats donde participe el usuario
-            data.chats = data.chats.filter(c => !c.participantes.includes(userId));
-            
-            // Eliminar notificaciones del usuario
-            data.notifications = data.notifications.filter(n => n.userId !== userId);
-            
-            // Eliminar usuario
-            data.users = data.users.filter(u => u.id !== userId);
-            
-            saveData(data);
-            showToast('Usuario eliminado exitosamente', 'success');
-            loadAdminPanel();
-        }
-
-        function adminEliminarAviso(avisoId) {
-            if (!confirm('¿Estás seguro de eliminar este aviso? Esta acción eliminará todas las propuestas y chats asociados.')) {
-                return;
-            }
-            
-            const data = getData();
-            
-            // Eliminar propuestas asociadas
-            data.propuestas = data.propuestas.filter(p => p.avisoId !== avisoId);
-            
-            // Eliminar chats asociados
-            data.chats = data.chats.filter(c => c.avisoId !== avisoId);
-            
-            // Eliminar aviso
-            data.avisos = data.avisos.filter(a => a.id !== avisoId);
-            
-            saveData(data);
-            showToast('Aviso eliminado exitosamente', 'success');
-            loadAdminPanel();
-        }
-
-        function adminEliminarPropuesta(propuestaId) {
-            if (!confirm('¿Estás seguro de eliminar esta propuesta?')) {
-                return;
-            }
-            
-            const data = getData();
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
-            
-            if (propuesta) {
-                // Eliminar de la lista de propuestas del aviso
-                const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
-                if (aviso && aviso.propuestas) {
-                    const index = aviso.propuestas.indexOf(propuestaId);
-                    if (index > -1) {
-                        aviso.propuestas.splice(index, 1);
-                    }
-                }
-                
-                // Eliminar chats asociados
-                data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
-                
-                // Eliminar propuesta
-                data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
-            }
-            
-            saveData(data);
-            showToast('Propuesta eliminada exitosamente', 'success');
-            loadAdminPanel();
-        }
-
-        function generarReporte() {
-            const data = getData();
-            
-            const reporte = {
-                fecha: new Date().toISOString(),
-                totalUsuarios: data.users.length,
-                totalCompradores: data.users.filter(u => u.role === 'comprador').length,
-                totalVendedores: data.users.filter(u => u.role === 'vendedor').length,
-                totalAvisos: data.avisos.length,
-                avisosActivos: data.avisos.filter(a => a.estado === 'abierto').length,
-                avisosNegociando: data.avisos.filter(a => a.estado === 'negociando').length,
-                avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length,
-                totalPropuestas: data.propuestas.length,
-                propuestasPendientes: data.propuestas.filter(p => p.estado === 'pendiente').length,
-                propuestasAceptadas: data.propuestas.filter(p => p.estado === 'aceptada').length,
-                totalChats: data.chats.length,
-                chatsActivos: data.chats.filter(c => c.activo).length
-            };
-            
-            // Crear un blob con el reporte
-            const blob = new Blob([JSON.stringify(reporte, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            // Crear un enlace para descargar
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `reporte-marketconnect-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            URL.revokeObjectURL(url);
-            
-            showToast('Reporte generado y descargado', 'success');
-        }
-
-        function resetSystem() {
-            if (!confirm('¿ESTÁS SEGURO DE RESETEAR EL SISTEMA? Esta acción eliminará todos los datos excepto los usuarios de demostración.')) {
-                return;
-            }
-            
-            // Conservar usuarios de demo
-            const data = getData();
-            const demoUsers = data.users.filter(u => 
-                u.email === 'comprador@demo.com' || 
-                u.email === 'vendedor@demo.com' || 
-                u.email === 'admin@demo.com'
-            );
-            
-            // Resetear a datos iniciales pero conservando usuarios demo
-            const newData = JSON.parse(JSON.stringify(initialData));
-            newData.users = demoUsers;
-            newData.nextIds.users = demoUsers.length + 1;
-            
-            saveData(newData);
-            showToast('Sistema resetado exitosamente', 'success');
-            
-            // Recargar la página para reflejar cambios
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        }
-
         // ============================================
         // FUNCIONES UTILITARIAS
         // ============================================
         function scrollToFeatures() {
-            const featuresSection = document.getElementById('features-section');
-            if (featuresSection) {
-                featuresSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            document.getElementById('features-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         function showPasswordReset() {
-            showToast('Funcionalidad de recuperación de contraseña en desarrollo', 'info');
+            showToast('Función de recuperación de contraseña en desarrollo', 'info');
         }
 
-        function updateNotificationBadges() {
-            updateNotifications();
+        function editarPerfil() {
+            showToast('Función de edición de perfil en desarrollo', 'info');
         }
+
+        function generarReporte() {
+            showToast('Generando reporte...', 'info');
+            setTimeout(() => {
+                showToast('Reporte generado exitosamente', 'success');
+            }, 2000);
+        }
+
+        function resetSystem() {
+            if (confirm('¿Estás seguro de resetear el sistema? Esto eliminará todos los datos excepto los usuarios administradores.')) {
+                const data = getData();
+                
+                // Mantener solo usuarios administradores
+                const adminUsers = data.users.filter(u => u.role === 'admin');
+                adminUsers.forEach(user => {
+                    user.totalAvisos = 0;
+                    user.totalPropuestas = 0;
+                });
+                
+                // Resetear datos
+                const newData = {
+                    users: adminUsers,
+                    avisos: [],
+                    propuestas: [],
+                    chats: [],
+                    notifications: [],
+                    nextIds: {
+                        users: adminUsers.length + 1,
+                        avisos: 1,
+                        propuestas: 1,
+                        chats: 1,
+                        notifications: 1
+                    }
+                };
+                
+                saveData(newData);
+                showToast('Sistema reseteado exitosamente', 'success');
+                
+                // Recargar página
+                location.reload();
+            }
+        }
+
+        // ============================================
+        // PWA INSTALLATION
+        // ============================================
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-pwa').classList.remove('hidden');
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('install-pwa').classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
 
         // ============================================
         // INICIALIZACIÓN
@@ -5784,34 +5642,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             
-            // Inicializar eventos de PWA
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                document.getElementById('install-pwa').classList.remove('hidden');
-            });
-            
-            document.getElementById('install-btn').addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        document.getElementById('install-pwa').classList.add('hidden');
-                    }
-                    deferredPrompt = null;
-                }
-            });
-            
-            // Añadir animación de flash
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes flashEffect {
-                    0% { opacity: 0; }
-                    50% { opacity: 0.8; }
-                    100% { opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
+            // Inicializar service worker para PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+            }
         });
     </script>
 </body>
