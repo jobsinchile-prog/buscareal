@@ -1240,6 +1240,135 @@
             color: var(--gray);
         }
 
+        /* GALERÍA DE FOTOS */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            aspect-ratio: 1;
+            border: 2px solid var(--gray-light);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .photo-remove:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .photo-upload-area {
+            border: 2px dashed var(--primary);
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            background: var(--primary-light);
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 20px 0;
+        }
+
+        .photo-upload-area:hover {
+            background: rgba(67, 97, 238, 0.1);
+            border-color: var(--primary-dark);
+        }
+
+        .photo-upload-area.drag-over {
+            background: rgba(67, 97, 238, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .photo-upload-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .photo-upload-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .photo-counter {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+
+        .photo-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .photo-preview {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(239, 35, 60, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
         /* RESPONSIVE */
         @media (min-width: 768px) {
             .desktop-nav {
@@ -1273,6 +1402,10 @@
             .filter-row {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
+            
+            .photo-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
         }
 
         @media (min-width: 992px) {
@@ -1286,6 +1419,10 @@
             
             .filters-grid {
                 grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .photo-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
 
@@ -1316,6 +1453,33 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* ESTILOS PARA CÁMARA */
+        .camera-preview {
+            width: 100%;
+            max-height: 400px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .camera-preview.active {
+            display: block;
+        }
+
+        .camera-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -2288,7 +2452,7 @@
                 <h2 class="modal-title" id="propuesta-modal-title">Enviar Propuesta</h2>
                 <button class="modal-close" onclick="closeModal('enviar-propuesta-modal')">×</button>
             </div>
-            <form id="enviar-propuesta-form" onsubmit="enviarPropuesta(event)">
+            <form id="enviar-propuesta-form" onsubmit="enviarPropuestaConFotos(event)">
                 <input type="hidden" id="propuesta-aviso-id">
                 
                 <div class="form-group">
@@ -2307,9 +2471,44 @@
                     <textarea id="propuesta-detalles" class="form-control form-textarea" placeholder="Información adicional, condiciones especiales, garantías, etc."></textarea>
                 </div>
                 
+                <!-- SECCIÓN DE FOTOS -->
+                <div class="form-group">
+                    <label>Fotos del producto/servicio (máx. 5) *</label>
+                    <div class="photo-upload-area" id="photo-drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                        <div class="photo-upload-icon">📷</div>
+                        <div style="font-weight: 600; margin-bottom: 10px;">Arrastra y suelta tus fotos aquí</div>
+                        <div style="color: var(--gray); margin-bottom: 20px;">o haz clic para seleccionar</div>
+                        <div class="photo-upload-actions">
+                            <button type="button" class="btn btn-outline" onclick="document.getElementById('photo-input').click()">
+                                📁 Subir Fotos
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="abrirCamara()">
+                                📸 Usar Cámara
+                            </button>
+                        </div>
+                        <div class="photo-counter" id="photo-counter">0/5 fotos seleccionadas</div>
+                    </div>
+                    
+                    <input type="file" id="photo-input" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+                    
+                    <!-- Vista previa de cámara -->
+                    <div class="camera-preview" id="camera-preview">
+                        <video id="camera-video" autoplay></video>
+                        <div class="camera-controls">
+                            <button type="button" class="btn btn-danger" onclick="cerrarCamara()">Cancelar</button>
+                            <button type="button" class="btn btn-success" onclick="tomarFoto()">Tomar Foto</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Vista previa de fotos -->
+                    <div class="photo-preview-container" id="photo-preview-container">
+                        <!-- Las previsualizaciones de fotos se añaden aquí -->
+                    </div>
+                </div>
+                
                 <div style="display: flex; gap: 15px; margin-top: 30px;">
                     <button type="button" class="btn btn-outline" onclick="closeModal('enviar-propuesta-modal')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Enviar Propuesta</button>
+                    <button type="submit" class="btn btn-primary" id="enviar-propuesta-btn">Enviar Propuesta</button>
                 </div>
             </form>
         </div>
@@ -2384,6 +2583,19 @@
         </div>
     </div>
 
+    <!-- MODAL PARA VER FOTOS -->
+    <div id="ver-fotos-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Fotos del producto</h2>
+                <button class="modal-close" onclick="closeModal('ver-fotos-modal')">×</button>
+            </div>
+            <div id="fotos-modal-content" style="text-align: center;">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT PRINCIPAL -->
     <script>
         // ============================================
@@ -2403,6 +2615,10 @@
             zona: '',
             categoriaEspecifica: {}
         };
+        
+        // Variables para manejo de fotos
+        let selectedPhotos = [];
+        let cameraStream = null;
 
         // ============================================
         // DATOS INICIALES DE EJEMPLO (MEJORADOS)
@@ -2543,7 +2759,11 @@
                     estado: "pendiente",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
-                    destacada: true
+                    destacada: true,
+                    fotos: [
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2YwZjBmMCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiPkRlcGFydGFtZW50byAxeDE8L3RleHQ+PC9zdmc+",
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiPlNhbGEgRXN0YXI8L3RleHQ+PC9zdmc+"
+                    ]
                 },
                 { 
                     id: 2, 
@@ -2555,7 +2775,10 @@
                     estado: "pendiente",
                     createdAt: new Date(Date.now() - 3600000).toISOString(),
                     updatedAt: new Date(Date.now() - 3600000).toISOString(),
-                    destacada: false
+                    destacada: false,
+                    fotos: [
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2QwZDBkMCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiPkRlcGFydGFtZW50byAyeDI8L3RleHQ+PC9zdmc+"
+                    ]
                 },
                 { 
                     id: 3, 
@@ -2567,7 +2790,11 @@
                     estado: "pendiente",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
-                    destacada: true
+                    destacada: true,
+                    fotos: [
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2MwYzBjMCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiPlRveW90YSBSQVY0PC90ZXh0Pjwvc3ZnPg==",
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2IwYjBiMCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMzMzMiPkludGVyaW9yPC90ZXh0Pjwvc3ZnPg=="
+                    ]
                 }
             ],
             chats: [
@@ -2662,13 +2889,9 @@
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 showUserUI();
                 
-                // Si es vendedor, mostrar avisos disponibles
-                if (user.role === 'vendedor') {
-                    showView('avisos');
-                    loadAvisos();
-                } else {
-                    showView('dashboard');
-                }
+                // Redirigir directamente a la vista de avisos después del login
+                showView('avisos');
+                loadAvisos();
                 
                 updateDashboard();
                 updateNotifications();
@@ -2713,7 +2936,13 @@
             saveData(data);
             
             showToast(`¡Cuenta creada exitosamente! Bienvenid@ a MarketConnect`, 'success');
-            showView('login');
+            
+            // Auto-login después del registro
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            showUserUI();
+            showView('avisos');
+            loadAvisos();
         }
 
         function logout() {
@@ -2730,13 +2959,9 @@
                 currentUser = JSON.parse(userData);
                 showUserUI();
                 
-                // Si es vendedor, mostrar avisos disponibles
-                if (currentUser.role === 'vendedor') {
-                    showView('avisos');
-                    loadAvisos();
-                } else {
-                    showView('dashboard');
-                }
+                // Redirigir directamente a la vista de avisos al iniciar
+                showView('avisos');
+                loadAvisos();
                 
                 updateDashboard();
                 updateNotifications();
@@ -3703,6 +3928,38 @@
                             const vendedor = data.users.find(u => u.id === propuesta.vendedorId);
                             const chat = data.chats.find(c => c.propuestaId === propuesta.id);
                             
+                            // Mostrar miniaturas de fotos si existen
+                            let fotosHTML = '';
+                            if (propuesta.fotos && propuesta.fotos.length > 0) {
+                                fotosHTML = `
+                                    <div style="margin: 15px 0;">
+                                        <div style="font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                            <span>📸</span>
+                                            <span>Fotos del producto:</span>
+                                        </div>
+                                        <div class="photo-gallery">
+                                            ${propuesta.fotos.slice(0, 3).map((foto, index) => `
+                                                <div class="photo-item" onclick="verFotoAmpliada('${foto}', ${propuesta.id})">
+                                                    <img src="${foto}" alt="Foto ${index + 1} del producto">
+                                                    ${index === 2 && propuesta.fotos.length > 3 ? 
+                                                        `<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">
+                                                            +${propuesta.fotos.length - 3}
+                                                        </div>` : ''
+                                                    }
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        ${propuesta.fotos.length > 3 ? `
+                                            <div style="text-align: center; margin-top: 10px;">
+                                                <button class="btn btn-xs btn-outline" onclick="verTodasLasFotos(${propuesta.id})">
+                                                    Ver todas las fotos (${propuesta.fotos.length})
+                                                </button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `;
+                            }
+                            
                             return `
                                 <div class="propuesta-item">
                                     <div class="propuesta-item-header">
@@ -3732,6 +3989,8 @@
                                             ${propuesta.precio <= aviso.presupuesto ? '✅ Dentro del presupuesto' : '⚠️ Supera el presupuesto'}
                                         </div>
                                     </div>
+                                    
+                                    ${fotosHTML}
                                     
                                     <div class="propuesta-item-content">
                                         <div style="font-weight: 600; margin-bottom: 10px;">Propuesta:</div>
@@ -3913,7 +4172,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE PROPUESTAS
+        // FUNCIONES DE PROPUESTAS CON FOTOS
         // ============================================
         function mostrarEnviarPropuesta(avisoId) {
             const data = getData();
@@ -3949,6 +4208,10 @@
                 }
             }
             
+            // Resetear fotos seleccionadas
+            selectedPhotos = [];
+            updatePhotoPreview();
+            
             document.getElementById('propuesta-aviso-id').value = avisoId;
             document.getElementById('propuesta-modal-title').textContent = `Enviar propuesta: ${aviso.titulo}`;
             document.getElementById('propuesta-presupuesto-info').textContent = 
@@ -3961,7 +4224,136 @@
             showModal('enviar-propuesta-modal');
         }
 
-        function enviarPropuesta(event) {
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.dataTransfer.dropEffect = 'copy';
+            document.getElementById('photo-drop-zone').classList.add('drag-over');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            document.getElementById('photo-drop-zone').classList.remove('drag-over');
+            
+            const files = event.dataTransfer.files;
+            handlePhotoFiles(files);
+        }
+
+        function handlePhotoUpload(event) {
+            const files = event.target.files;
+            handlePhotoFiles(files);
+        }
+
+        function handlePhotoFiles(files) {
+            const MAX_PHOTOS = 5;
+            const remainingSlots = MAX_PHOTOS - selectedPhotos.length;
+            
+            if (files.length > remainingSlots) {
+                showToast(`Solo puedes agregar ${remainingSlots} fotos más (máximo ${MAX_PHOTOS})`, 'warning');
+                return;
+            }
+            
+            Array.from(files).slice(0, remainingSlots).forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    showToast('Solo se permiten archivos de imagen', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedPhotos.push(e.target.result);
+                    updatePhotoPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updatePhotoPreview() {
+            const container = document.getElementById('photo-preview-container');
+            const counter = document.getElementById('photo-counter');
+            
+            container.innerHTML = '';
+            
+            selectedPhotos.forEach((photo, index) => {
+                const preview = document.createElement('div');
+                preview.className = 'photo-preview';
+                preview.innerHTML = `
+                    <img src="${photo}" alt="Foto ${index + 1}">
+                    <button type="button" class="photo-preview-remove" onclick="removePhoto(${index})">×</button>
+                `;
+                container.appendChild(preview);
+            });
+            
+            counter.textContent = `${selectedPhotos.length}/5 fotos seleccionadas`;
+            
+            // Actualizar estado del botón de enviar
+            const enviarBtn = document.getElementById('enviar-propuesta-btn');
+            if (enviarBtn) {
+                enviarBtn.disabled = selectedPhotos.length === 0;
+                enviarBtn.textContent = selectedPhotos.length === 0 ? 
+                    'Selecciona al menos 1 foto' : 
+                    `Enviar Propuesta (${selectedPhotos.length} foto${selectedPhotos.length > 1 ? 's' : ''})`;
+            }
+        }
+
+        function removePhoto(index) {
+            selectedPhotos.splice(index, 1);
+            updatePhotoPreview();
+        }
+
+        function abrirCamara() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showToast('La cámara no está disponible en este dispositivo', 'error');
+                return;
+            }
+            
+            const cameraPreview = document.getElementById('camera-preview');
+            const video = document.getElementById('camera-video');
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    cameraStream = stream;
+                    video.srcObject = stream;
+                    cameraPreview.classList.add('active');
+                })
+                .catch(err => {
+                    console.error('Error al acceder a la cámara:', err);
+                    showToast('No se pudo acceder a la cámara. Asegúrate de dar los permisos necesarios.', 'error');
+                });
+        }
+
+        function cerrarCamara() {
+            const cameraPreview = document.getElementById('camera-preview');
+            const video = document.getElementById('camera-video');
+            
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
+            video.srcObject = null;
+            cameraPreview.classList.remove('active');
+        }
+
+        function tomarFoto() {
+            const video = document.getElementById('camera-video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const photoData = canvas.toDataURL('image/jpeg', 0.8);
+            selectedPhotos.push(photoData);
+            updatePhotoPreview();
+            
+            cerrarCamara();
+            showToast('Foto tomada exitosamente', 'success');
+        }
+
+        function enviarPropuestaConFotos(event) {
             event.preventDefault();
             
             const avisoId = parseInt(document.getElementById('propuesta-aviso-id').value);
@@ -3979,6 +4371,16 @@
                 return;
             }
             
+            if (selectedPhotos.length === 0) {
+                showToast('Debes agregar al menos una foto del producto/servicio', 'error');
+                return;
+            }
+            
+            if (selectedPhotos.length > 5) {
+                showToast('Máximo 5 fotos permitidas', 'error');
+                return;
+            }
+            
             const data = getData();
             const aviso = data.avisos.find(a => a.id === avisoId);
             
@@ -3988,7 +4390,7 @@
                 return;
             }
             
-            // Crear nueva propuesta
+            // Crear nueva propuesta con fotos
             const nuevaPropuesta = {
                 id: data.nextIds.propuestas++,
                 avisoId: avisoId,
@@ -3999,7 +4401,8 @@
                 estado: 'pendiente',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
-                destacada: false
+                destacada: false,
+                fotos: selectedPhotos // Guardar las fotos
             };
             
             data.propuestas.push(nuevaPropuesta);
@@ -4018,8 +4421,8 @@
                 id: data.nextIds.notifications++,
                 userId: comprador.id,
                 type: "propuesta_nueva",
-                title: "¡Nueva propuesta recibida!",
-                message: `${user.name || user.email} envió una propuesta a tu aviso: "${aviso.titulo}"`,
+                title: "¡Nueva propuesta con fotos recibida!",
+                message: `${user.name || user.email} envió una propuesta con ${selectedPhotos.length} foto${selectedPhotos.length > 1 ? 's' : ''} a tu aviso: "${aviso.titulo}"`,
                 data: { avisoId: avisoId, propuestaId: nuevaPropuesta.id },
                 read: false,
                 createdAt: new Date().toISOString()
@@ -4035,13 +4438,13 @@
                     {
                         id: 1,
                         userId: currentUser.id,
-                        text: `Hola, he enviado una propuesta por $${precio.toLocaleString()}. ${mensaje.substring(0, 50)}...`,
+                        text: `Hola, he enviado una propuesta por $${precio.toLocaleString()} con ${selectedPhotos.length} foto${selectedPhotos.length > 1 ? 's' : ''}. ${mensaje.substring(0, 50)}...`,
                         timestamp: new Date().toISOString(),
                         leido: false
                     }
                 ],
                 unreadCount: 1,
-                lastMessage: `Hola, he enviado una propuesta por $${precio.toLocaleString()}. ${mensaje.substring(0, 50)}...`,
+                lastMessage: `Hola, he enviado una propuesta por $${precio.toLocaleString()} con ${selectedPhotos.length} foto${selectedPhotos.length > 1 ? 's' : ''}. ${mensaje.substring(0, 50)}...`,
                 lastMessageTime: new Date().toISOString(),
                 activo: true
             };
@@ -4050,12 +4453,57 @@
             
             saveData(data);
             
+            // Limpiar fotos
+            selectedPhotos = [];
+            
             closeModal('enviar-propuesta-modal');
-            showToast('¡Propuesta enviada exitosamente! Se ha iniciado un chat con el comprador.', 'success');
+            showToast(`¡Propuesta enviada exitosamente con ${selectedPhotos.length} foto${selectedPhotos.length > 1 ? 's' : ''}! Se ha iniciado un chat con el comprador.`, 'success');
             
             // Redirigir al detalle del aviso
             currentAvisoId = avisoId;
             showView('detalle-aviso');
+        }
+
+        function verFotoAmpliada(fotoSrc, propuestaId) {
+            const modalContent = document.getElementById('fotos-modal-content');
+            modalContent.innerHTML = `
+                <img src="${fotoSrc}" style="max-width: 100%; max-height: 70vh; border-radius: var(--border-radius);">
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="closeModal('ver-fotos-modal')">
+                        Cerrar
+                    </button>
+                </div>
+            `;
+            showModal('ver-fotos-modal');
+        }
+
+        function verTodasLasFotos(propuestaId) {
+            const data = getData();
+            const propuesta = data.propuestas.find(p => p.id === propuestaId);
+            
+            if (!propuesta || !propuesta.fotos || propuesta.fotos.length === 0) {
+                showToast('No hay fotos disponibles', 'info');
+                return;
+            }
+            
+            const modalContent = document.getElementById('fotos-modal-content');
+            modalContent.innerHTML = `
+                <h3 style="margin-bottom: 20px; text-align: center;">Fotos del producto (${propuesta.fotos.length})</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    ${propuesta.fotos.map((foto, index) => `
+                        <div style="cursor: pointer;" onclick="verFotoAmpliada('${foto}', ${propuestaId})">
+                            <img src="${foto}" style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--border-radius-sm); border: 2px solid var(--primary-light);">
+                            <div style="text-align: center; margin-top: 5px; font-size: 0.9rem; color: var(--gray);">Foto ${index + 1}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="closeModal('ver-fotos-modal')">
+                        Cerrar
+                    </button>
+                </div>
+            `;
+            showModal('ver-fotos-modal');
         }
 
         function loadPropuestas() {
@@ -4138,6 +4586,10 @@
                     'moto': '🏍️'
                 }[aviso.categoria] || '📦';
                 
+                // Indicador de fotos
+                const fotosIndicator = propuesta.fotos && propuesta.fotos.length > 0 ? 
+                    `<span class="badge badge-info" style="margin-left: 5px;">📸 ${propuesta.fotos.length}</span>` : '';
+                
                 return `
                     <div class="propuesta-card" onclick="verPropuestaDetalle(${propuesta.id}, ${aviso.id})">
                         <div class="propuesta-header">
@@ -4153,6 +4605,7 @@
                                     <span class="badge badge-light">
                                         ${currentUser.role === 'comprador' ? 'De:' : 'Para:'} ${otroUsuario.name || otroUsuario.email}
                                     </span>
+                                    ${fotosIndicator}
                                 </div>
                             </div>
                         </div>
@@ -4171,6 +4624,12 @@
                             <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); verPropuestaDetalle(${propuesta.id}, ${aviso.id})">
                                 Ver Detalles
                             </button>
+                            
+                            ${propuesta.fotos && propuesta.fotos.length > 0 ? `
+                                <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); verTodasLasFotos(${propuesta.id})">
+                                    📸 Ver Fotos
+                                </button>
+                            ` : ''}
                             
                             ${chat ? `
                                 <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); abrirChat(${chat.id}, ${aviso.id})">
@@ -4468,6 +4927,9 @@
                                                                propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">
                                                 ${propuesta.estado}
                                             </span>
+                                            ${propuesta.fotos && propuesta.fotos.length > 0 ? 
+                                                `<span class="badge badge-info">📸 ${propuesta.fotos.length}</span>` : ''
+                                            }
                                         </div>
                                     </div>
                                 ` : ''}
