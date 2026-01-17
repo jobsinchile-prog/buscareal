@@ -991,7 +991,7 @@
             font-size: 1.2rem;
         }
 
-        /* FILTROS */
+        /* FILTROS - NUEVOS ESTILOS ESPECÍFICOS */
         .filters {
             background: white;
             border-radius: var(--border-radius);
@@ -1011,6 +1011,85 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+        }
+
+        .category-filters {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--gray-light);
+        }
+
+        .category-filters.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .filter-section h4 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-section h4 i {
+            color: var(--primary);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .filter-option {
+            padding: 8px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .filter-option:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .filter-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-inputs .form-control {
+            flex: 1;
+        }
+
+        .range-separator {
+            color: var(--gray);
+            font-weight: 600;
         }
 
         /* PANEL ADMIN */
@@ -1098,7 +1177,7 @@
             background: white;
             border-radius: var(--border-radius);
             padding: 40px;
-            max-width: 600px;
+            max-width: 800px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -1190,6 +1269,10 @@
             .detalle-sidebar {
                 width: 400px;
             }
+            
+            .filter-row {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
         }
 
         @media (min-width: 992px) {
@@ -1199,6 +1282,10 @@
             
             .detalle-sidebar {
                 width: 450px;
+            }
+            
+            .filters-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -1459,16 +1546,16 @@
             </div>
         </section>
 
-        <!-- AVISOS -->
+        <!-- AVISOS - VISTA PRINCIPAL PARA VENDEDORES -->
         <section id="avisos" class="view">
             <div class="dashboard-header">
                 <div class="dashboard-title">
                     <span class="dashboard-title-icon">📋</span>
-                    <span id="avisos-title">Avisos</span>
+                    <span id="avisos-title">Avisos Disponibles</span>
                 </div>
                 <div>
                     <button id="filter-toggle" class="btn btn-outline" onclick="toggleFilters()">
-                        <span>🔍</span> Filtros
+                        <span>🔍</span> Filtros Avanzados
                     </button>
                     <button id="create-aviso-btn-2" class="btn btn-primary hidden" onclick="showCreateAvisoModal()">
                         <span>➕</span> Nuevo Aviso
@@ -1476,49 +1563,235 @@
                 </div>
             </div>
             
-            <div id="filters-container" class="filters hidden">
+            <!-- FILTROS AVANZADOS -->
+            <div id="filters-container" class="filters">
                 <div class="filters-header">
                     <h3 style="margin: 0;">Filtrar Avisos</h3>
                     <button class="btn btn-xs" onclick="limpiarFiltros()">Limpiar Filtros</button>
                 </div>
                 <div class="filters-grid">
                     <div>
-                        <label>Tipo</label>
-                        <select id="filter-tipo" class="form-control">
-                            <option value="">Todos los tipos</option>
-                            <option value="auto">Auto</option>
-                            <option value="inmueble">Inmueble</option>
-                            <option value="tecnologia">Tecnología</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="otros">Otros</option>
+                        <label for="filter-categoria">Categoría *</label>
+                        <select id="filter-categoria" class="form-control" onchange="mostrarFiltrosEspecificos()" required>
+                            <option value="">Selecciona categoría</option>
+                            <option value="inmueble">🏠 Inmuebles</option>
+                            <option value="auto">🚗 Automóviles</option>
+                            <option value="moto">🏍️ Motos</option>
                         </select>
                     </div>
                     <div>
-                        <label>Presupuesto máximo</label>
-                        <input type="number" id="filter-presupuesto" class="form-control" placeholder="USD">
+                        <label for="filter-presupuesto-min">Presupuesto Mínimo</label>
+                        <input type="number" id="filter-presupuesto-min" class="form-control" placeholder="USD" min="0">
                     </div>
                     <div>
-                        <label>Estado</label>
-                        <select id="filter-estado" class="form-control">
-                            <option value="">Todos los estados</option>
-                            <option value="abierto">Abierto</option>
-                            <option value="negociando">Negociando</option>
-                            <option value="cerrado">Cerrado</option>
-                            <option value="rechazado">Rechazado</option>
-                        </select>
+                        <label for="filter-presupuesto-max">Presupuesto Máximo</label>
+                        <input type="number" id="filter-presupuesto-max" class="form-control" placeholder="USD" min="0">
                     </div>
                     <div>
-                        <label>Urgencia</label>
-                        <select id="filter-urgencia" class="form-control">
-                            <option value="">Cualquier urgencia</option>
-                            <option value="baja">Baja</option>
-                            <option value="media">Media</option>
-                            <option value="alta">Alta</option>
-                            <option value="inmediata">Inmediata</option>
-                        </select>
+                        <label for="filter-zona">Zona/Ubicación</label>
+                        <input type="text" id="filter-zona" class="form-control" placeholder="Ej: Santiago Centro">
                     </div>
                 </div>
-                <div style="text-align: right; margin-top: 20px;">
+                
+                <!-- FILTROS ESPECÍFICOS POR CATEGORÍA -->
+                <div id="filtros-inmueble" class="category-filters">
+                    <div class="filter-section">
+                        <h4><i>🏠</i> Tipo de Inmueble</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo')">Casa</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo')">Departamento</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo')">Oficina</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo')">Local Comercial</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo')">Terreno</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo')">Cabaña</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>🛏️</i> Dormitorios</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'dormitorios')">1</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'dormitorios')">2</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'dormitorios')">3</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'dormitorios')">4+</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>🚿</i> Baños</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">1</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">2</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">3</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'banos')">4+</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>📏</i> Metros Cuadrados</h4>
+                        <div class="filter-row">
+                            <div>
+                                <label>Mínimo (m²)</label>
+                                <input type="number" id="filter-metros-min" class="form-control" placeholder="Ej: 50" min="0">
+                            </div>
+                            <div>
+                                <label>Máximo (m²)</label>
+                                <input type="number" id="filter-metros-max" class="form-control" placeholder="Ej: 200" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>📍</i> Características</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas')">Estacionamiento</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas')">Piscina</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas')">Jardín</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas')">Amoblado</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas')">Logia</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas')">Bodega</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="filtros-auto" class="category-filters">
+                    <div class="filter-section">
+                        <h4><i>🚗</i> Tipo de Vehículo</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-vehiculo')">Auto</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-vehiculo')">Camioneta</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-vehiculo')">SUV</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-vehiculo')">Furgón</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-vehiculo')">Vehículo Comercial</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>🏷️</i> Marca</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Toyota</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Nissan</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Chevrolet</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Ford</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Hyundai</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Kia</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Volkswagen</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca')">Mazda</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>📅</i> Año</h4>
+                        <div class="filter-row">
+                            <div>
+                                <label>Desde</label>
+                                <input type="number" id="filter-ano-min" class="form-control" placeholder="Ej: 2015" min="1990" max="2024">
+                            </div>
+                            <div>
+                                <label>Hasta</label>
+                                <input type="number" id="filter-ano-max" class="form-control" placeholder="Ej: 2023" min="1990" max="2024">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>🛣️</i> Kilometraje</h4>
+                        <div class="filter-row">
+                            <div>
+                                <label>Mínimo (km)</label>
+                                <input type="number" id="filter-km-min" class="form-control" placeholder="Ej: 0" min="0">
+                            </div>
+                            <div>
+                                <label>Máximo (km)</label>
+                                <input type="number" id="filter-km-max" class="form-control" placeholder="Ej: 50000" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>⚙️</i> Características</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Automático</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Manual</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Diesel</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Gasolina</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Híbrido</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Eléctrico</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">4x4</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Aire Acondicionado</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="filtros-moto" class="category-filters">
+                    <div class="filter-section">
+                        <h4><i>🏍️</i> Tipo de Moto</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-moto')">Deportiva</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-moto')">Naked</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-moto')">Scooter</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-moto')">Enduro</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-moto')">Custom</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'tipo-moto')">Tour</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>🏷️</i> Marca</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">Yamaha</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">Honda</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">Suzuki</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">Kawasaki</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">BMW</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">KTM</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'marca-moto')">Ducati</div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>📅</i> Año</h4>
+                        <div class="filter-row">
+                            <div>
+                                <label>Desde</label>
+                                <input type="number" id="filter-moto-ano-min" class="form-control" placeholder="Ej: 2018" min="1990" max="2024">
+                            </div>
+                            <div>
+                                <label>Hasta</label>
+                                <input type="number" id="filter-moto-ano-max" class="form-control" placeholder="Ej: 2023" min="1990" max="2024">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>🛣️</i> Kilometraje</h4>
+                        <div class="filter-row">
+                            <div>
+                                <label>Mínimo (km)</label>
+                                <input type="number" id="filter-moto-km-min" class="form-control" placeholder="Ej: 0" min="0">
+                            </div>
+                            <div>
+                                <label>Máximo (km)</label>
+                                <input type="number" id="filter-moto-km-max" class="form-control" placeholder="Ej: 20000" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4><i>⚙️</i> Cilindrada (cc)</h4>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'cilindrada')">125cc</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'cilindrada')">250cc</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'cilindrada')">500cc</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'cilindrada')">600cc</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'cilindrada')">750cc</div>
+                            <div class="filter-option" onclick="toggleFilterOption(this, 'cilindrada')">1000cc+</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-top: 30px;">
+                    <button class="btn btn-outline" onclick="toggleFilters()">Ocultar Filtros</button>
                     <button class="btn btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
                 </div>
             </div>
@@ -1569,11 +1842,9 @@
                         <label>Tipo de aviso</label>
                         <select id="filter-propuesta-tipo" class="form-control">
                             <option value="">Todos los tipos</option>
-                            <option value="auto">Auto</option>
                             <option value="inmueble">Inmueble</option>
-                            <option value="tecnologia">Tecnología</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="otros">Otros</option>
+                            <option value="auto">Automóvil</option>
+                            <option value="moto">Moto</option>
                         </select>
                     </div>
                     <div>
@@ -1781,40 +2052,226 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="aviso-tipo">Tipo *</label>
-                    <select id="aviso-tipo" class="form-control" required>
-                        <option value="">Selecciona un tipo</option>
-                        <option value="auto">Auto</option>
-                        <option value="inmueble">Inmueble</option>
-                        <option value="tecnologia">Tecnología</option>
-                        <option value="servicios">Servicios</option>
-                        <option value="otros">Otros</option>
+                    <label for="aviso-categoria">Categoría *</label>
+                    <select id="aviso-categoria" class="form-control" onchange="mostrarCamposEspecificos()" required>
+                        <option value="">Selecciona categoría</option>
+                        <option value="inmueble">🏠 Inmuebles</option>
+                        <option value="auto">🚗 Automóviles</option>
+                        <option value="moto">🏍️ Motos</option>
                     </select>
                 </div>
                 
+                <!-- CAMPOS ESPECÍFICOS PARA INMUEBLES -->
+                <div id="campos-inmueble" class="category-fields hidden">
+                    <div class="form-group">
+                        <label for="inmueble-tipo">Tipo de Inmueble *</label>
+                        <select id="inmueble-tipo" class="form-control">
+                            <option value="">Selecciona tipo</option>
+                            <option value="casa">Casa</option>
+                            <option value="departamento">Departamento</option>
+                            <option value="oficina">Oficina</option>
+                            <option value="local">Local Comercial</option>
+                            <option value="terreno">Terreno</option>
+                            <option value="cabaña">Cabaña</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="inmueble-dormitorios">Dormitorios *</label>
+                            <select id="inmueble-dormitorios" class="form-control">
+                                <option value="">Cantidad</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5+">5+</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="inmueble-banos">Baños *</label>
+                            <select id="inmueble-banos" class="form-control">
+                                <option value="">Cantidad</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4+">4+</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inmueble-metros">Metros cuadrados *</label>
+                        <input type="number" id="inmueble-metros" class="form-control" placeholder="Ej: 120" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Características (selecciona las que apliquen)</label>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Estacionamiento</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Piscina</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Jardín</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Amoblado</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Logia</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'inmueble')">Bodega</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CAMPOS ESPECÍFICOS PARA AUTOS -->
+                <div id="campos-auto" class="category-fields hidden">
+                    <div class="form-group">
+                        <label for="auto-tipo">Tipo de Vehículo *</label>
+                        <select id="auto-tipo" class="form-control">
+                            <option value="">Selecciona tipo</option>
+                            <option value="auto">Auto</option>
+                            <option value="camioneta">Camioneta</option>
+                            <option value="suv">SUV</option>
+                            <option value="furgon">Furgón</option>
+                            <option value="comercial">Vehículo Comercial</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="auto-marca">Marca *</label>
+                            <select id="auto-marca" class="form-control">
+                                <option value="">Selecciona marca</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="nissan">Nissan</option>
+                                <option value="chevrolet">Chevrolet</option>
+                                <option value="ford">Ford</option>
+                                <option value="hyundai">Hyundai</option>
+                                <option value="kia">Kia</option>
+                                <option value="volkswagen">Volkswagen</option>
+                                <option value="mazda">Mazda</option>
+                                <option value="otra">Otra</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="auto-modelo">Modelo *</label>
+                            <input type="text" id="auto-modelo" class="form-control" placeholder="Ej: Corolla, Civic, etc.">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="auto-ano">Año *</label>
+                            <input type="number" id="auto-ano" class="form-control" placeholder="Ej: 2020" min="1990" max="2024">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="auto-kilometraje">Kilometraje máximo (km)</label>
+                            <input type="number" id="auto-kilometraje" class="form-control" placeholder="Ej: 50000" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Características (selecciona las que apliquen)</label>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Automático</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Manual</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Diesel</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Gasolina</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Híbrido</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Eléctrico</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">4x4</div>
+                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Aire Acondicionado</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CAMPOS ESPECÍFICOS PARA MOTOS -->
+                <div id="campos-moto" class="category-fields hidden">
+                    <div class="form-group">
+                        <label for="moto-tipo">Tipo de Moto *</label>
+                        <select id="moto-tipo" class="form-control">
+                            <option value="">Selecciona tipo</option>
+                            <option value="deportiva">Deportiva</option>
+                            <option value="naked">Naked</option>
+                            <option value="scooter">Scooter</option>
+                            <option value="enduro">Enduro</option>
+                            <option value="custom">Custom</option>
+                            <option value="tour">Tour</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="moto-marca">Marca *</label>
+                            <select id="moto-marca" class="form-control">
+                                <option value="">Selecciona marca</option>
+                                <option value="yamaha">Yamaha</option>
+                                <option value="honda">Honda</option>
+                                <option value="suzuki">Suzuki</option>
+                                <option value="kawasaki">Kawasaki</option>
+                                <option value="bmw">BMW</option>
+                                <option value="ktm">KTM</option>
+                                <option value="ducati">Ducati</option>
+                                <option value="otra">Otra</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="moto-modelo">Modelo *</label>
+                            <input type="text" id="moto-modelo" class="form-control" placeholder="Ej: R1, Ninja, etc.">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="moto-ano">Año *</label>
+                            <input type="number" id="moto-ano" class="form-control" placeholder="Ej: 2021" min="1990" max="2024">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="moto-kilometraje">Kilometraje máximo (km)</label>
+                            <input type="number" id="moto-kilometraje" class="form-control" placeholder="Ej: 15000" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="moto-cilindrada">Cilindrada (cc) *</label>
+                        <select id="moto-cilindrada" class="form-control">
+                            <option value="">Selecciona cilindrada</option>
+                            <option value="125">125cc</option>
+                            <option value="250">250cc</option>
+                            <option value="500">500cc</option>
+                            <option value="600">600cc</option>
+                            <option value="750">750cc</option>
+                            <option value="1000">1000cc+</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- CAMPOS COMUNES PARA TODAS LAS CATEGORÍAS -->
                 <div class="form-group">
                     <label for="aviso-descripcion">Descripción detallada *</label>
                     <textarea id="aviso-descripcion" class="form-control form-textarea" placeholder="Describe exactamente lo que buscas, características importantes, preferencias, etc." required></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="aviso-presupuesto">Presupuesto máximo (USD) *</label>
-                    <input type="number" id="aviso-presupuesto" class="form-control" min="0" step="100" placeholder="Ej: 50000" required>
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="aviso-presupuesto">Presupuesto máximo (USD) *</label>
+                        <input type="number" id="aviso-presupuesto" class="form-control" min="0" step="100" placeholder="Ej: 50000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aviso-urgencia">Nivel de urgencia *</label>
+                        <select id="aviso-urgencia" class="form-control" required>
+                            <option value="baja">Baja (1-3 meses)</option>
+                            <option value="media" selected>Media (2-4 semanas)</option>
+                            <option value="alta">Alta (1 semana)</option>
+                            <option value="inmediata">Inmediata (1-3 días)</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="aviso-zona">Zona o ubicación *</label>
-                    <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Centro ciudad, Zona norte, Online, etc." required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="aviso-urgencia">Nivel de urgencia *</label>
-                    <select id="aviso-urgencia" class="form-control" required>
-                        <option value="baja">Baja (1-3 meses)</option>
-                        <option value="media" selected>Media (2-4 semanas)</option>
-                        <option value="alta">Alta (1 semana)</option>
-                        <option value="inmediata">Inmediata (1-3 días)</option>
-                    </select>
+                    <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Santiago Centro, Providencia, Las Condes, etc." required>
                 </div>
                 
                 <div style="display: flex; gap: 15px; margin-top: 30px;">
@@ -1939,6 +2396,13 @@
         let currentPropuestaId = null;
         let notifications = [];
         let unreadMessages = 0;
+        let activeFilters = {
+            categoria: '',
+            presupuestoMin: null,
+            presupuestoMax: null,
+            zona: '',
+            categoriaEspecifica: {}
+        };
 
         // ============================================
         // DATOS INICIALES DE EJEMPLO (MEJORADOS)
@@ -1998,49 +2462,73 @@
                 { 
                     id: 1, 
                     userId: 1, 
-                    tipo: "auto", 
-                    titulo: "Busco SUV familiar 2020-2022 con buen estado", 
-                    descripcion: "Necesito un SUV familiar con espacio para 5 personas, preferiblemente marca Toyota o Honda. Debe estar en buen estado, máximo 40,000 km. Busco buen precio y garantía.\n\nRequisitos:\n- Máximo 40,000 km\n- Buen estado mecánico\n- Preferiblemente blanco o negro\n- Documentación en regla\n- Servicio completo de mantenimiento",
-                    presupuesto: 35000, 
-                    zona: "Ciudad Capital y alrededores", 
+                    categoria: "inmueble",
+                    titulo: "Busco departamento 3 dormitorios en Providencia", 
+                    descripcion: "Necesito departamento para familia, mínimo 3 dormitorios, 2 baños, preferiblemente amoblado. Busco edificio con seguridad y áreas comunes.\n\nRequisitos:\n- Mínimo 80m²\n- Cocina equipada\n- Estacionamiento incluido\n- Cerca de metro\n- Acepto mascotas",
+                    presupuesto: 350000, 
+                    zona: "Providencia, Santiago", 
                     urgencia: "media", 
                     estado: "abierto",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
+                    detalles: {
+                        tipo: "departamento",
+                        dormitorios: 3,
+                        banos: 2,
+                        metrosCuadrados: 85,
+                        caracteristicas: ["estacionamiento", "amoblado", "logia"]
+                    },
                     propuestas: [1, 2],
-                    vistas: 15,
+                    vistas: 25,
                     destacado: true
                 },
                 { 
                     id: 2, 
                     userId: 1, 
-                    tipo: "inmueble", 
-                    titulo: "Apartamento 3 habitaciones cerca de universidad", 
-                    descripcion: "Busco apartamento para familia de 4, mínimo 3 habitaciones, 2 baños. Preferiblemente en edificio con áreas verdes y seguridad 24/7.\n\nCaracterísticas deseadas:\n- Mínimo 90m²\n- Cocina integral\n- Parqueadero incluido\n- Aire acondicionado\n- Cerca de transporte público\n- Acepto condominio",
-                    presupuesto: 250000, 
-                    zona: "Zona Norte, Sector Universitario", 
-                    urgencia: "baja", 
-                    estado: "negociando",
-                    createdAt: new Date(Date.now() - 86400000).toISOString(),
+                    categoria: "auto",
+                    titulo: "Busco SUV familiar 2020-2022 con buen estado", 
+                    descripcion: "Necesito un SUV familiar con espacio para 5 personas, preferiblemente marca Toyota o Honda. Debe estar en buen estado, máximo 40,000 km. Busco buen precio y garantía.\n\nRequisitos:\n- Máximo 40,000 km\n- Buen estado mecánico\n- Preferiblemente blanco o negro\n- Documentación en regla\n- Servicio completo de mantenimiento",
+                    presupuesto: 35000, 
+                    zona: "Región Metropolitana", 
+                    urgencia: "media", 
+                    estado: "abierto",
+                    createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
+                    detalles: {
+                        tipo: "suv",
+                        marca: "toyota",
+                        modelo: "RAV4",
+                        ano: 2021,
+                        kilometrajeMax: 40000,
+                        caracteristicas: ["automatico", "gasolina", "aire acondicionado", "4x4"]
+                    },
                     propuestas: [3],
-                    vistas: 28,
+                    vistas: 42,
                     destacado: false
                 },
                 { 
                     id: 3, 
                     userId: 1, 
-                    tipo: "tecnologia", 
-                    titulo: "Laptop gamer con RTX 3070 y buen rendimiento", 
-                    descripcion: "Busco laptop para gaming y trabajo, mínimo RTX 3070, 16GB RAM, pantalla 144Hz. Marca preferida: ASUS ROG o Lenovo Legion.\n\nEspecificaciones:\n- Procesador i7 o Ryzen 7\n- 16GB RAM (expandible)\n- SSD 1TB\n- Pantalla 15-17 pulgadas\n- Garantía vigente\n- Sin daños físicos",
-                    presupuesto: 1800, 
-                    zona: "Envío nacional", 
-                    urgencia: "alta", 
+                    categoria: "moto",
+                    titulo: "Busco moto deportiva 600cc para ciudad", 
+                    descripcion: "Busco moto deportiva en buen estado, preferiblemente Yamaha o Honda. Ideal para uso urbano y ocasional paseo.\n\nEspecificaciones:\n- 600cc preferiblemente\n- Documentación al día\n- Sin accidentes\n- Buen estado de neumáticos\n- Mantenimiento al día",
+                    presupuesto: 8000, 
+                    zona: "Santiago y alrededores", 
+                    urgencia: "baja", 
                     estado: "abierto",
-                    createdAt: new Date(Date.now() - 172800000).toISOString(),
-                    updatedAt: new Date(Date.now() - 86400000).toISOString(),
+                    createdAt: new Date(Date.now() - 86400000).toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    detalles: {
+                        tipo: "deportiva",
+                        marca: "yamaha",
+                        modelo: "YZF-R6",
+                        ano: 2019,
+                        kilometrajeMax: 15000,
+                        cilindrada: "600",
+                        caracteristicas: ["inyeccion", "abs", "llantas nuevas"]
+                    },
                     propuestas: [],
-                    vistas: 42,
+                    vistas: 18,
                     destacado: true
                 }
             ],
@@ -2049,9 +2537,9 @@
                     id: 1, 
                     avisoId: 1, 
                     vendedorId: 2, 
-                    precio: 32000, 
-                    mensaje: "Toyota RAV4 2021, 35,000 km, excelente estado. Único dueño, mantenimientos al día en agencia. Incluye garantía extendida de 2 años. Disponible para prueba de manejo.",
-                    detalles: "Color blanco perla, techo panorámico, sistema de sonido premium, cámaras 360°, sensores de estacionamiento. Historial completo disponible.",
+                    precio: 340000, 
+                    mensaje: "Tengo departamento en Providencia, 3 dormitorios, 2 baños, 90m2, amoblado. Edificio con piscina y gimnasio. Disponible inmediatamente.",
+                    detalles: "Departamento en piso 12, vista despejada, cocina integral nueva, estacionamiento y bodega incluidos. Condominio con seguridad 24/7.",
                     estado: "pendiente",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
@@ -2061,9 +2549,9 @@
                     id: 2, 
                     avisoId: 1, 
                     vendedorId: 4, 
-                    precio: 31500, 
-                    mensaje: "Honda CR-V 2020, 38,000 km, impecable. Full equipo: piel, navegación, asientos calefactados. Recién pasó revisión técnica.",
-                    detalles: "Color gris metalizado, rines de aleación 18\", control crucero adaptativo, alerta de cambio de carril. Todos los servicios en Honda.",
+                    precio: 330000, 
+                    mensaje: "Departamento en Providencia, 3 dormitorios, 85m2, semi-amoblado. Excelente ubicación cerca de metro y comercios.",
+                    detalles: "Edificio nuevo (2020), departamento con terraza, estacionamiento, cerca de parques y colegios. Precio negociable.",
                     estado: "pendiente",
                     createdAt: new Date(Date.now() - 3600000).toISOString(),
                     updatedAt: new Date(Date.now() - 3600000).toISOString(),
@@ -2073,10 +2561,10 @@
                     id: 3, 
                     avisoId: 2, 
                     vendedorId: 2, 
-                    precio: 240000, 
-                    mensaje: "Tengo exactamente lo que buscas. Apartamento en condominio 'Los Pinos', 120m2, 3 hab, 2 baños, cocina integral, parqueadero techado. Podemos negociar el precio.",
-                    detalles: "Condominio con piscina, gimnasio, áreas verdes, seguridad 24/7. Apartamento en 3er piso, vista a jardines. Listo para entrega inmediata.",
-                    estado: "aceptada",
+                    precio: 33500, 
+                    mensaje: "Toyota RAV4 2021, 35,000 km, excelente estado. Único dueño, mantenimientos al día en agencia.",
+                    detalles: "Color blanco perla, techo panorámico, sistema de sonido premium, cámaras 360°, sensores de estacionamiento. Historial completo disponible.",
+                    estado: "pendiente",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                     destacada: true
@@ -2085,46 +2573,6 @@
             chats: [
                 {
                     id: 1,
-                    avisoId: 2,
-                    propuestaId: 3,
-                    participantes: [1, 2],
-                    mensajes: [
-                        { 
-                            id: 1, 
-                            userId: 2, 
-                            text: "Hola Juan, vi tu aviso y tengo una propuesta que podría interesarte. Apartamento en condominio seguro, 120m2, 3 habitaciones, 2 baños.", 
-                            timestamp: new Date(Date.now() - 3600000).toISOString(),
-                            leido: true
-                        },
-                        { 
-                            id: 2, 
-                            userId: 1, 
-                            text: "Hola María, sí me interesa. ¿Podrías darme más detalles sobre la ubicación exacta y los servicios del condominio?", 
-                            timestamp: new Date(Date.now() - 1800000).toISOString(),
-                            leido: true
-                        },
-                        { 
-                            id: 3, 
-                            userId: 2, 
-                            text: "Claro, está en el condominio 'Los Pinos' en la Av. Principal. Tiene piscina, gimnasio, parque infantil, seguridad 24/7 con cámaras. La zona es muy tranquila y cerca de la universidad.", 
-                            timestamp: new Date(Date.now() - 900000).toISOString(),
-                            leido: true
-                        },
-                        { 
-                            id: 4, 
-                            userId: 1, 
-                            text: "Suena bien. ¿El precio de 240,000 es negociable? ¿Incluye parqueadero?", 
-                            timestamp: new Date(Date.now() - 300000).toISOString(),
-                            leido: false
-                        }
-                    ],
-                    unreadCount: 1,
-                    lastMessage: "Suena bien. ¿El precio de 240,000 es negociable? ¿Incluye parqueadero?",
-                    lastMessageTime: new Date(Date.now() - 300000).toISOString(),
-                    activo: true
-                },
-                {
-                    id: 2,
                     avisoId: 1,
                     propuestaId: 1,
                     participantes: [1, 2],
@@ -2132,14 +2580,21 @@
                         { 
                             id: 1, 
                             userId: 2, 
-                            text: "Hola, te envié una propuesta para el SUV. El Toyota RAV4 está en excelente estado. ¿Te gustaría agendar una prueba de manejo?", 
-                            timestamp: new Date(Date.now() - 7200000).toISOString(),
+                            text: "Hola Juan, vi tu aviso y tengo un departamento que podría interesarte. 3 dormitorios, 2 baños, 90m2 en Providencia.", 
+                            timestamp: new Date(Date.now() - 3600000).toISOString(),
+                            leido: true
+                        },
+                        { 
+                            id: 2, 
+                            userId: 1, 
+                            text: "Hola María, sí me interesa. ¿Podrías enviarme más fotos y detalles sobre las áreas comunes?", 
+                            timestamp: new Date(Date.now() - 1800000).toISOString(),
                             leido: true
                         }
                     ],
                     unreadCount: 0,
-                    lastMessage: "Hola, te envié una propuesta para el SUV. El Toyota RAV4 está en excelente estado. ¿Te gustaría agendar una prueba de manejo?",
-                    lastMessageTime: new Date(Date.now() - 7200000).toISOString(),
+                    lastMessage: "Hola María, sí me interesa. ¿Podrías enviarme más fotos y detalles sobre las áreas comunes?",
+                    lastMessageTime: new Date(Date.now() - 1800000).toISOString(),
                     activo: true
                 }
             ],
@@ -2149,38 +2604,18 @@
                     userId: 1,
                     type: "propuesta_nueva",
                     title: "Nueva propuesta recibida",
-                    message: "María Vendedora envió una propuesta a tu aviso 'Apartamento 3 habitaciones'",
-                    data: { avisoId: 2, propuestaId: 3 },
+                    message: "María Vendedora envió una propuesta a tu aviso 'Busco departamento 3 dormitorios'",
+                    data: { avisoId: 1, propuestaId: 1 },
                     read: false,
                     createdAt: new Date(Date.now() - 3600000).toISOString()
-                },
-                {
-                    id: 2,
-                    userId: 2,
-                    type: "propuesta_aceptada",
-                    title: "¡Propuesta aceptada!",
-                    message: "Juan Comprador aceptó tu propuesta para el apartamento",
-                    data: { avisoId: 2, propuestaId: 3 },
-                    read: true,
-                    createdAt: new Date(Date.now() - 1800000).toISOString()
-                },
-                {
-                    id: 3,
-                    userId: 1,
-                    type: "mensaje_nuevo",
-                    title: "Nuevo mensaje",
-                    message: "María Vendedora respondió en el chat del apartamento",
-                    data: { chatId: 1 },
-                    read: false,
-                    createdAt: new Date(Date.now() - 900000).toISOString()
                 }
             ],
             nextIds: {
                 users: 5,
                 avisos: 4,
                 propuestas: 4,
-                chats: 3,
-                notifications: 4
+                chats: 2,
+                notifications: 2
             }
         };
 
@@ -2226,7 +2661,15 @@
                 currentUser = user;
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 showUserUI();
-                showView('dashboard');
+                
+                // Si es vendedor, mostrar avisos disponibles
+                if (user.role === 'vendedor') {
+                    showView('avisos');
+                    loadAvisos();
+                } else {
+                    showView('dashboard');
+                }
+                
                 updateDashboard();
                 updateNotifications();
                 showToast(`¡Bienvenido ${user.name || user.email}!`, 'success');
@@ -2286,7 +2729,15 @@
             if (userData) {
                 currentUser = JSON.parse(userData);
                 showUserUI();
-                showView('dashboard');
+                
+                // Si es vendedor, mostrar avisos disponibles
+                if (currentUser.role === 'vendedor') {
+                    showView('avisos');
+                    loadAvisos();
+                } else {
+                    showView('dashboard');
+                }
+                
                 updateDashboard();
                 updateNotifications();
             }
@@ -2515,6 +2966,53 @@
         }
 
         // ============================================
+        // FUNCIONES DE FILTROS
+        // ============================================
+        function mostrarFiltrosEspecificos() {
+            const categoria = document.getElementById('filter-categoria').value;
+            
+            // Ocultar todos los filtros específicos primero
+            document.querySelectorAll('.category-filters').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Mostrar filtros específicos según categoría
+            if (categoria === 'inmueble') {
+                document.getElementById('filtros-inmueble').classList.add('active');
+            } else if (categoria === 'auto') {
+                document.getElementById('filtros-auto').classList.add('active');
+            } else if (categoria === 'moto') {
+                document.getElementById('filtros-moto').classList.add('active');
+            }
+        }
+
+        function mostrarCamposEspecificos() {
+            const categoria = document.getElementById('aviso-categoria').value;
+            
+            // Ocultar todos los campos específicos primero
+            document.querySelectorAll('.category-fields').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Mostrar campos específicos según categoría
+            if (categoria === 'inmueble') {
+                document.getElementById('campos-inmueble').classList.remove('hidden');
+            } else if (categoria === 'auto') {
+                document.getElementById('campos-auto').classList.remove('hidden');
+            } else if (categoria === 'moto') {
+                document.getElementById('campos-moto').classList.remove('hidden');
+            }
+        }
+
+        function toggleFilterOption(element, filterType) {
+            element.classList.toggle('active');
+        }
+
+        function toggleCaracteristica(element, categoria) {
+            element.classList.toggle('active');
+        }
+
+        // ============================================
         // FUNCIONES DE AVISOS
         // ============================================
         function showCreateAvisoModal() {
@@ -2522,6 +3020,16 @@
                 showToast('Solo los compradores pueden crear avisos', 'warning');
                 return;
             }
+            
+            // Limpiar formulario
+            document.getElementById('create-aviso-form').reset();
+            document.querySelectorAll('.category-fields').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('.filter-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            
             showModal('create-aviso-modal');
         }
 
@@ -2529,10 +3037,90 @@
             event.preventDefault();
             
             const data = getData();
+            const categoria = document.getElementById('aviso-categoria').value;
+            
+            // Validar campos específicos según categoría
+            let detalles = {};
+            
+            if (categoria === 'inmueble') {
+                const tipo = document.getElementById('inmueble-tipo').value;
+                const dormitorios = document.getElementById('inmueble-dormitorios').value;
+                const banos = document.getElementById('inmueble-banos').value;
+                const metros = document.getElementById('inmueble-metros').value;
+                
+                if (!tipo || !dormitorios || !banos || !metros) {
+                    showToast('Por favor completa todos los campos específicos de inmueble', 'error');
+                    return;
+                }
+                
+                // Obtener características seleccionadas
+                const caracteristicas = [];
+                document.querySelectorAll('#campos-inmueble .filter-option.active').forEach(el => {
+                    caracteristicas.push(el.textContent.toLowerCase());
+                });
+                
+                detalles = {
+                    tipo: tipo,
+                    dormitorios: parseInt(dormitorios),
+                    banos: parseInt(banos),
+                    metrosCuadrados: parseInt(metros),
+                    caracteristicas: caracteristicas
+                };
+                
+            } else if (categoria === 'auto') {
+                const tipo = document.getElementById('auto-tipo').value;
+                const marca = document.getElementById('auto-marca').value;
+                const modelo = document.getElementById('auto-modelo').value;
+                const ano = document.getElementById('auto-ano').value;
+                const kilometraje = document.getElementById('auto-kilometraje').value;
+                
+                if (!tipo || !marca || !modelo || !ano) {
+                    showToast('Por favor completa todos los campos específicos de automóvil', 'error');
+                    return;
+                }
+                
+                // Obtener características seleccionadas
+                const caracteristicas = [];
+                document.querySelectorAll('#campos-auto .filter-option.active').forEach(el => {
+                    caracteristicas.push(el.textContent.toLowerCase());
+                });
+                
+                detalles = {
+                    tipo: tipo,
+                    marca: marca,
+                    modelo: modelo,
+                    ano: parseInt(ano),
+                    kilometrajeMax: kilometraje ? parseInt(kilometraje) : null,
+                    caracteristicas: caracteristicas
+                };
+                
+            } else if (categoria === 'moto') {
+                const tipo = document.getElementById('moto-tipo').value;
+                const marca = document.getElementById('moto-marca').value;
+                const modelo = document.getElementById('moto-modelo').value;
+                const ano = document.getElementById('moto-ano').value;
+                const kilometraje = document.getElementById('moto-kilometraje').value;
+                const cilindrada = document.getElementById('moto-cilindrada').value;
+                
+                if (!tipo || !marca || !modelo || !ano || !cilindrada) {
+                    showToast('Por favor completa todos los campos específicos de moto', 'error');
+                    return;
+                }
+                
+                detalles = {
+                    tipo: tipo,
+                    marca: marca,
+                    modelo: modelo,
+                    ano: parseInt(ano),
+                    kilometrajeMax: kilometraje ? parseInt(kilometraje) : null,
+                    cilindrada: cilindrada
+                };
+            }
+            
             const nuevoAviso = {
                 id: data.nextIds.avisos++,
                 userId: currentUser.id,
-                tipo: document.getElementById('aviso-tipo').value,
+                categoria: categoria,
                 titulo: document.getElementById('aviso-titulo').value,
                 descripcion: document.getElementById('aviso-descripcion').value,
                 presupuesto: parseInt(document.getElementById('aviso-presupuesto').value),
@@ -2541,6 +3129,7 @@
                 estado: 'abierto',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
+                detalles: detalles,
                 propuestas: [],
                 vistas: 0,
                 destacado: false
@@ -2551,8 +3140,6 @@
             // Actualizar contador del usuario
             const user = data.users.find(u => u.id === currentUser.id);
             user.totalAvisos = (user.totalAvisos || 0) + 1;
-            
-            saveData(data);
             
             // Crear notificación para vendedores
             const vendedores = data.users.filter(u => u.role === 'vendedor');
@@ -2574,9 +3161,6 @@
             closeModal('create-aviso-modal');
             showToast('¡Aviso publicado exitosamente! Los vendedores ya pueden verlo.', 'success');
             
-            // Resetear formulario
-            document.getElementById('create-aviso-form').reset();
-            
             // Redirigir al detalle del aviso
             currentAvisoId = nuevoAviso.id;
             showView('detalle-aviso');
@@ -2596,25 +3180,132 @@
             } else if (currentUser.role === 'vendedor') {
                 // Mostrar avisos activos de otros usuarios
                 avisos = data.avisos.filter(a => a.userId !== currentUser.id && a.estado === 'abierto');
+                
+                // Aplicar filtros si existen
+                const categoria = document.getElementById('filter-categoria')?.value;
+                const presupuestoMin = document.getElementById('filter-presupuesto-min')?.value;
+                const presupuestoMax = document.getElementById('filter-presupuesto-max')?.value;
+                const zona = document.getElementById('filter-zona')?.value;
+                
+                if (categoria) avisos = avisos.filter(a => a.categoria === categoria);
+                if (presupuestoMin) avisos = avisos.filter(a => a.presupuesto >= parseInt(presupuestoMin));
+                if (presupuestoMax) avisos = avisos.filter(a => a.presupuesto <= parseInt(presupuestoMax));
+                if (zona) avisos = avisos.filter(a => a.zona.toLowerCase().includes(zona.toLowerCase()));
+                
+                // Aplicar filtros específicos por categoría
+                if (categoria === 'inmueble') {
+                    const tipoFiltros = [];
+                    document.querySelectorAll('#filtros-inmueble .filter-option.active[onclick*="tipo"]').forEach(el => {
+                        tipoFiltros.push(el.textContent.toLowerCase());
+                    });
+                    
+                    if (tipoFiltros.length > 0) {
+                        avisos = avisos.filter(a => {
+                            return a.detalles && tipoFiltros.includes(a.detalles.tipo);
+                        });
+                    }
+                    
+                    // Filtrar por dormitorios
+                    const dormitoriosFiltros = [];
+                    document.querySelectorAll('#filtros-inmueble .filter-option.active[onclick*="dormitorios"]').forEach(el => {
+                        dormitoriosFiltros.push(parseInt(el.textContent));
+                    });
+                    
+                    if (dormitoriosFiltros.length > 0) {
+                        avisos = avisos.filter(a => {
+                            return a.detalles && dormitoriosFiltros.includes(a.detalles.dormitorios);
+                        });
+                    }
+                    
+                    // Filtrar por metros cuadrados
+                    const metrosMin = document.getElementById('filter-metros-min')?.value;
+                    const metrosMax = document.getElementById('filter-metros-max')?.value;
+                    
+                    if (metrosMin) {
+                        avisos = avisos.filter(a => a.detalles && a.detalles.metrosCuadrados >= parseInt(metrosMin));
+                    }
+                    if (metrosMax) {
+                        avisos = avisos.filter(a => a.detalles && a.detalles.metrosCuadrados <= parseInt(metrosMax));
+                    }
+                    
+                } else if (categoria === 'auto') {
+                    // Filtrar por tipo de vehículo
+                    const tipoFiltros = [];
+                    document.querySelectorAll('#filtros-auto .filter-option.active[onclick*="tipo-vehiculo"]').forEach(el => {
+                        tipoFiltros.push(el.textContent.toLowerCase());
+                    });
+                    
+                    if (tipoFiltros.length > 0) {
+                        avisos = avisos.filter(a => {
+                            return a.detalles && tipoFiltros.includes(a.detalles.tipo);
+                        });
+                    }
+                    
+                    // Filtrar por marca
+                    const marcaFiltros = [];
+                    document.querySelectorAll('#filtros-auto .filter-option.active[onclick*="marca"]').forEach(el => {
+                        marcaFiltros.push(el.textContent.toLowerCase());
+                    });
+                    
+                    if (marcaFiltros.length > 0) {
+                        avisos = avisos.filter(a => {
+                            return a.detalles && marcaFiltros.includes(a.detalles.marca);
+                        });
+                    }
+                    
+                    // Filtrar por año
+                    const anoMin = document.getElementById('filter-ano-min')?.value;
+                    const anoMax = document.getElementById('filter-ano-max')?.value;
+                    
+                    if (anoMin) {
+                        avisos = avisos.filter(a => a.detalles && a.detalles.ano >= parseInt(anoMin));
+                    }
+                    if (anoMax) {
+                        avisos = avisos.filter(a => a.detalles && a.detalles.ano <= parseInt(anoMax));
+                    }
+                    
+                    // Filtrar por kilometraje
+                    const kmMin = document.getElementById('filter-km-min')?.value;
+                    const kmMax = document.getElementById('filter-km-max')?.value;
+                    
+                    if (kmMin && kmMax) {
+                        avisos = avisos.filter(a => a.detalles && a.detalles.kilometrajeMax >= parseInt(kmMin) && a.detalles.kilometrajeMax <= parseInt(kmMax));
+                    }
+                    
+                } else if (categoria === 'moto') {
+                    // Filtrar por tipo de moto
+                    const tipoFiltros = [];
+                    document.querySelectorAll('#filtros-moto .filter-option.active[onclick*="tipo-moto"]').forEach(el => {
+                        tipoFiltros.push(el.textContent.toLowerCase());
+                    });
+                    
+                    if (tipoFiltros.length > 0) {
+                        avisos = avisos.filter(a => {
+                            return a.detalles && tipoFiltros.includes(a.detalles.tipo);
+                        });
+                    }
+                    
+                    // Filtrar por cilindrada
+                    const cilindradaFiltros = [];
+                    document.querySelectorAll('#filtros-moto .filter-option.active[onclick*="cilindrada"]').forEach(el => {
+                        const text = el.textContent;
+                        cilindradaFiltros.push(text.replace('cc', '').trim());
+                    });
+                    
+                    if (cilindradaFiltros.length > 0) {
+                        avisos = avisos.filter(a => {
+                            return a.detalles && cilindradaFiltros.includes(a.detalles.cilindrada);
+                        });
+                    }
+                }
             }
-            
-            // Aplicar filtros
-            const tipo = document.getElementById('filter-tipo')?.value;
-            const presupuesto = document.getElementById('filter-presupuesto')?.value;
-            const estado = document.getElementById('filter-estado')?.value;
-            const urgencia = document.getElementById('filter-urgencia')?.value;
-            
-            if (tipo) avisos = avisos.filter(a => a.tipo === tipo);
-            if (presupuesto) avisos = avisos.filter(a => a.presupuesto <= parseInt(presupuesto));
-            if (estado) avisos = avisos.filter(a => a.estado === estado);
-            if (urgencia) avisos = avisos.filter(a => a.urgencia === urgencia);
             
             if (avisos.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📝</div>
                         <h3>No hay avisos</h3>
-                        <p>${currentUser.role === 'comprador' ? 'Crea tu primer aviso para empezar' : 'No hay avisos disponibles en este momento'}</p>
+                        <p>${currentUser.role === 'comprador' ? 'Crea tu primer aviso para empezar' : 'No hay avisos disponibles con los filtros actuales'}</p>
                         ${currentUser.role === 'comprador' ? 
                             '<button class="btn btn-primary" onclick="showCreateAvisoModal()">Crear Mi Primer Aviso</button>' : 
                             '<button class="btn btn-outline" onclick="limpiarFiltros()">Limpiar Filtros</button>'
@@ -2631,6 +3322,20 @@
                 const user = data.users.find(u => u.id === aviso.userId);
                 const propuestasCount = aviso.propuestas ? aviso.propuestas.length : 0;
                 
+                // Icono según categoría
+                const icono = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'moto': '🏍️'
+                }[aviso.categoria] || '📦';
+                
+                // Texto de categoría
+                const categoriaText = {
+                    'inmueble': 'Inmueble',
+                    'auto': 'Automóvil',
+                    'moto': 'Moto'
+                }[aviso.categoria] || aviso.categoria;
+                
                 // Formatear urgencia
                 const urgenciaText = {
                     'baja': 'Baja',
@@ -2639,14 +3344,38 @@
                     'inmediata': '🔥 Inmediata'
                 }[aviso.urgencia] || aviso.urgencia;
                 
-                // Formatear tipo
-                const tipoText = {
-                    'auto': '🚗 Auto',
-                    'inmueble': '🏠 Inmueble',
-                    'tecnologia': '💻 Tecnología',
-                    'servicios': '🔧 Servicios',
-                    'otros': '📦 Otros'
-                }[aviso.tipo] || aviso.tipo;
+                // Detalles específicos según categoría
+                let detallesHTML = '';
+                if (aviso.detalles) {
+                    if (aviso.categoria === 'inmueble') {
+                        detallesHTML = `
+                            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                                <span class="badge badge-light">${aviso.detalles.dormitorios || 0} 🛏️</span>
+                                <span class="badge badge-light">${aviso.detalles.banos || 0} 🚿</span>
+                                <span class="badge badge-light">${aviso.detalles.metrosCuadrados || 0}m²</span>
+                                <span class="badge badge-light">${aviso.detalles.tipo || ''}</span>
+                            </div>
+                        `;
+                    } else if (aviso.categoria === 'auto') {
+                        detallesHTML = `
+                            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                                <span class="badge badge-light">${aviso.detalles.marca || ''}</span>
+                                <span class="badge badge-light">${aviso.detalles.modelo || ''}</span>
+                                <span class="badge badge-light">${aviso.detalles.ano || ''}</span>
+                                <span class="badge badge-light">${aviso.detalles.tipo || ''}</span>
+                            </div>
+                        `;
+                    } else if (aviso.categoria === 'moto') {
+                        detallesHTML = `
+                            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                                <span class="badge badge-light">${aviso.detalles.marca || ''}</span>
+                                <span class="badge badge-light">${aviso.detalles.modelo || ''}</span>
+                                <span class="badge badge-light">${aviso.detalles.cilindrada || ''}cc</span>
+                                <span class="badge badge-light">${aviso.detalles.tipo || ''}</span>
+                            </div>
+                        `;
+                    }
+                }
                 
                 return `
                     <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})">
@@ -2659,7 +3388,7 @@
                                                       aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
                                         ${aviso.estado}
                                     </span>
-                                    <span class="badge badge-light">${tipoText}</span>
+                                    <span class="badge badge-info">${icono} ${categoriaText}</span>
                                     ${aviso.destacado ? '<span class="badge badge-warning">⭐ Destacado</span>' : ''}
                                 </div>
                             </div>
@@ -2670,6 +3399,8 @@
                                 <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto</div>
                             </div>
                         </div>
+                        
+                        ${detallesHTML}
                         
                         <div class="aviso-meta">
                             <span><strong>📍 Zona:</strong> ${aviso.zona}</span>
@@ -2736,6 +3467,20 @@
             
             const container = document.getElementById('detalle-aviso-content');
             
+            // Icono según categoría
+            const icono = {
+                'inmueble': '🏠',
+                'auto': '🚗',
+                'moto': '🏍️'
+            }[aviso.categoria] || '📦';
+            
+            // Texto de categoría
+            const categoriaText = {
+                'inmueble': 'Inmueble',
+                'auto': 'Automóvil',
+                'moto': 'Moto'
+            }[aviso.categoria] || aviso.categoria;
+            
             // Formatear urgencia
             const urgenciaText = {
                 'baja': '🟢 Baja',
@@ -2744,17 +3489,115 @@
                 'inmediata': '🔥 Inmediata'
             }[aviso.urgencia] || aviso.urgencia;
             
-            // Formatear tipo
-            const tipoText = {
-                'auto': '🚗 Auto',
-                'inmueble': '🏠 Inmueble',
-                'tecnologia': '💻 Tecnología',
-                'servicios': '🔧 Servicios',
-                'otros': '📦 Otros'
-            }[aviso.tipo] || aviso.tipo;
-            
             // Determinar si el usuario actual es el creador del aviso
             const esCreador = aviso.userId === currentUser.id;
+            
+            // Generar detalles específicos según categoría
+            let detallesEspecificosHTML = '';
+            if (aviso.detalles) {
+                if (aviso.categoria === 'inmueble') {
+                    detallesEspecificosHTML = `
+                        <div class="detalle-meta-grid">
+                            <div class="meta-card">
+                                <div class="meta-label">Tipo de Inmueble</div>
+                                <div class="meta-value">${aviso.detalles.tipo || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Dormitorios</div>
+                                <div class="meta-value">${aviso.detalles.dormitorios || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Baños</div>
+                                <div class="meta-value">${aviso.detalles.banos || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Metros Cuadrados</div>
+                                <div class="meta-value">${aviso.detalles.metrosCuadrados || 'No especificado'} m²</div>
+                            </div>
+                        </div>
+                        ${aviso.detalles.caracteristicas && aviso.detalles.caracteristicas.length > 0 ? `
+                            <div style="margin: 20px 0;">
+                                <h4 style="margin-bottom: 15px;">Características:</h4>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    ${aviso.detalles.caracteristicas.map(caract => 
+                                        `<span class="badge badge-light">${caract}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `;
+                } else if (aviso.categoria === 'auto') {
+                    detallesEspecificosHTML = `
+                        <div class="detalle-meta-grid">
+                            <div class="meta-card">
+                                <div class="meta-label">Tipo de Vehículo</div>
+                                <div class="meta-value">${aviso.detalles.tipo || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Marca</div>
+                                <div class="meta-value">${aviso.detalles.marca || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Modelo</div>
+                                <div class="meta-value">${aviso.detalles.modelo || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Año</div>
+                                <div class="meta-value">${aviso.detalles.ano || 'No especificado'}</div>
+                            </div>
+                        </div>
+                        ${aviso.detalles.kilometrajeMax ? `
+                            <div class="meta-card">
+                                <div class="meta-label">Kilometraje Máximo</div>
+                                <div class="meta-value">${aviso.detalles.kilometrajeMax.toLocaleString()} km</div>
+                            </div>
+                        ` : ''}
+                        ${aviso.detalles.caracteristicas && aviso.detalles.caracteristicas.length > 0 ? `
+                            <div style="margin: 20px 0;">
+                                <h4 style="margin-bottom: 15px;">Características:</h4>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    ${aviso.detalles.caracteristicas.map(caract => 
+                                        `<span class="badge badge-light">${caract}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `;
+                } else if (aviso.categoria === 'moto') {
+                    detallesEspecificosHTML = `
+                        <div class="detalle-meta-grid">
+                            <div class="meta-card">
+                                <div class="meta-label">Tipo de Moto</div>
+                                <div class="meta-value">${aviso.detalles.tipo || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Marca</div>
+                                <div class="meta-value">${aviso.detalles.marca || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Modelo</div>
+                                <div class="meta-value">${aviso.detalles.modelo || 'No especificado'}</div>
+                            </div>
+                            <div class="meta-card">
+                                <div class="meta-label">Año</div>
+                                <div class="meta-value">${aviso.detalles.ano || 'No especificado'}</div>
+                            </div>
+                        </div>
+                        <div class="detalle-meta-grid">
+                            <div class="meta-card">
+                                <div class="meta-label">Cilindrada</div>
+                                <div class="meta-value">${aviso.detalles.cilindrada || 'No especificado'} cc</div>
+                            </div>
+                            ${aviso.detalles.kilometrajeMax ? `
+                                <div class="meta-card">
+                                    <div class="meta-label">Kilometraje Máximo</div>
+                                    <div class="meta-value">${aviso.detalles.kilometrajeMax.toLocaleString()} km</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            }
             
             container.innerHTML = `
                 <div class="detalle-info">
@@ -2768,7 +3611,7 @@
                                                       aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
                                         ${aviso.estado.toUpperCase()}
                                     </span>
-                                    <span class="badge badge-info">${tipoText}</span>
+                                    <span class="badge badge-info">${icono} ${categoriaText}</span>
                                     <span class="badge badge-light">${urgenciaText}</span>
                                     ${aviso.destacado ? '<span class="badge badge-warning">⭐ Destacado</span>' : ''}
                                     <span class="badge badge-light">👁️ ${aviso.vistas || 0} vistas</span>
@@ -2781,6 +3624,8 @@
                                 <div style="font-size: 1rem; color: var(--gray);">Presupuesto máximo</div>
                             </div>
                         </div>
+                        
+                        ${detallesEspecificosHTML}
                         
                         <div class="detalle-meta-grid">
                             <div class="meta-card">
@@ -3245,7 +4090,7 @@
             if (tipo) {
                 propuestas = propuestas.filter(p => {
                     const aviso = data.avisos.find(a => a.id === p.avisoId);
-                    return aviso && aviso.tipo === tipo;
+                    return aviso && aviso.categoria === tipo;
                 });
             }
             
@@ -3286,6 +4131,13 @@
                 
                 if (!aviso || !otroUsuario) return '';
                 
+                // Icono según categoría
+                const icono = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'moto': '🏍️'
+                }[aviso.categoria] || '📦';
+                
                 return `
                     <div class="propuesta-card" onclick="verPropuestaDetalle(${propuesta.id}, ${aviso.id})">
                         <div class="propuesta-header">
@@ -3297,6 +4149,7 @@
                                                       propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">
                                         ${propuesta.estado}
                                     </span>
+                                    <span class="badge badge-info">${icono}</span>
                                     <span class="badge badge-light">
                                         ${currentUser.role === 'comprador' ? 'De:' : 'Para:'} ${otroUsuario.name || otroUsuario.email}
                                     </span>
@@ -4269,11 +5122,18 @@
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
+                // Icono según categoría
+                const icono = {
+                    'inmueble': '🏠',
+                    'auto': '🚗',
+                    'moto': '🏍️'
+                }[aviso.categoria] || '📦';
+                
                 return `
                     <tr>
                         <td>${aviso.id}</td>
                         <td>${aviso.titulo.substring(0, 40)}...</td>
-                        <td><span class="badge badge-info">${aviso.tipo}</span></td>
+                        <td><span class="badge badge-info">${icono} ${aviso.categoria}</span></td>
                         <td>${user.email}</td>
                         <td>$${aviso.presupuesto.toLocaleString()}</td>
                         <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : 'badge-danger'}">${aviso.estado}</span></td>
@@ -4434,7 +5294,13 @@
 
         function toggleFilters() {
             const filters = document.getElementById('filters-container');
-            filters.classList.toggle('hidden');
+            if (filters.style.display === 'none') {
+                filters.style.display = 'block';
+                document.getElementById('filter-toggle').innerHTML = '<span>🔍</span> Ocultar Filtros';
+            } else {
+                filters.style.display = 'none';
+                document.getElementById('filter-toggle').innerHTML = '<span>🔍</span> Filtros Avanzados';
+            }
         }
 
         function togglePropuestasFilters() {
@@ -4453,10 +5319,29 @@
         }
 
         function limpiarFiltros() {
-            document.getElementById('filter-tipo').value = '';
-            document.getElementById('filter-presupuesto').value = '';
-            document.getElementById('filter-estado').value = '';
-            document.getElementById('filter-urgencia').value = '';
+            // Limpiar campos de filtro
+            document.getElementById('filter-categoria').value = '';
+            document.getElementById('filter-presupuesto-min').value = '';
+            document.getElementById('filter-presupuesto-max').value = '';
+            document.getElementById('filter-zona').value = '';
+            
+            // Ocultar todos los filtros específicos
+            document.querySelectorAll('.category-filters').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Limpiar opciones activas
+            document.querySelectorAll('.filter-option.active').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Limpiar campos de rango
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                if (input.id.includes('filter-')) {
+                    input.value = '';
+                }
+            });
+            
             showToast('Filtros limpiados', 'info');
             loadAvisos();
         }
@@ -4609,6 +5494,11 @@
             // Inicializar vista predeterminada
             if (!currentUser) {
                 showView('landing');
+            }
+            
+            // Mostrar filtros por defecto para vendedores
+            if (currentUser && currentUser.role === 'vendedor') {
+                document.getElementById('filters-container').style.display = 'block';
             }
             
             // Configurar actualización automática cada 30 segundos
