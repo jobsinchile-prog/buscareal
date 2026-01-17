@@ -2374,12 +2374,6 @@
                 option.textContent = comuna;
                 comunaSelect.appendChild(option);
             });
-            
-            // Limpiar barrios
-            const barrioSelect = document.getElementById('aviso-barrio');
-            if (barrioSelect) {
-                barrioSelect.innerHTML = '<option value="">Selecciona un barrio</option>';
-            }
         }
 
         function cargarComunasFiltro() {
@@ -2391,7 +2385,7 @@
             const regionNombre = regionSelect.value;
             const region = chileData.regiones.find(r => r.nombre === regionNombre);
             
-            comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+            comunaSelect.innerHTML = '<option value="">Todas las comunas</option>';
             
             if (!region) return;
             
@@ -2429,7 +2423,6 @@
         function toggleCamposEspecificos() {
             const tipo = document.getElementById('aviso-tipo').value;
             const camposInmueble = document.getElementById('campos-inmueble');
-            const camposGenerales = document.getElementById('campos-generales');
             const zonaInput = document.getElementById('aviso-zona');
             
             // Ocultar todos los campos específicos primero
@@ -3112,44 +3105,6 @@
         }
 
         // ============================================
-        // FUNCIONES DE MODALES
-        // ============================================
-        function showModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        // ============================================
-        // FUNCIONES AUXILIARES
-        // ============================================
-        function scrollToFeatures() {
-            const featuresSection = document.getElementById('features-section');
-            if (featuresSection) {
-                featuresSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function showPasswordReset() {
-            const email = prompt('Ingresa tu email para restablecer la contraseña:');
-            if (email) {
-                showToast('Se ha enviado un enlace de restablecimiento a ' + email, 'info');
-            }
-        }
-
-        function updateNotificationBadges() {
-            updateNotifications(); // Ya implementada
-        }
-
-        // ============================================
         // FUNCIONES DE AVISOS (MEJORADAS CON INMUEBLES)
         // ============================================
         function showCreateAvisoModal() {
@@ -3215,17 +3170,11 @@
                 const caracteristicasCheckboxes = document.querySelectorAll('input[name="aviso-caracteristicas"]:checked');
                 nuevoAviso.caracteristicas = Array.from(caracteristicasCheckboxes).map(cb => cb.value);
                 
-                // Validar campos específicos
-                if (!nuevoAviso.region || !nuevoAviso.comuna || !nuevoAviso.superficieUtil || !nuevoAviso.superficieTotal) {
-                    showToast('Completa todos los campos obligatorios del inmueble', 'error');
-                    return;
-                }
-                
                 // Actualizar zona con ubicación jerárquica
                 nuevoAviso.zona = `${nuevoAviso.region}, ${nuevoAviso.comuna}`;
             }
             
-            // Validar campos requeridos generales
+            // Validar campos requeridos
             if (!nuevoAviso.titulo || !nuevoAviso.descripcion || !nuevoAviso.presupuesto || !nuevoAviso.zona) {
                 showToast('Completa todos los campos obligatorios', 'error');
                 return;
@@ -3334,22 +3283,12 @@
                 
                 // Filtrar por dormitorios
                 if (dormitorios) {
-                    const dormValue = parseInt(dormitorios);
-                    if (dormValue === 5) {
-                        avisos = avisos.filter(a => a.dormitorios >= 5);
-                    } else {
-                        avisos = avisos.filter(a => a.dormitorios === dormValue);
-                    }
+                    avisos = avisos.filter(a => a.dormitorios === parseInt(dormitorios));
                 }
                 
                 // Filtrar por baños
                 if (banos) {
-                    const banosValue = parseInt(banos);
-                    if (banosValue === 4) {
-                        avisos = avisos.filter(a => a.banos >= 4);
-                    } else {
-                        avisos = avisos.filter(a => a.banos === banosValue);
-                    }
+                    avisos = avisos.filter(a => a.banos === parseInt(banos));
                 }
                 
                 // Filtrar por superficie útil
@@ -3424,11 +3363,11 @@
                 if (aviso.tipo === 'inmueble') {
                     infoEspecifica = `
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0;">
-                            <span class="badge badge-light">${aviso.operacion || 'N/A'}</span>
-                            <span class="badge badge-light">${aviso.tipoInmueble || 'N/A'}</span>
+                            <span class="badge badge-light">${aviso.operacion}</span>
+                            <span class="badge badge-light">${aviso.tipoInmueble}</span>
                             ${aviso.dormitorios > 0 ? `<span class="badge badge-light">🛏️ ${aviso.dormitorios}</span>` : ''}
-                            <span class="badge badge-light">🚿 ${aviso.banos || 'N/A'}</span>
-                            <span class="badge badge-light">📐 ${aviso.superficieUtil || 'N/A'}m²</span>
+                            <span class="badge badge-light">🚿 ${aviso.banos}</span>
+                            <span class="badge badge-light">📐 ${aviso.superficieUtil}m²</span>
                         </div>
                     `;
                 }
@@ -3462,7 +3401,7 @@
                             <span><strong>📍 Ubicación:</strong> ${aviso.zona}</span>
                             <span><strong>⏱️ Urgencia:</strong> ${urgenciaText}</span>
                             <span><strong>💬 Propuestas:</strong> ${propuestasCount}</span>
-                            ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user?.name || user?.email || 'N/A'}</span>` : ''}
+                            ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user.name || user.email}</span>` : ''}
                         </div>
                         
                         <div class="aviso-description">
@@ -3562,11 +3501,11 @@
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Tipo de Inmueble</div>
-                            <div class="meta-value">${aviso.tipoInmueble || 'N/A'}</div>
+                            <div class="meta-value">${aviso.tipoInmueble}</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Ubicación</div>
-                            <div class="meta-value">${aviso.region || 'N/A'}, ${aviso.comuna || 'N/A'}</div>
+                            <div class="meta-value">${aviso.region}, ${aviso.comuna}</div>
                         </div>
                         ${aviso.barrio ? `
                         <div class="meta-card">
@@ -3576,19 +3515,19 @@
                         ` : ''}
                         <div class="meta-card">
                             <div class="meta-label">Dormitorios</div>
-                            <div class="meta-value">${aviso.dormitorios === 0 ? 'Studio' : aviso.dormitorios || 'N/A'}</div>
+                            <div class="meta-value">${aviso.dormitorios === 0 ? 'Studio' : aviso.dormitorios}</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Baños</div>
-                            <div class="meta-value">${aviso.banos || 'N/A'}</div>
+                            <div class="meta-value">${aviso.banos}</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Superficie útil</div>
-                            <div class="meta-value">${aviso.superficieUtil || 'N/A'} m²</div>
+                            <div class="meta-value">${aviso.superficieUtil} m²</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Superficie total</div>
-                            <div class="meta-value">${aviso.superficieTotal || 'N/A'} m²</div>
+                            <div class="meta-value">${aviso.superficieTotal} m²</div>
                         </div>
                         ${aviso.caracteristicas && aviso.caracteristicas.length > 0 ? `
                         <div class="meta-card" style="grid-column: span 2;">
@@ -3703,12 +3642,12 @@
                                 <div class="propuesta-item">
                                     <div class="propuesta-item-header">
                                         <div class="propuesta-item-user">
-                                            <div class="propuesta-user-avatar" style="background: ${vendedor?.avatarColor || '#4361ee'}">
-                                                ${(vendedor?.name || vendedor?.email || 'V').charAt(0).toUpperCase()}
+                                            <div class="propuesta-user-avatar" style="background: ${vendedor.avatarColor}">
+                                                ${(vendedor.name || vendedor.email).charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <div style="font-weight: 700; font-size: 1.1rem;">${vendedor?.name || vendedor?.email || 'Vendedor'}</div>
-                                                <div style="font-size: 0.9rem; color: var(--gray);">⭐ ${vendedor?.rating || 5.0}/5.0</div>
+                                                <div style="font-weight: 700; font-size: 1.1rem;">${vendedor.name || vendedor.email}</div>
+                                                <div style="font-size: 0.9rem; color: var(--gray);">⭐ ${vendedor.rating || 5.0}/5.0</div>
                                             </div>
                                         </div>
                                         <div>
@@ -3754,13 +3693,13 @@
                                             <button class="btn btn-sm btn-primary" onclick="abrirChat(${chat.id}, ${aviso.id})">
                                                 💬 ${chat.unreadCount > 0 ? `Chat (${chat.unreadCount})` : 'Abrir Chat'}
                                             </button>
-                                        ` : currentUser.id === vendedor?.id ? `
+                                        ` : currentUser.id === vendedor.id ? `
                                             <button class="btn btn-sm btn-outline" onclick="iniciarChatConComprador(${aviso.id}, ${propuesta.id})">
                                                 💬 Iniciar Chat
                                             </button>
                                         ` : esCreador ? `
                                             <button class="btn btn-sm btn-primary" onclick="iniciarChatConVendedor(${aviso.id}, ${propuesta.id})">
-                                                💬 Chatear con ${vendedor?.name || vendedor?.email || 'Vendedor'}
+                                                💬 Chatear con ${vendedor.name || vendedor.email}
                                             </button>
                                         ` : ''}
                                         
@@ -3802,11 +3741,11 @@
                                         const otroUsuarioId = chatActivo.participantes.find(id => id !== currentUser.id);
                                         const otroUsuario = data.users.find(u => u.id === otroUsuarioId);
                                         return `
-                                            <div class="chat-user-avatar" style="background: ${otroUsuario?.avatarColor || '#4361ee'}">
-                                                ${(otroUsuario?.name || otroUsuario?.email || 'U').charAt(0).toUpperCase()}
+                                            <div class="chat-user-avatar" style="background: ${otroUsuario.avatarColor}">
+                                                ${(otroUsuario.name || otroUsuario.email).charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <h3 style="margin: 0; font-size: 1.2rem;">${otroUsuario?.name || otroUsuario?.email || 'Usuario'}</h3>
+                                                <h3 style="margin: 0; font-size: 1.2rem;">${otroUsuario.name || otroUsuario.email}</h3>
                                                 <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9rem;">
                                                     ${currentUser.role === 'comprador' ? 'Vendedor' : 'Comprador'}
                                                 </p>
@@ -3823,7 +3762,7 @@
                                     return `
                                         <div class="message ${esMio ? 'message-sent' : 'message-received'}">
                                             <div class="message-header">
-                                                <span class="message-sender">${usuario?.name || usuario?.email || 'Usuario'}</span>
+                                                <span class="message-sender">${usuario.name || usuario.email}</span>
                                                 <span class="message-time">${new Date(mensaje.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                                             </div>
                                             <div class="message-content">${mensaje.text}</div>
@@ -4187,7 +4126,7 @@
                 
                 const chat = data.chats.find(c => c.propuestaId === propuesta.id);
                 
-                if (!aviso) return '';
+                if (!aviso || !otroUsuario) return '';
                 
                 // Icono según tipo
                 const tipoIcon = {
@@ -4260,7 +4199,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE CHAT (MANTENIDAS)
+        // FUNCIONES DE CHAT
         // ============================================
         function abrirChat(chatId, avisoId) {
             const data = getData();
@@ -4551,7 +4490,7 @@
         // ============================================
         // FUNCIONES DE NOTIFICACIONES
         // ============================================
-        function updateNotifications() {
+        function updateNotificationBadges() {
             const data = getData();
             notifications = data.notifications.filter(n => n.userId === currentUser.id);
             
@@ -4588,6 +4527,10 @@
                 document.getElementById('unread-chats-badge').classList.add('hidden');
                 document.getElementById('mobile-chat-notification').classList.add('hidden');
             }
+        }
+
+        function updateNotifications() {
+            updateNotificationBadges();
         }
 
         function toggleNotifications() {
@@ -4948,7 +4891,7 @@
                                 $${propuesta.precio.toLocaleString()}
                             </div>
                             <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
-                                De: ${vendedor?.name || vendedor?.email || 'Vendedor'}
+                                De: ${vendedor.name || vendedor.email}
                             </div>
                             <button class="btn btn-sm btn-primary btn-block" onclick="event.stopPropagation(); verDetalleAviso(${aviso.id})">
                                 Ver Propuesta
@@ -4992,7 +4935,7 @@
                     if (aviso.tipo === 'inmueble') {
                         infoExtra = `
                             <div style="font-size: 0.9rem; color: var(--gray); margin: 8px 0;">
-                                ${aviso.tipoInmueble || 'Inmueble'} en ${aviso.comuna || 'ubicación'}
+                                ${aviso.tipoInmueble} en ${aviso.comuna}
                             </div>
                         `;
                     }
@@ -5006,7 +4949,7 @@
                                     $${aviso.presupuesto.toLocaleString()}
                                 </div>
                                 <div style="font-size: 0.9rem; color: var(--gray);">
-                                    ${tipoIcon} De: ${user?.name || user?.email || 'Usuario'}
+                                    ${tipoIcon} De: ${user.name || user.email}
                                 </div>
                             </div>
                             <button class="btn btn-sm btn-secondary btn-block" onclick="event.stopPropagation(); mostrarEnviarPropuesta(${aviso.id})">
@@ -5282,17 +5225,20 @@
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
+                const propuestasCount = aviso.propuestas ? aviso.propuestas.length : 0;
+                
                 return `
                     <tr>
                         <td>${aviso.id}</td>
-                        <td>${aviso.titulo.substring(0, 40)}...</td>
-                        <td><span class="badge badge-light">${aviso.tipo}</span></td>
-                        <td>${user?.email || 'N/A'}</td>
+                        <td>
+                            <div style="font-weight: 600;">${aviso.titulo.substring(0, 30)}...</div>
+                            <div style="font-size: 0.85rem; color: var(--gray);">${aviso.tipo}</div>
+                        </td>
+                        <td>${aviso.tipo}</td>
+                        <td>${user?.email || 'Desconocido'}</td>
                         <td>$${aviso.presupuesto.toLocaleString()}</td>
-                        <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : 
-                                               aviso.estado === 'negociando' ? 'badge-warning' : 
-                                               aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">${aviso.estado}</span></td>
-                        <td>${aviso.propuestas?.length || 0}</td>
+                        <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : 'badge-info'}">${aviso.estado}</span></td>
+                        <td>${propuestasCount}</td>
                         <td>
                             <button class="btn btn-xs" onclick="eliminarAvisoAdmin(${aviso.id})">Eliminar</button>
                         </td>
@@ -5305,15 +5251,16 @@
             propuestasList.innerHTML = data.propuestas.map(propuesta => {
                 const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
                 const vendedor = data.users.find(u => u.id === propuesta.vendedorId);
+                
                 return `
                     <tr>
                         <td>${propuesta.id}</td>
-                        <td>${aviso?.titulo.substring(0, 30) || 'N/A'}...</td>
-                        <td>${vendedor?.email || 'N/A'}</td>
+                        <td>
+                            <div style="font-weight: 600;">${aviso?.titulo.substring(0, 30) || 'Aviso eliminado'}...</div>
+                        </td>
+                        <td>${vendedor?.email || 'Desconocido'}</td>
                         <td>$${propuesta.precio.toLocaleString()}</td>
-                        <td><span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : 
-                                                propuesta.estado === 'aceptada' ? 'badge-success' : 
-                                                propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">${propuesta.estado}</span></td>
+                        <td><span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">${propuesta.estado}</span></td>
                         <td>${new Date(propuesta.createdAt).toLocaleDateString()}</td>
                         <td>
                             <button class="btn btn-xs" onclick="eliminarPropuestaAdmin(${propuesta.id})">Eliminar</button>
@@ -5324,17 +5271,16 @@
         }
 
         function eliminarUsuarioAdmin(userId) {
+            if (userId === currentUser.id) {
+                showToast('No puedes eliminarte a ti mismo', 'error');
+                return;
+            }
+            
             if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) {
                 return;
             }
             
             const data = getData();
-            
-            // No permitir eliminar al usuario actual
-            if (userId === currentUser.id) {
-                showToast('No puedes eliminarte a ti mismo', 'error');
-                return;
-            }
             
             // Eliminar avisos del usuario
             data.avisos = data.avisos.filter(a => a.userId !== userId);
@@ -5342,14 +5288,11 @@
             // Eliminar propuestas del usuario
             data.propuestas = data.propuestas.filter(p => p.vendedorId !== userId);
             
-            // Eliminar chats donde participe el usuario
-            data.chats = data.chats.filter(c => !c.participantes.includes(userId));
-            
-            // Eliminar notificaciones del usuario
-            data.notifications = data.notifications.filter(n => n.userId !== userId);
-            
             // Eliminar usuario
             data.users = data.users.filter(u => u.id !== userId);
+            
+            // Eliminar chats del usuario
+            data.chats = data.chats.filter(c => !c.participantes.includes(userId));
             
             saveData(data);
             showToast('Usuario eliminado exitosamente', 'success');
@@ -5357,7 +5300,7 @@
         }
 
         function eliminarAvisoAdmin(avisoId) {
-            if (!confirm('¿Estás seguro de eliminar este aviso? Esta acción también eliminará todas las propuestas y chats asociados.')) {
+            if (!confirm('¿Estás seguro de eliminar este aviso? Esta acción no se puede deshacer.')) {
                 return;
             }
             
@@ -5378,15 +5321,15 @@
         }
 
         function eliminarPropuestaAdmin(propuestaId) {
-            if (!confirm('¿Estás seguro de eliminar esta propuesta? Esta acción también eliminará el chat asociado.')) {
+            if (!confirm('¿Estás seguro de eliminar esta propuesta? Esta acción no se puede deshacer.')) {
                 return;
             }
             
             const data = getData();
-            
-            // Eliminar de la lista de propuestas del aviso
             const propuesta = data.propuestas.find(p => p.id === propuestaId);
+            
             if (propuesta) {
+                // Eliminar de la lista de propuestas del aviso
                 const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
                 if (aviso && aviso.propuestas) {
                     const index = aviso.propuestas.indexOf(propuestaId);
@@ -5394,17 +5337,17 @@
                         aviso.propuestas.splice(index, 1);
                     }
                 }
+                
+                // Eliminar chat asociado
+                data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
+                
+                // Eliminar propuesta
+                data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
+                
+                saveData(data);
+                showToast('Propuesta eliminada exitosamente', 'success');
+                loadAdminPanel();
             }
-            
-            // Eliminar chat asociado
-            data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
-            
-            // Eliminar propuesta
-            data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
-            
-            saveData(data);
-            showToast('Propuesta eliminada exitosamente', 'success');
-            loadAdminPanel();
         }
 
         function generarReporte() {
@@ -5412,25 +5355,29 @@
             
             const reporte = {
                 fecha: new Date().toISOString(),
-                estadisticas: {
-                    totalUsuarios: data.users.length,
-                    totalCompradores: data.users.filter(u => u.role === 'comprador').length,
-                    totalVendedores: data.users.filter(u => u.role === 'vendedor').length,
-                    totalAvisos: data.avisos.length,
-                    totalPropuestas: data.propuestas.length,
-                    totalChats: data.chats.length,
-                    avisosActivos: data.avisos.filter(a => a.estado === 'abierto').length,
-                    avisosNegociando: data.avisos.filter(a => a.estado === 'negociando').length,
-                    avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length
+                totalUsuarios: data.users.length,
+                totalAvisos: data.avisos.length,
+                totalPropuestas: data.propuestas.length,
+                totalChats: data.chats.length,
+                usuariosPorRol: {
+                    compradores: data.users.filter(u => u.role === 'comprador').length,
+                    vendedores: data.users.filter(u => u.role === 'vendedor').length,
+                    administradores: data.users.filter(u => u.role === 'admin').length
                 },
-                usuarios: data.users.map(u => ({
-                    id: u.id,
-                    email: u.email,
-                    role: u.role,
-                    fechaRegistro: u.createdAt,
-                    avisos: u.totalAvisos || 0,
-                    propuestas: u.totalPropuestas || 0
-                }))
+                avisosPorTipo: {
+                    inmueble: data.avisos.filter(a => a.tipo === 'inmueble').length,
+                    auto: data.avisos.filter(a => a.tipo === 'auto').length,
+                    motos: data.avisos.filter(a => a.tipo === 'motos').length,
+                    tecnologia: data.avisos.filter(a => a.tipo === 'tecnologia').length,
+                    servicios: data.avisos.filter(a => a.tipo === 'servicios').length,
+                    otros: data.avisos.filter(a => a.tipo === 'otros').length
+                },
+                avisosPorEstado: {
+                    abierto: data.avisos.filter(a => a.estado === 'abierto').length,
+                    negociando: data.avisos.filter(a => a.estado === 'negociando').length,
+                    cerrado: data.avisos.filter(a => a.estado === 'cerrado').length,
+                    rechazado: data.avisos.filter(a => a.estado === 'rechazado').length
+                }
             };
             
             const dataStr = JSON.stringify(reporte, null, 2);
@@ -5448,15 +5395,16 @@
         }
 
         function resetSystem() {
-            if (!confirm('⚠️ ADVERTENCIA: ¿Estás seguro de resetear el sistema? Esto eliminará todos los datos excepto las cuentas de administrador. Esta acción no se puede deshacer.')) {
+            if (!confirm('¿ESTÁS SEGURO DE RESETEAR EL SISTEMA? Esta acción eliminará todos los datos excepto las cuentas de administrador y no se puede deshacer.')) {
                 return;
             }
             
             const data = getData();
             
-            // Mantener solo usuarios admin
+            // Guardar solo los usuarios administradores
             const adminUsers = data.users.filter(u => u.role === 'admin');
             
+            // Crear nuevos datos iniciales
             const newData = {
                 users: adminUsers,
                 avisos: [],
@@ -5464,7 +5412,7 @@
                 chats: [],
                 notifications: [],
                 nextIds: {
-                    users: adminUsers.length > 0 ? Math.max(...adminUsers.map(u => u.id)) + 1 : 1,
+                    users: adminUsers.length + 1,
                     avisos: 1,
                     propuestas: 1,
                     chats: 1,
@@ -5472,82 +5420,110 @@
                 }
             };
             
+            // Añadir usuarios de demo
+            const demoUsers = [
+                { 
+                    id: newData.nextIds.users++, 
+                    email: "comprador@demo.com", 
+                    password: "123456", 
+                    name: "Juan Comprador",
+                    role: "comprador", 
+                    createdAt: new Date().toISOString(),
+                    avatarColor: "#4361ee",
+                    rating: 4.8,
+                    totalAvisos: 0,
+                    totalPropuestas: 0
+                },
+                { 
+                    id: newData.nextIds.users++, 
+                    email: "vendedor@demo.com", 
+                    password: "123456", 
+                    name: "María Vendedora",
+                    role: "vendedor", 
+                    createdAt: new Date().toISOString(),
+                    avatarColor: "#7209b7",
+                    rating: 4.9,
+                    totalAvisos: 0,
+                    totalPropuestas: 0
+                }
+            ];
+            
+            newData.users.push(...demoUsers);
             saveData(newData);
             
-            // Si el usuario actual no es admin, cerrar sesión
-            if (currentUser.role !== 'admin') {
-                logout();
-            } else {
-                showToast('Sistema reseteado exitosamente', 'success');
-                loadAdminPanel();
+            // Recargar página
+            location.reload();
+        }
+
+        // ============================================
+        // FUNCIONES AUXILIARES
+        // ============================================
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('hidden');
+        }
+
+        function scrollToFeatures() {
+            const featuresSection = document.getElementById('features-section');
+            if (featuresSection) {
+                featuresSection.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
+        function showPasswordReset() {
+            showToast('Función de recuperación de contraseña en desarrollo', 'info');
+        }
+
         function verHistorialVentas() {
-            showToast('Función de historial de ventas en desarrollo', 'info');
+            showToast('Historial de ventas en desarrollo', 'info');
         }
 
         // ============================================
         // INICIALIZACIÓN
         // ============================================
-        function init() {
+        document.addEventListener('DOMContentLoaded', function() {
             // Verificar autenticación al cargar
             checkAuth();
             
-            // Cargar regiones si existen los selectores
-            setTimeout(() => {
-                cargarRegiones('aviso-region');
-                cargarRegiones('filter-inmueble-region');
-            }, 100);
+            // Cargar regiones en los formularios
+            cargarRegiones('aviso-region');
+            cargarRegiones('filter-inmueble-region');
             
-            // Configurar PWA
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                const installBtn = document.getElementById('install-btn');
-                const installPwa = document.getElementById('install-pwa');
-                
-                if (installBtn && installPwa) {
-                    installPwa.classList.remove('hidden');
-                    installBtn.onclick = () => {
-                        if (deferredPrompt) {
-                            deferredPrompt.prompt();
-                            deferredPrompt.userChoice.then((choiceResult) => {
-                                if (choiceResult.outcome === 'accepted') {
-                                    showToast('¡App instalada exitosamente!', 'success');
-                                }
-                                deferredPrompt = null;
-                                installPwa.classList.add('hidden');
-                            });
-                        }
-                    };
+            // Añadir CSS para fadeOut
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; }
                 }
-            });
-            
-            // Verificar si la app está instalada
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                const installPwa = document.getElementById('install-pwa');
-                if (installPwa) {
-                    installPwa.classList.add('hidden');
-                }
-            }
-            
-            // Mostrar notificación de bienvenida si es la primera vez
-            const firstTime = !localStorage.getItem('firstVisit');
-            if (firstTime) {
-                setTimeout(() => {
-                    showToast('¡Bienvenido a MarketConnect! Regístrate para comenzar.', 'info');
-                    localStorage.setItem('firstVisit', 'true');
-                }, 2000);
-            }
-        }
+            `;
+            document.head.appendChild(style);
+        });
 
-        // Inicializar cuando el DOM esté listo
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
+        // ============================================
+        // PWA INSTALL PROMPT
+        // ============================================
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-pwa').classList.remove('hidden');
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('install-pwa').classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
     </script>
 </body>
 </html>
