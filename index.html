@@ -2354,9 +2354,9 @@
             });
         }
 
-        function cargarComunas(regionSelectId, comunaSelectId) {
-            const regionSelect = document.getElementById(regionSelectId);
-            const comunaSelect = document.getElementById(comunaSelectId);
+        function cargarComunas() {
+            const regionSelect = document.getElementById('aviso-region');
+            const comunaSelect = document.getElementById('aviso-comuna');
             
             if (!regionSelect || !comunaSelect) return;
             
@@ -2376,18 +2376,37 @@
             });
             
             // Limpiar barrios
-            const barrioSelect = comunaSelectId === 'aviso-comuna' ? 
-                document.getElementById('aviso-barrio') : 
-                document.getElementById('filter-inmueble-barrio');
-            
+            const barrioSelect = document.getElementById('aviso-barrio');
             if (barrioSelect) {
                 barrioSelect.innerHTML = '<option value="">Selecciona un barrio</option>';
             }
         }
 
-        function cargarBarrios(comunaSelectId, barrioSelectId) {
-            const comunaSelect = document.getElementById(comunaSelectId);
-            const barrioSelect = document.getElementById(barrioSelectId);
+        function cargarComunasFiltro() {
+            const regionSelect = document.getElementById('filter-inmueble-region');
+            const comunaSelect = document.getElementById('filter-inmueble-comuna');
+            
+            if (!regionSelect || !comunaSelect) return;
+            
+            const regionNombre = regionSelect.value;
+            const region = chileData.regiones.find(r => r.nombre === regionNombre);
+            
+            comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+            
+            if (!region) return;
+            
+            const comunas = chileData.comunas[region.id] || [];
+            comunas.forEach(comuna => {
+                const option = document.createElement('option');
+                option.value = comuna;
+                option.textContent = comuna;
+                comunaSelect.appendChild(option);
+            });
+        }
+
+        function cargarBarrios() {
+            const comunaSelect = document.getElementById('aviso-comuna');
+            const barrioSelect = document.getElementById('aviso-barrio');
             
             if (!comunaSelect || !barrioSelect) return;
             
@@ -3093,6 +3112,44 @@
         }
 
         // ============================================
+        // FUNCIONES DE MODALES
+        // ============================================
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // ============================================
+        // FUNCIONES AUXILIARES
+        // ============================================
+        function scrollToFeatures() {
+            const featuresSection = document.getElementById('features-section');
+            if (featuresSection) {
+                featuresSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function showPasswordReset() {
+            const email = prompt('Ingresa tu email para restablecer la contraseña:');
+            if (email) {
+                showToast('Se ha enviado un enlace de restablecimiento a ' + email, 'info');
+            }
+        }
+
+        function updateNotificationBadges() {
+            updateNotifications(); // Ya implementada
+        }
+
+        // ============================================
         // FUNCIONES DE AVISOS (MEJORADAS CON INMUEBLES)
         // ============================================
         function showCreateAvisoModal() {
@@ -3158,11 +3215,17 @@
                 const caracteristicasCheckboxes = document.querySelectorAll('input[name="aviso-caracteristicas"]:checked');
                 nuevoAviso.caracteristicas = Array.from(caracteristicasCheckboxes).map(cb => cb.value);
                 
+                // Validar campos específicos
+                if (!nuevoAviso.region || !nuevoAviso.comuna || !nuevoAviso.superficieUtil || !nuevoAviso.superficieTotal) {
+                    showToast('Completa todos los campos obligatorios del inmueble', 'error');
+                    return;
+                }
+                
                 // Actualizar zona con ubicación jerárquica
                 nuevoAviso.zona = `${nuevoAviso.region}, ${nuevoAviso.comuna}`;
             }
             
-            // Validar campos requeridos
+            // Validar campos requeridos generales
             if (!nuevoAviso.titulo || !nuevoAviso.descripcion || !nuevoAviso.presupuesto || !nuevoAviso.zona) {
                 showToast('Completa todos los campos obligatorios', 'error');
                 return;
@@ -3271,12 +3334,22 @@
                 
                 // Filtrar por dormitorios
                 if (dormitorios) {
-                    avisos = avisos.filter(a => a.dormitorios === parseInt(dormitorios));
+                    const dormValue = parseInt(dormitorios);
+                    if (dormValue === 5) {
+                        avisos = avisos.filter(a => a.dormitorios >= 5);
+                    } else {
+                        avisos = avisos.filter(a => a.dormitorios === dormValue);
+                    }
                 }
                 
                 // Filtrar por baños
                 if (banos) {
-                    avisos = avisos.filter(a => a.banos === parseInt(banos));
+                    const banosValue = parseInt(banos);
+                    if (banosValue === 4) {
+                        avisos = avisos.filter(a => a.banos >= 4);
+                    } else {
+                        avisos = avisos.filter(a => a.banos === banosValue);
+                    }
                 }
                 
                 // Filtrar por superficie útil
@@ -3351,11 +3424,11 @@
                 if (aviso.tipo === 'inmueble') {
                     infoEspecifica = `
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0;">
-                            <span class="badge badge-light">${aviso.operacion}</span>
-                            <span class="badge badge-light">${aviso.tipoInmueble}</span>
+                            <span class="badge badge-light">${aviso.operacion || 'N/A'}</span>
+                            <span class="badge badge-light">${aviso.tipoInmueble || 'N/A'}</span>
                             ${aviso.dormitorios > 0 ? `<span class="badge badge-light">🛏️ ${aviso.dormitorios}</span>` : ''}
-                            <span class="badge badge-light">🚿 ${aviso.banos}</span>
-                            <span class="badge badge-light">📐 ${aviso.superficieUtil}m²</span>
+                            <span class="badge badge-light">🚿 ${aviso.banos || 'N/A'}</span>
+                            <span class="badge badge-light">📐 ${aviso.superficieUtil || 'N/A'}m²</span>
                         </div>
                     `;
                 }
@@ -3389,7 +3462,7 @@
                             <span><strong>📍 Ubicación:</strong> ${aviso.zona}</span>
                             <span><strong>⏱️ Urgencia:</strong> ${urgenciaText}</span>
                             <span><strong>💬 Propuestas:</strong> ${propuestasCount}</span>
-                            ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user.name || user.email}</span>` : ''}
+                            ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user?.name || user?.email || 'N/A'}</span>` : ''}
                         </div>
                         
                         <div class="aviso-description">
@@ -3489,11 +3562,11 @@
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Tipo de Inmueble</div>
-                            <div class="meta-value">${aviso.tipoInmueble}</div>
+                            <div class="meta-value">${aviso.tipoInmueble || 'N/A'}</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Ubicación</div>
-                            <div class="meta-value">${aviso.region}, ${aviso.comuna}</div>
+                            <div class="meta-value">${aviso.region || 'N/A'}, ${aviso.comuna || 'N/A'}</div>
                         </div>
                         ${aviso.barrio ? `
                         <div class="meta-card">
@@ -3503,19 +3576,19 @@
                         ` : ''}
                         <div class="meta-card">
                             <div class="meta-label">Dormitorios</div>
-                            <div class="meta-value">${aviso.dormitorios === 0 ? 'Studio' : aviso.dormitorios}</div>
+                            <div class="meta-value">${aviso.dormitorios === 0 ? 'Studio' : aviso.dormitorios || 'N/A'}</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Baños</div>
-                            <div class="meta-value">${aviso.banos}</div>
+                            <div class="meta-value">${aviso.banos || 'N/A'}</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Superficie útil</div>
-                            <div class="meta-value">${aviso.superficieUtil} m²</div>
+                            <div class="meta-value">${aviso.superficieUtil || 'N/A'} m²</div>
                         </div>
                         <div class="meta-card">
                             <div class="meta-label">Superficie total</div>
-                            <div class="meta-value">${aviso.superficieTotal} m²</div>
+                            <div class="meta-value">${aviso.superficieTotal || 'N/A'} m²</div>
                         </div>
                         ${aviso.caracteristicas && aviso.caracteristicas.length > 0 ? `
                         <div class="meta-card" style="grid-column: span 2;">
@@ -3630,12 +3703,12 @@
                                 <div class="propuesta-item">
                                     <div class="propuesta-item-header">
                                         <div class="propuesta-item-user">
-                                            <div class="propuesta-user-avatar" style="background: ${vendedor.avatarColor}">
-                                                ${(vendedor.name || vendedor.email).charAt(0).toUpperCase()}
+                                            <div class="propuesta-user-avatar" style="background: ${vendedor?.avatarColor || '#4361ee'}">
+                                                ${(vendedor?.name || vendedor?.email || 'V').charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <div style="font-weight: 700; font-size: 1.1rem;">${vendedor.name || vendedor.email}</div>
-                                                <div style="font-size: 0.9rem; color: var(--gray);">⭐ ${vendedor.rating || 5.0}/5.0</div>
+                                                <div style="font-weight: 700; font-size: 1.1rem;">${vendedor?.name || vendedor?.email || 'Vendedor'}</div>
+                                                <div style="font-size: 0.9rem; color: var(--gray);">⭐ ${vendedor?.rating || 5.0}/5.0</div>
                                             </div>
                                         </div>
                                         <div>
@@ -3681,13 +3754,13 @@
                                             <button class="btn btn-sm btn-primary" onclick="abrirChat(${chat.id}, ${aviso.id})">
                                                 💬 ${chat.unreadCount > 0 ? `Chat (${chat.unreadCount})` : 'Abrir Chat'}
                                             </button>
-                                        ` : currentUser.id === vendedor.id ? `
+                                        ` : currentUser.id === vendedor?.id ? `
                                             <button class="btn btn-sm btn-outline" onclick="iniciarChatConComprador(${aviso.id}, ${propuesta.id})">
                                                 💬 Iniciar Chat
                                             </button>
                                         ` : esCreador ? `
                                             <button class="btn btn-sm btn-primary" onclick="iniciarChatConVendedor(${aviso.id}, ${propuesta.id})">
-                                                💬 Chatear con ${vendedor.name || vendedor.email}
+                                                💬 Chatear con ${vendedor?.name || vendedor?.email || 'Vendedor'}
                                             </button>
                                         ` : ''}
                                         
@@ -3729,11 +3802,11 @@
                                         const otroUsuarioId = chatActivo.participantes.find(id => id !== currentUser.id);
                                         const otroUsuario = data.users.find(u => u.id === otroUsuarioId);
                                         return `
-                                            <div class="chat-user-avatar" style="background: ${otroUsuario.avatarColor}">
-                                                ${(otroUsuario.name || otroUsuario.email).charAt(0).toUpperCase()}
+                                            <div class="chat-user-avatar" style="background: ${otroUsuario?.avatarColor || '#4361ee'}">
+                                                ${(otroUsuario?.name || otroUsuario?.email || 'U').charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <h3 style="margin: 0; font-size: 1.2rem;">${otroUsuario.name || otroUsuario.email}</h3>
+                                                <h3 style="margin: 0; font-size: 1.2rem;">${otroUsuario?.name || otroUsuario?.email || 'Usuario'}</h3>
                                                 <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9rem;">
                                                     ${currentUser.role === 'comprador' ? 'Vendedor' : 'Comprador'}
                                                 </p>
@@ -3750,7 +3823,7 @@
                                     return `
                                         <div class="message ${esMio ? 'message-sent' : 'message-received'}">
                                             <div class="message-header">
-                                                <span class="message-sender">${usuario.name || usuario.email}</span>
+                                                <span class="message-sender">${usuario?.name || usuario?.email || 'Usuario'}</span>
                                                 <span class="message-time">${new Date(mensaje.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                                             </div>
                                             <div class="message-content">${mensaje.text}</div>
@@ -4114,7 +4187,7 @@
                 
                 const chat = data.chats.find(c => c.propuestaId === propuesta.id);
                 
-                if (!aviso || !otroUsuario) return '';
+                if (!aviso) return '';
                 
                 // Icono según tipo
                 const tipoIcon = {
@@ -4875,7 +4948,7 @@
                                 $${propuesta.precio.toLocaleString()}
                             </div>
                             <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
-                                De: ${vendedor.name || vendedor.email}
+                                De: ${vendedor?.name || vendedor?.email || 'Vendedor'}
                             </div>
                             <button class="btn btn-sm btn-primary btn-block" onclick="event.stopPropagation(); verDetalleAviso(${aviso.id})">
                                 Ver Propuesta
@@ -4919,7 +4992,7 @@
                     if (aviso.tipo === 'inmueble') {
                         infoExtra = `
                             <div style="font-size: 0.9rem; color: var(--gray); margin: 8px 0;">
-                                ${aviso.tipoInmueble} en ${aviso.comuna}
+                                ${aviso.tipoInmueble || 'Inmueble'} en ${aviso.comuna || 'ubicación'}
                             </div>
                         `;
                     }
@@ -4933,7 +5006,7 @@
                                     $${aviso.presupuesto.toLocaleString()}
                                 </div>
                                 <div style="font-size: 0.9rem; color: var(--gray);">
-                                    ${tipoIcon} De: ${user.name || user.email}
+                                    ${tipoIcon} De: ${user?.name || user?.email || 'Usuario'}
                                 </div>
                             </div>
                             <button class="btn btn-sm btn-secondary btn-block" onclick="event.stopPropagation(); mostrarEnviarPropuesta(${aviso.id})">
@@ -5209,24 +5282,16 @@
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
-                // Icono según tipo
-                const tipoIcon = {
-                    'inmueble': '🏠',
-                    'auto': '🚗',
-                    'motos': '🏍️',
-                    'tecnologia': '💻',
-                    'servicios': '🔧',
-                    'otros': '📦'
-                }[aviso.tipo] || '📋';
-                
                 return `
                     <tr>
                         <td>${aviso.id}</td>
                         <td>${aviso.titulo.substring(0, 40)}...</td>
-                        <td><span class="badge badge-info">${tipoIcon} ${aviso.tipo}</span></td>
-                        <td>${user.email}</td>
+                        <td><span class="badge badge-light">${aviso.tipo}</span></td>
+                        <td>${user?.email || 'N/A'}</td>
                         <td>$${aviso.presupuesto.toLocaleString()}</td>
-                        <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : 'badge-danger'}">${aviso.estado}</span></td>
+                        <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : 
+                                               aviso.estado === 'negociando' ? 'badge-warning' : 
+                                               aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">${aviso.estado}</span></td>
                         <td>${aviso.propuestas?.length || 0}</td>
                         <td>
                             <button class="btn btn-xs" onclick="eliminarAvisoAdmin(${aviso.id})">Eliminar</button>
@@ -5243,10 +5308,12 @@
                 return `
                     <tr>
                         <td>${propuesta.id}</td>
-                        <td>${aviso?.titulo.substring(0, 40) || 'N/A'}...</td>
-                        <td>${vendedor.email}</td>
+                        <td>${aviso?.titulo.substring(0, 30) || 'N/A'}...</td>
+                        <td>${vendedor?.email || 'N/A'}</td>
                         <td>$${propuesta.precio.toLocaleString()}</td>
-                        <td><span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : 'badge-danger'}">${propuesta.estado}</span></td>
+                        <td><span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : 
+                                                propuesta.estado === 'aceptada' ? 'badge-success' : 
+                                                propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">${propuesta.estado}</span></td>
                         <td>${new Date(propuesta.createdAt).toLocaleDateString()}</td>
                         <td>
                             <button class="btn btn-xs" onclick="eliminarPropuestaAdmin(${propuesta.id})">Eliminar</button>
@@ -5256,74 +5323,92 @@
             }).join('');
         }
 
-        function eliminarUsuarioAdmin(id) {
-            if (confirm('⚠️ ¿ESTÁS SEGURO? Esto eliminará al usuario, todos sus avisos, propuestas y chats asociados.')) {
-                const data = getData();
-                
-                // Eliminar avisos del usuario
-                data.avisos = data.avisos.filter(a => a.userId !== id);
-                
-                // Eliminar propuestas del usuario
-                data.propuestas = data.propuestas.filter(p => p.vendedorId !== id);
-                
-                // Eliminar chats donde participe el usuario
-                data.chats = data.chats.filter(c => !c.participantes.includes(id));
-                
-                // Eliminar notificaciones del usuario
-                data.notifications = data.notifications.filter(n => n.userId !== id);
-                
-                // Eliminar usuario
-                data.users = data.users.filter(u => u.id !== id);
-                
-                saveData(data);
-                showToast('Usuario eliminado exitosamente', 'success');
-                loadAdminPanel();
+        function eliminarUsuarioAdmin(userId) {
+            if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) {
+                return;
             }
+            
+            const data = getData();
+            
+            // No permitir eliminar al usuario actual
+            if (userId === currentUser.id) {
+                showToast('No puedes eliminarte a ti mismo', 'error');
+                return;
+            }
+            
+            // Eliminar avisos del usuario
+            data.avisos = data.avisos.filter(a => a.userId !== userId);
+            
+            // Eliminar propuestas del usuario
+            data.propuestas = data.propuestas.filter(p => p.vendedorId !== userId);
+            
+            // Eliminar chats donde participe el usuario
+            data.chats = data.chats.filter(c => !c.participantes.includes(userId));
+            
+            // Eliminar notificaciones del usuario
+            data.notifications = data.notifications.filter(n => n.userId !== userId);
+            
+            // Eliminar usuario
+            data.users = data.users.filter(u => u.id !== userId);
+            
+            saveData(data);
+            showToast('Usuario eliminado exitosamente', 'success');
+            loadAdminPanel();
         }
 
-        function eliminarAvisoAdmin(id) {
-            if (confirm('¿Eliminar este aviso y todas sus propuestas y chats asociados?')) {
-                const data = getData();
-                
-                // Eliminar propuestas asociadas
-                data.propuestas = data.propuestas.filter(p => p.avisoId !== id);
-                
-                // Eliminar chats asociados
-                data.chats = data.chats.filter(c => c.avisoId !== id);
-                
-                // Eliminar aviso
-                data.avisos = data.avisos.filter(a => a.id !== id);
-                
-                saveData(data);
-                showToast('Aviso eliminado exitosamente', 'success');
-                loadAdminPanel();
+        function eliminarAvisoAdmin(avisoId) {
+            if (!confirm('¿Estás seguro de eliminar este aviso? Esta acción también eliminará todas las propuestas y chats asociados.')) {
+                return;
             }
+            
+            const data = getData();
+            
+            // Eliminar propuestas asociadas
+            data.propuestas = data.propuestas.filter(p => p.avisoId !== avisoId);
+            
+            // Eliminar chats asociados
+            data.chats = data.chats.filter(c => c.avisoId !== avisoId);
+            
+            // Eliminar aviso
+            data.avisos = data.avisos.filter(a => a.id !== avisoId);
+            
+            saveData(data);
+            showToast('Aviso eliminado exitosamente', 'success');
+            loadAdminPanel();
         }
 
-        function eliminarPropuestaAdmin(id) {
-            if (confirm('¿Eliminar esta propuesta?')) {
-                const data = getData();
-                data.propuestas = data.propuestas.filter(p => p.id !== id);
-                
-                // Eliminar chat asociado
-                data.chats = data.chats.filter(c => c.propuestaId !== id);
-                
-                saveData(data);
-                showToast('Propuesta eliminada exitosamente', 'success');
-                loadAdminPanel();
+        function eliminarPropuestaAdmin(propuestaId) {
+            if (!confirm('¿Estás seguro de eliminar esta propuesta? Esta acción también eliminará el chat asociado.')) {
+                return;
             }
+            
+            const data = getData();
+            
+            // Eliminar de la lista de propuestas del aviso
+            const propuesta = data.propuestas.find(p => p.id === propuestaId);
+            if (propuesta) {
+                const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
+                if (aviso && aviso.propuestas) {
+                    const index = aviso.propuestas.indexOf(propuestaId);
+                    if (index > -1) {
+                        aviso.propuestas.splice(index, 1);
+                    }
+                }
+            }
+            
+            // Eliminar chat asociado
+            data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
+            
+            // Eliminar propuesta
+            data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
+            
+            saveData(data);
+            showToast('Propuesta eliminada exitosamente', 'success');
+            loadAdminPanel();
         }
 
         function generarReporte() {
             const data = getData();
-            
-            // Estadísticas por tipo de aviso
-            const avisosInmuebles = data.avisos.filter(a => a.tipo === 'inmueble').length;
-            const avisosAutos = data.avisos.filter(a => a.tipo === 'auto').length;
-            const avisosMotos = data.avisos.filter(a => a.tipo === 'motos').length;
-            const avisosTecnologia = data.avisos.filter(a => a.tipo === 'tecnologia').length;
-            const avisosServicios = data.avisos.filter(a => a.tipo === 'servicios').length;
-            const avisosOtros = data.avisos.filter(a => a.tipo === 'otros').length;
             
             const reporte = {
                 fecha: new Date().toISOString(),
@@ -5336,33 +5421,16 @@
                     totalChats: data.chats.length,
                     avisosActivos: data.avisos.filter(a => a.estado === 'abierto').length,
                     avisosNegociando: data.avisos.filter(a => a.estado === 'negociando').length,
-                    avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length,
-                    avisosPorTipo: {
-                        inmuebles: avisosInmuebles,
-                        autos: avisosAutos,
-                        motos: avisosMotos,
-                        tecnologia: avisosTecnologia,
-                        servicios: avisosServicios,
-                        otros: avisosOtros
-                    }
+                    avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length
                 },
                 usuarios: data.users.map(u => ({
                     id: u.id,
                     email: u.email,
                     role: u.role,
                     fechaRegistro: u.createdAt,
-                    totalAvisos: u.totalAvisos || 0,
-                    totalPropuestas: u.totalPropuestas || 0
-                })),
-                topVendedores: data.users
-                    .filter(u => u.role === 'vendedor')
-                    .sort((a, b) => (b.totalPropuestas || 0) - (a.totalPropuestas || 0))
-                    .slice(0, 5)
-                    .map(u => ({
-                        email: u.email,
-                        propuestasEnviadas: u.totalPropuestas || 0,
-                        rating: u.rating || 5.0
-                    }))
+                    avisos: u.totalAvisos || 0,
+                    propuestas: u.totalPropuestas || 0
+                }))
             };
             
             const dataStr = JSON.stringify(reporte, null, 2);
@@ -5371,7 +5439,7 @@
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = `reporte_marketconnect_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `reporte_admin_${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -5380,188 +5448,106 @@
         }
 
         function resetSystem() {
-            if (confirm('⚠️ ¿ESTÁS SEGURO? Esto eliminará TODOS los datos excepto los usuarios de ejemplo y reiniciará el sistema completamente.')) {
-                saveData(initialData);
-                showToast('Sistema reiniciado exitosamente', 'success');
+            if (!confirm('⚠️ ADVERTENCIA: ¿Estás seguro de resetear el sistema? Esto eliminará todos los datos excepto las cuentas de administrador. Esta acción no se puede deshacer.')) {
+                return;
+            }
+            
+            const data = getData();
+            
+            // Mantener solo usuarios admin
+            const adminUsers = data.users.filter(u => u.role === 'admin');
+            
+            const newData = {
+                users: adminUsers,
+                avisos: [],
+                propuestas: [],
+                chats: [],
+                notifications: [],
+                nextIds: {
+                    users: adminUsers.length > 0 ? Math.max(...adminUsers.map(u => u.id)) + 1 : 1,
+                    avisos: 1,
+                    propuestas: 1,
+                    chats: 1,
+                    notifications: 1
+                }
+            };
+            
+            saveData(newData);
+            
+            // Si el usuario actual no es admin, cerrar sesión
+            if (currentUser.role !== 'admin') {
+                logout();
+            } else {
+                showToast('Sistema reseteado exitosamente', 'success');
                 loadAdminPanel();
             }
         }
 
-        // ============================================
-        // FUNCIONES AUXILIARES
-        // ============================================
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
+        function verHistorialVentas() {
+            showToast('Función de historial de ventas en desarrollo', 'info');
         }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        function scrollToFeatures() {
-            const featuresSection = document.getElementById('features-section');
-            if (featuresSection) {
-                featuresSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function showPasswordReset() {
-            const email = prompt('Ingresa tu email para restablecer la contraseña:');
-            if (email) {
-                showToast(`Se ha enviado un enlace de recuperación a ${email}`, 'info');
-            }
-        }
-
-        // ============================================
-        // PWA FUNCTIONALITY
-        // ============================================
-        function generateManifest() {
-            const manifest = {
-                name: "MarketConnect",
-                short_name: "MarketConnect",
-                description: "Marketplace inverso - Conectando compradores y vendedores",
-                start_url: "./",
-                display: "standalone",
-                background_color: "#ffffff",
-                theme_color: "#4361ee",
-                icons: [
-                    {
-                        src: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%234361ee%22>🔄</text></svg>",
-                        sizes: "any",
-                        type: "image/svg+xml"
-                    }
-                ]
-            };
-            
-            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-            const manifestURL = URL.createObjectURL(manifestBlob);
-            document.getElementById('manifest-placeholder').href = manifestURL;
-        }
-
-        function registerServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                const swCode = `
-                    self.addEventListener('install', (event) => {
-                        event.waitUntil(
-                            caches.open('marketconnect-v2').then((cache) => {
-                                return cache.addAll([
-                                    './',
-                                    './index.html'
-                                ]);
-                            })
-                        );
-                    });
-                    
-                    self.addEventListener('fetch', (event) => {
-                        event.respondWith(
-                            caches.match(event.request).then((response) => {
-                                return response || fetch(event.request);
-                            })
-                        );
-                    });
-                    
-                    self.addEventListener('message', (event) => {
-                        if (event.data.action === 'skipWaiting') {
-                            self.skipWaiting();
-                        }
-                    });
-                `;
-                
-                const swBlob = new Blob([swCode], {type: 'application/javascript'});
-                const swURL = URL.createObjectURL(swBlob);
-                
-                navigator.serviceWorker.register(swURL)
-                    .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Error al registrar Service Worker:', error);
-                    });
-            }
-        }
-
-        // Instalación PWA
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            const installBtn = document.getElementById('install-btn');
-            const installPWA = document.getElementById('install-pwa');
-            
-            if (installBtn && installPWA) {
-                installPWA.classList.remove('hidden');
-                
-                installBtn.addEventListener('click', () => {
-                    installPWA.classList.add('hidden');
-                    deferredPrompt.prompt();
-                    
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('Usuario instaló la PWA');
-                            showToast('¡Aplicación instalada exitosamente!', 'success');
-                        }
-                        deferredPrompt = null;
-                    });
-                });
-            }
-        });
 
         // ============================================
         // INICIALIZACIÓN
         // ============================================
-        window.addEventListener('DOMContentLoaded', () => {
-            // Inicializar datos
-            getData();
-            
-            // Verificar autenticación
+        function init() {
+            // Verificar autenticación al cargar
             checkAuth();
             
+            // Cargar regiones si existen los selectores
+            setTimeout(() => {
+                cargarRegiones('aviso-region');
+                cargarRegiones('filter-inmueble-region');
+            }, 100);
+            
             // Configurar PWA
-            generateManifest();
-            registerServiceWorker();
-            
-            // Configurar eventos globales
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('[data-view]')) {
-                    const viewId = e.target.closest('[data-view]').getAttribute('data-view');
-                    showView(viewId);
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const installBtn = document.getElementById('install-btn');
+                const installPwa = document.getElementById('install-pwa');
+                
+                if (installBtn && installPwa) {
+                    installPwa.classList.remove('hidden');
+                    installBtn.onclick = () => {
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            deferredPrompt.userChoice.then((choiceResult) => {
+                                if (choiceResult.outcome === 'accepted') {
+                                    showToast('¡App instalada exitosamente!', 'success');
+                                }
+                                deferredPrompt = null;
+                                installPwa.classList.add('hidden');
+                            });
+                        }
+                    };
                 }
             });
             
-            // Cerrar modales al hacer clic fuera
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal-overlay')) {
-                    e.target.classList.add('hidden');
+            // Verificar si la app está instalada
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                const installPwa = document.getElementById('install-pwa');
+                if (installPwa) {
+                    installPwa.classList.add('hidden');
                 }
-            });
-            
-            // Inicializar vista predeterminada
-            if (!currentUser) {
-                showView('landing');
             }
             
-            // Cargar regiones en los filtros
-            cargarRegiones('filter-inmueble-region');
-            
-            // Configurar actualización automática cada 30 segundos
-            setInterval(() => {
-                if (currentUser) {
-                    updateNotifications();
-                    if (document.querySelector('.view.active').id === 'dashboard') {
-                        updateDashboard();
-                    }
-                }
-            }, 30000);
-        });
+            // Mostrar notificación de bienvenida si es la primera vez
+            const firstTime = !localStorage.getItem('firstVisit');
+            if (firstTime) {
+                setTimeout(() => {
+                    showToast('¡Bienvenido a MarketConnect! Regístrate para comenzar.', 'info');
+                    localStorage.setItem('firstVisit', 'true');
+                }, 2000);
+            }
+        }
 
-        // Manejar cambios en la conexión
-        window.addEventListener('online', () => {
-            showToast('Conexión restablecida', 'success');
-        });
-
-        window.addEventListener('offline', () => {
-            showToast('Estás trabajando sin conexión', 'warning');
-        });
+        // Inicializar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
