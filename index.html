@@ -1648,6 +1648,24 @@
                             </label>
                         </div>
                     </div>
+                    
+                    <!-- SELECCIÓN DE CATEGORÍAS PARA VENDEDORES (visible sólo cuando se selecciona vendedor) -->
+                    <div id="vendedor-categorias" class="form-group hidden">
+                        <label>¿En qué categorías quieres recibir avisos? (múltiple opción)</label>
+                        <div class="filter-options">
+                            <div class="filter-option" onclick="toggleCategoriaRegistro(this, 'inmueble')">
+                                🏠 Inmuebles
+                            </div>
+                            <div class="filter-option" onclick="toggleCategoriaRegistro(this, 'auto')">
+                                🚗 Automóviles
+                            </div>
+                            <div class="filter-option" onclick="toggleCategoriaRegistro(this, 'moto')">
+                                🏍️ Motos
+                            </div>
+                        </div>
+                        <input type="hidden" id="register-categorias" name="categorias" value="inmueble,auto,moto">
+                    </div>
+                    
                     <button type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
                 </form>
                 <p style="text-align: center; margin-top: 30px;">
@@ -2107,6 +2125,7 @@
                                 <th>Email</th>
                                 <th>Nombre</th>
                                 <th>Rol</th>
+                                <th>Categorías</th>
                                 <th>Registro</th>
                                 <th>Avisos</th>
                                 <th>Propuestas</th>
@@ -2613,7 +2632,7 @@
         let currentChatIdForCamera = null;
 
         // ============================================
-        // DATOS INICIALES DE EJEMPLO (MEJORADOS)
+        // DATOS INICIALES DE EJEMPLO (MEJORADOS CON CATEGORÍAS)
         // ============================================
         const initialData = {
             users: [
@@ -2627,19 +2646,21 @@
                     avatarColor: "#4361ee",
                     rating: 4.8,
                     totalAvisos: 3,
-                    totalPropuestas: 0
+                    totalPropuestas: 0,
+                    categorias: [] // Compradores no tienen categorías
                 },
                 { 
                     id: 2, 
                     email: "vendedor@demo.com", 
                     password: "123456", 
-                    name: "María Vendedora",
+                    name: "María Inmobiliaria",
                     role: "vendedor", 
                     createdAt: new Date().toISOString(),
                     avatarColor: "#7209b7",
                     rating: 4.9,
                     totalAvisos: 0,
-                    totalPropuestas: 5
+                    totalPropuestas: 5,
+                    categorias: ["inmueble"] // ESPECIALIZADA EN INMUEBLES
                 },
                 { 
                     id: 3, 
@@ -2651,19 +2672,21 @@
                     avatarColor: "#f72585",
                     rating: 5.0,
                     totalAvisos: 0,
-                    totalPropuestas: 0
+                    totalPropuestas: 0,
+                    categorias: []
                 },
                 { 
                     id: 4, 
                     email: "vendedor2@demo.com", 
                     password: "123456", 
-                    name: "Carlos Proveedor",
+                    name: "Carlos Automotriz",
                     role: "vendedor", 
                     createdAt: new Date(Date.now() - 86400000).toISOString(),
                     avatarColor: "#4cc9f0",
                     rating: 4.5,
                     totalAvisos: 0,
-                    totalPropuestas: 8
+                    totalPropuestas: 8,
+                    categorias: ["auto", "moto"] // ESPECIALIZADO EN VEHÍCULOS
                 }
             ],
             avisos: [
@@ -2808,10 +2831,20 @@
             notifications: [
                 {
                     id: 1,
+                    userId: 2,
+                    type: "aviso_nuevo",
+                    title: "📢 Nuevo aviso en Inmuebles",
+                    message: "Juan Comprador busca: 'Busco departamento 3 dormitorios en Providencia'",
+                    data: { avisoId: 1, categoria: "inmueble", zona: "Providencia, Santiago" },
+                    read: false,
+                    createdAt: new Date(Date.now() - 3600000).toISOString()
+                },
+                {
+                    id: 2,
                     userId: 1,
                     type: "propuesta_nueva",
-                    title: "Nueva propuesta recibida",
-                    message: "María Vendedora envió una propuesta a tu aviso 'Busco departamento 3 dormitorios'",
+                    title: "📨 Nueva propuesta recibida",
+                    message: "María Inmobiliaria envió una propuesta a tu aviso 'Busco departamento 3 dormitorios'",
                     data: { avisoId: 1, propuestaId: 1 },
                     read: false,
                     createdAt: new Date(Date.now() - 3600000).toISOString()
@@ -2822,7 +2855,7 @@
                 avisos: 4,
                 propuestas: 4,
                 chats: 2,
-                notifications: 2
+                notifications: 3
             }
         };
 
@@ -2854,31 +2887,21 @@
         }
 
         // ============================================
-        // FUNCIONES DE AUTENTICACIÓN
+        // FUNCIONES DE AUTENTICACIÓN (CON CATEGORÍAS)
         // ============================================
-        function login(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const data = getData();
+        function toggleCategoriaRegistro(element, categoria) {
+            element.classList.toggle('active');
             
-            const user = data.users.find(u => u.email === email && u.password === password);
+            // Actualizar el campo oculto con las categorías seleccionadas
+            const categoriasSeleccionadas = [];
+            document.querySelectorAll('#vendedor-categorias .filter-option.active').forEach(el => {
+                const text = el.textContent.trim();
+                if (text.includes('🏠')) categoriasSeleccionadas.push('inmueble');
+                else if (text.includes('🚗')) categoriasSeleccionadas.push('auto');
+                else if (text.includes('🏍️')) categoriasSeleccionadas.push('moto');
+            });
             
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                showUserUI();
-                
-                // Redirigir directamente a la vista de avisos después del login
-                showView('avisos');
-                loadAvisos();
-                
-                updateDashboard();
-                updateNotifications();
-                showToast(`¡Bienvenido ${user.name || user.email}!`, 'success');
-            } else {
-                showToast('Email o contraseña incorrectos', 'error');
-            }
+            document.getElementById('register-categorias').value = categoriasSeleccionadas.join(',');
         }
 
         function register(event) {
@@ -2887,12 +2910,25 @@
             const password = document.getElementById('register-password').value;
             const name = document.getElementById('register-name').value;
             const role = document.querySelector('input[name="role"]:checked').value;
+            const categoriasInput = document.getElementById('register-categorias').value;
             const data = getData();
             
             // Verificar si el usuario ya existe
             if (data.users.find(u => u.email === email)) {
                 showToast('Este email ya está registrado', 'error');
                 return;
+            }
+            
+            // Procesar categorías
+            let categorias = [];
+            if (role === 'vendedor') {
+                if (categoriasInput) {
+                    categorias = categoriasInput.split(',').filter(c => c.trim());
+                }
+                // Si no seleccionó ninguna, asignar todas por defecto
+                if (categorias.length === 0) {
+                    categorias = ["inmueble", "auto", "moto"];
+                }
             }
             
             // Colores para avatares
@@ -2909,7 +2945,8 @@
                 avatarColor: randomColor,
                 rating: 5.0,
                 totalAvisos: 0,
-                totalPropuestas: 0
+                totalPropuestas: 0,
+                categorias: categorias
             };
             
             data.users.push(newUser);
@@ -2923,6 +2960,37 @@
             showUserUI();
             showView('avisos');
             loadAvisos();
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const data = getData();
+            
+            const user = data.users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showUserUI();
+                
+                // Redirigir según rol
+                if (user.role === 'comprador') {
+                    showView('avisos');
+                } else if (user.role === 'vendedor') {
+                    showView('avisos');
+                } else if (user.role === 'admin') {
+                    showView('admin');
+                }
+                
+                loadAvisos();
+                updateDashboard();
+                updateNotifications();
+                showToast(`¡Bienvenido ${user.name || user.email}!`, 'success');
+            } else {
+                showToast('Email o contraseña incorrectos', 'error');
+            }
         }
 
         function logout() {
@@ -2939,10 +3007,16 @@
                 currentUser = JSON.parse(userData);
                 showUserUI();
                 
-                // Redirigir directamente a la vista de avisos al iniciar
-                showView('avisos');
-                loadAvisos();
+                // Redirigir según rol
+                if (currentUser.role === 'comprador') {
+                    showView('avisos');
+                } else if (currentUser.role === 'vendedor') {
+                    showView('avisos');
+                } else if (currentUser.role === 'admin') {
+                    showView('admin');
+                }
                 
+                loadAvisos();
                 updateDashboard();
                 updateNotifications();
             }
@@ -3012,6 +3086,21 @@
                 const createBtn2 = document.getElementById('create-aviso-btn-2');
                 if (createBtn1) createBtn1.classList.toggle('hidden', currentUser?.role !== 'comprador');
                 if (createBtn2) createBtn2.classList.toggle('hidden', currentUser?.role !== 'comprador');
+                
+                // Mostrar selección de categorías en registro si es vendedor
+                const roleRadios = document.querySelectorAll('input[name="role"]');
+                if (roleRadios.length > 0) {
+                    roleRadios.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const categoriasDiv = document.getElementById('vendedor-categorias');
+                            if (this.value === 'vendedor') {
+                                categoriasDiv.classList.remove('hidden');
+                            } else {
+                                categoriasDiv.classList.add('hidden');
+                            }
+                        });
+                    });
+                }
             }
             
             // Cargar datos específicos de la vista
@@ -3292,7 +3381,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE AVISOS
+        // FUNCIONES DE AVISOS (CON NOTIFICACIONES SEGMENTADAS)
         // ============================================
         function showCreateAvisoModal() {
             if (currentUser?.role !== 'comprador') {
@@ -3414,16 +3503,35 @@
             const user = data.users.find(u => u.id === currentUser.id);
             user.totalAvisos = (user.totalAvisos || 0) + 1;
             
-            // Crear notificación para vendedores
-            const vendedores = data.users.filter(u => u.role === 'vendedor');
-            vendedores.forEach(vendedor => {
+            // ============================================
+            // CORRECCIÓN: NOTIFICACIONES SÓLO PARA VENDEDORES DE LA CATEGORÍA
+            // ============================================
+            const categoriaText = {
+                'inmueble': 'Inmuebles',
+                'auto': 'Automóviles',
+                'moto': 'Motos'
+            }[categoria] || categoria;
+            
+            // Filtrar vendedores por categoría
+            const vendedoresInteresados = data.users.filter(u => 
+                u.role === 'vendedor' && 
+                u.categorias && 
+                u.categorias.includes(categoria)
+            );
+            
+            // Crear notificaciones segmentadas
+            vendedoresInteresados.forEach(vendedor => {
                 data.notifications.push({
                     id: data.nextIds.notifications++,
                     userId: vendedor.id,
                     type: "aviso_nuevo",
-                    title: "Nuevo aviso publicado",
-                    message: `${user.name || user.email} publicó: "${nuevoAviso.titulo}"`,
-                    data: { avisoId: nuevoAviso.id },
+                    title: `📢 Nuevo aviso en ${categoriaText}`,
+                    message: `${user.name || user.email} busca: "${nuevoAviso.titulo}" en ${nuevoAviso.zona}`,
+                    data: { 
+                        avisoId: nuevoAviso.id, 
+                        categoria: nuevoAviso.categoria,
+                        zona: nuevoAviso.zona
+                    },
                     read: false,
                     createdAt: new Date().toISOString()
                 });
@@ -3432,7 +3540,7 @@
             saveData(data);
             
             closeModal('create-aviso-modal');
-            showToast('¡Aviso publicado exitosamente! Los vendedores ya pueden verlo.', 'success');
+            showToast(`¡Aviso publicado exitosamente! Notificación enviada a ${vendedoresInteresados.length} vendedores especializados.`, 'success');
             
             // Redirigir al detalle del aviso
             currentAvisoId = nuevoAviso.id;
@@ -3451,8 +3559,21 @@
                 // Mostrar solo los avisos del usuario
                 avisos = data.avisos.filter(a => a.userId === currentUser.id);
             } else if (currentUser.role === 'vendedor') {
-                // Mostrar avisos activos de otros usuarios
-                avisos = data.avisos.filter(a => a.userId !== currentUser.id && a.estado === 'abierto');
+                // ============================================
+                // CORRECCIÓN: SOLO MOSTRAR AVISOS DE LAS CATEGORÍAS DEL VENDEDOR
+                // ============================================
+                const categoriasVendedor = currentUser.categorias || [];
+                
+                // Si el vendedor no tiene categorías, mostrar todos (para retrocompatibilidad)
+                if (categoriasVendedor.length === 0) {
+                    categoriasVendedor.push("inmueble", "auto", "moto");
+                }
+                
+                avisos = data.avisos.filter(a => 
+                    a.userId !== currentUser.id && 
+                    a.estado === 'abierto' &&
+                    categoriasVendedor.includes(a.categoria) // <- FILTRO POR CATEGORÍA
+                );
                 
                 // Aplicar filtros si existen
                 const categoria = document.getElementById('filter-categoria')?.value;
@@ -3559,7 +3680,12 @@
                     <div class="empty-state">
                         <div class="empty-state-icon">📝</div>
                         <h3>No hay avisos</h3>
-                        <p>${currentUser.role === 'comprador' ? 'Crea tu primer aviso para empezar' : 'No hay avisos disponibles con los filtros actuales'}</p>
+                        <p>${currentUser.role === 'comprador' ? 
+                            'Crea tu primer aviso para empezar' : 
+                            currentUser.categorias && currentUser.categorias.length > 0 ? 
+                            'No hay avisos disponibles en tus categorías especializadas' : 
+                            'No hay avisos disponibles con los filtros actuales'
+                        }</p>
                         ${currentUser.role === 'comprador' ? 
                             '<button class="btn btn-primary" onclick="showCreateAvisoModal()">Crear Mi Primer Aviso</button>' : 
                             '<button class="btn btn-outline" onclick="limpiarFiltros()">Limpiar Filtros</button>'
@@ -4159,10 +4285,9 @@
         }
 
         // ============================================
-        // FUNCIONES DE PROPUESTAS (SIN FOTOS)
+        // FUNCIONES DE PROPUESTAS
         // ============================================
         function mostrarEnviarPropuesta(avisoId) {
-            // Esta función ya no se usa, se reemplaza por iniciarChatConComprador
             showToast('Las propuestas ahora se envían por chat', 'info');
         }
 
@@ -5083,7 +5208,7 @@
                 const icon = notif.type === 'propuesta_nueva' ? '📨' : 
                             notif.type === 'propuesta_aceptada' ? '✅' : 
                             notif.type === 'mensaje_nuevo' ? '💬' : 
-                            notif.type === 'aviso_nuevo' ? '📝' : 'ℹ️';
+                            notif.type === 'aviso_nuevo' ? '📢' : 'ℹ️';
                 
                 return `
                     <div class="notification-item" onclick="handleNotificationClick(${notif.id})">
@@ -5408,7 +5533,14 @@
                 }).join('') : '<div class="empty-state" style="padding: 30px;">No hay propuestas recibidas</div>';
                 
             } else if (currentUser.role === 'vendedor') {
-                const avisosActivos = data.avisos.filter(a => a.userId !== currentUser.id && a.estado === 'abierto');
+                // SOLO CONTAR AVISOS DE LAS CATEGORÍAS DEL VENDEDOR
+                const categoriasVendedor = currentUser.categorias || ["inmueble", "auto", "moto"];
+                const avisosActivos = data.avisos.filter(a => 
+                    a.userId !== currentUser.id && 
+                    a.estado === 'abierto' &&
+                    categoriasVendedor.includes(a.categoria)
+                );
+                
                 const misPropuestas = data.propuestas.filter(p => p.vendedorId === currentUser.id);
                 const chatsActivos = data.chats.filter(c => c.participantes.includes(currentUser.id) && c.activo);
                 
@@ -5426,13 +5558,20 @@
         }
 
         // ============================================
-        // FUNCIONES DE PERFIL
+        // FUNCIONES DE PERFIL (CON CATEGORÍAS)
         // ============================================
         function loadProfile() {
             if (!currentUser) return;
             
             const data = getData();
             const container = document.getElementById('profile-content');
+            
+            // Convertir códigos de categoría a nombres
+            const categoriasNombres = {
+                'inmueble': '🏠 Inmuebles',
+                'auto': '🚗 Automóviles',
+                'moto': '🏍️ Motos'
+            };
             
             const userStats = {
                 avisosActivos: data.avisos.filter(a => a.userId === currentUser.id && a.estado === 'abierto').length,
@@ -5464,6 +5603,16 @@
                             </div>
                             <div style="color: var(--gray);">
                                 <div style="margin-bottom: 5px;"><strong>Email:</strong> ${currentUser.email}</div>
+                                ${currentUser.role === 'vendedor' && currentUser.categorias && currentUser.categorias.length > 0 ? `
+                                    <div style="margin-top: 10px;">
+                                        <strong>Especializado en:</strong>
+                                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px;">
+                                            ${currentUser.categorias.map(cat => 
+                                                `<span class="badge badge-info">${categoriasNombres[cat] || cat}</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
@@ -5482,15 +5631,95 @@
                             <div class="meta-value">${userStats.chatsActivos}</div>
                         </div>
                     </div>
+                    
+                    ${currentUser.role === 'vendedor' ? `
+                        <div class="card">
+                            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                <span>🎯</span>
+                                <span>Mis Categorías de Interés</span>
+                            </h3>
+                            <p style="margin-bottom: 15px; color: var(--gray);">
+                                Recibirás notificaciones y verás avisos solo de estas categorías:
+                            </p>
+                            <div class="filter-options">
+                                <div class="filter-option ${currentUser.categorias?.includes('inmueble') ? 'active' : ''}" 
+                                     onclick="toggleCategoriaPerfil('inmueble')">
+                                    🏠 Inmuebles
+                                </div>
+                                <div class="filter-option ${currentUser.categorias?.includes('auto') ? 'active' : ''}" 
+                                     onclick="toggleCategoriaPerfil('auto')">
+                                    🚗 Automóviles
+                                </div>
+                                <div class="filter-option ${currentUser.categorias?.includes('moto') ? 'active' : ''}" 
+                                     onclick="toggleCategoriaPerfil('moto')">
+                                    🏍️ Motos
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px;">
+                                <button class="btn btn-sm btn-primary" onclick="guardarCategoriasPerfil()">
+                                    💾 Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         }
 
+        function toggleCategoriaPerfil(categoria) {
+            const element = event.target;
+            element.classList.toggle('active');
+        }
+
+        function guardarCategoriasPerfil() {
+            if (currentUser.role !== 'vendedor') return;
+            
+            const categoriasSeleccionadas = [];
+            document.querySelectorAll('#profile-content .filter-option.active').forEach(el => {
+                const text = el.textContent.trim();
+                if (text.includes('🏠')) categoriasSeleccionadas.push('inmueble');
+                else if (text.includes('🚗')) categoriasSeleccionadas.push('auto');
+                else if (text.includes('🏍️')) categoriasSeleccionadas.push('moto');
+            });
+            
+            if (categoriasSeleccionadas.length === 0) {
+                showToast('Debes seleccionar al menos una categoría', 'error');
+                return;
+            }
+            
+            const data = getData();
+            const user = data.users.find(u => u.id === currentUser.id);
+            user.categorias = categoriasSeleccionadas;
+            currentUser.categorias = categoriasSeleccionadas;
+            
+            saveData(data);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            showToast('Categorías actualizadas correctamente', 'success');
+            
+            // Recargar vista de avisos para reflejar los cambios
+            if (document.getElementById('avisos').classList.contains('active')) {
+                loadAvisos();
+            }
+        }
+
+        function editarPerfil() {
+            // En una versión más completa, esto abriría un modal para editar perfil
+            showToast('Función de edición completa de perfil en desarrollo', 'info');
+        }
+
         // ============================================
-        // FUNCIONES DEL PANEL ADMIN
+        // FUNCIONES DEL PANEL ADMIN (MEJORADO)
         // ============================================
         function loadAdminPanel() {
             const data = getData();
+            
+            // Convertir códigos de categoría a nombres
+            const categoriasNombres = {
+                'inmueble': '🏠 Inmuebles',
+                'auto': '🚗 Automóviles',
+                'moto': '🏍️ Motos'
+            };
             
             // Actualizar estadísticas
             document.getElementById('admin-total-users').textContent = data.users.length;
@@ -5500,31 +5729,40 @@
             
             // Lista de usuarios
             const usersList = document.getElementById('admin-users-list');
-            usersList.innerHTML = data.users.map(user => `
-                <tr>
-                    <td>${user.id}</td>
-                    <td>${user.email}</td>
-                    <td>${user.name || 'Sin nombre'}</td>
-                    <td><span class="badge ${user.role === 'comprador' ? 'badge-info' : user.role === 'vendedor' ? 'badge-success' : 'badge-warning'}">${user.role}</span></td>
-                    <td>${new Date(user.createdAt).toLocaleDateString()}</td>
-                    <td>${user.totalAvisos || 0}</td>
-                    <td>${user.totalPropuestas || 0}</td>
-                    <td>
-                        <button class="btn btn-xs btn-outline" onclick="adminEditarUsuario(${user.id})">Editar</button>
-                        ${user.id !== currentUser.id ? `<button class="btn btn-xs btn-danger" onclick="adminEliminarUsuario(${user.id})">Eliminar</button>` : ''}
-                    </td>
-                </tr>
-            `).join('');
+            usersList.innerHTML = data.users.map(user => {
+                const categoriasTexto = user.categorias && user.categorias.length > 0 ? 
+                    user.categorias.map(cat => categoriasNombres[cat] || cat).join(', ') : 
+                    'Sin categorías';
+                
+                return `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.email}</td>
+                        <td>${user.name || 'Sin nombre'}</td>
+                        <td><span class="badge ${user.role === 'comprador' ? 'badge-info' : user.role === 'vendedor' ? 'badge-success' : 'badge-warning'}">${user.role}</span></td>
+                        <td>${categoriasTexto}</td>
+                        <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                        <td>${user.totalAvisos || 0}</td>
+                        <td>${user.totalPropuestas || 0}</td>
+                        <td>
+                            <button class="btn btn-xs btn-outline" onclick="adminEditarUsuario(${user.id})">Editar</button>
+                            ${user.id !== currentUser.id ? `<button class="btn btn-xs btn-danger" onclick="adminEliminarUsuario(${user.id})">Eliminar</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
             
             // Lista de avisos
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
+                const categoriaTexto = categoriasNombres[aviso.categoria] || aviso.categoria;
+                
                 return `
                     <tr>
                         <td>${aviso.id}</td>
                         <td>${aviso.titulo.substring(0, 30)}...</td>
-                        <td>${aviso.categoria}</td>
+                        <td>${categoriaTexto}</td>
                         <td>${user?.email || 'Usuario eliminado'}</td>
                         <td>${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}</td>
                         <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">${aviso.estado}</span></td>
@@ -5559,6 +5797,128 @@
             }).join('');
         }
 
+        function adminEditarUsuario(userId) {
+            showToast('Función de edición de usuario en desarrollo', 'info');
+        }
+
+        function adminEliminarUsuario(userId) {
+            if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) {
+                return;
+            }
+            
+            const data = getData();
+            
+            // No permitir eliminar al usuario actual
+            if (userId === currentUser.id) {
+                showToast('No puedes eliminarte a ti mismo', 'error');
+                return;
+            }
+            
+            // Eliminar avisos del usuario
+            const avisosUsuario = data.avisos.filter(a => a.userId === userId);
+            const avisosIds = avisosUsuario.map(a => a.id);
+            
+            // Eliminar propuestas del usuario
+            data.propuestas = data.propuestas.filter(p => 
+                p.vendedorId !== userId && !avisosIds.includes(p.avisoId)
+            );
+            
+            // Eliminar avisos del usuario
+            data.avisos = data.avisos.filter(a => a.userId !== userId);
+            
+            // Eliminar chats donde participa el usuario
+            data.chats = data.chats.filter(c => !c.participantes.includes(userId));
+            
+            // Eliminar notificaciones del usuario
+            data.notifications = data.notifications.filter(n => n.userId !== userId);
+            
+            // Eliminar usuario
+            data.users = data.users.filter(u => u.id !== userId);
+            
+            saveData(data);
+            showToast('Usuario eliminado exitosamente', 'success');
+            
+            // Recargar panel admin
+            loadAdminPanel();
+        }
+
+        function adminVerAviso(avisoId) {
+            currentAvisoId = avisoId;
+            showView('detalle-aviso');
+        }
+
+        function adminEliminarAviso(avisoId) {
+            if (!confirm('¿Estás seguro de eliminar este aviso? Esta acción también eliminará todas las propuestas y chats asociados.')) {
+                return;
+            }
+            
+            const data = getData();
+            
+            // Eliminar propuestas asociadas
+            data.propuestas = data.propuestas.filter(p => p.avisoId !== avisoId);
+            
+            // Eliminar chats asociados
+            data.chats = data.chats.filter(c => c.avisoId !== avisoId);
+            
+            // Eliminar notificaciones asociadas
+            data.notifications = data.notifications.filter(n => 
+                !n.data.avisoId || n.data.avisoId !== avisoId
+            );
+            
+            // Eliminar aviso
+            data.avisos = data.avisos.filter(a => a.id !== avisoId);
+            
+            saveData(data);
+            showToast('Aviso eliminado exitosamente', 'success');
+            
+            // Recargar panel admin
+            loadAdminPanel();
+        }
+
+        function adminVerPropuesta(propuestaId) {
+            const data = getData();
+            const propuesta = data.propuestas.find(p => p.id === propuestaId);
+            if (propuesta) {
+                currentAvisoId = propuesta.avisoId;
+                currentPropuestaId = propuestaId;
+                showView('detalle-aviso');
+            }
+        }
+
+        function adminEliminarPropuesta(propuestaId) {
+            if (!confirm('¿Estás seguro de eliminar esta propuesta? Esta acción también eliminará el chat asociado.')) {
+                return;
+            }
+            
+            const data = getData();
+            const propuesta = data.propuestas.find(p => p.id === propuestaId);
+            
+            if (!propuesta) return;
+            
+            // Eliminar chat asociado
+            data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
+            
+            // Eliminar notificaciones asociadas
+            data.notifications = data.notifications.filter(n => 
+                !n.data.propuestaId || n.data.propuestaId !== propuestaId
+            );
+            
+            // Eliminar propuesta del aviso
+            const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
+            if (aviso && aviso.propuestas) {
+                aviso.propuestas = aviso.propuestas.filter(id => id !== propuestaId);
+            }
+            
+            // Eliminar propuesta
+            data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
+            
+            saveData(data);
+            showToast('Propuesta eliminada exitosamente', 'success');
+            
+            // Recargar panel admin
+            loadAdminPanel();
+        }
+
         // ============================================
         // FUNCIONES UTILITARIAS
         // ============================================
@@ -5570,19 +5930,72 @@
             showToast('Función de recuperación de contraseña en desarrollo', 'info');
         }
 
-        function editarPerfil() {
-            showToast('Función de edición de perfil en desarrollo', 'info');
-        }
-
         function generarReporte() {
-            showToast('Generando reporte...', 'info');
-            setTimeout(() => {
-                showToast('Reporte generado exitosamente', 'success');
-            }, 2000);
+            const data = getData();
+            
+            // Generar estadísticas para el reporte
+            const reporte = {
+                fecha: new Date().toISOString(),
+                totalUsuarios: data.users.length,
+                totalCompradores: data.users.filter(u => u.role === 'comprador').length,
+                totalVendedores: data.users.filter(u => u.role === 'vendedor').length,
+                totalAvisos: data.avisos.length,
+                avisosActivos: data.avisos.filter(a => a.estado === 'abierto').length,
+                avisosNegociando: data.avisos.filter(a => a.estado === 'negociando').length,
+                avisosCerrados: data.avisos.filter(a => a.estado === 'cerrado').length,
+                totalPropuestas: data.propuestas.length,
+                propuestasPendientes: data.propuestas.filter(p => p.estado === 'pendiente').length,
+                propuestasAceptadas: data.propuestas.filter(p => p.estado === 'aceptada').length,
+                totalChats: data.chats.length,
+                chatsActivos: data.chats.filter(c => c.activo).length,
+                totalNotificaciones: data.notifications.length,
+                notificacionesNoLeidas: data.notifications.filter(n => !n.read).length,
+                categorias: {
+                    inmuebles: data.avisos.filter(a => a.categoria === 'inmueble').length,
+                    autos: data.avisos.filter(a => a.categoria === 'auto').length,
+                    motos: data.avisos.filter(a => a.categoria === 'moto').length
+                }
+            };
+            
+            // Mostrar reporte en consola (en un sistema real, se descargaría como archivo)
+            console.log('=== REPORTE DEL SISTEMA ===', reporte);
+            
+            // Crear un mensaje amigable
+            const mensaje = `
+                📊 Reporte Generado:
+                
+                👥 Usuarios: ${reporte.totalUsuarios}
+                  • Compradores: ${reporte.totalCompradores}
+                  • Vendedores: ${reporte.totalVendedores}
+                
+                📝 Avisos: ${reporte.totalAvisos}
+                  • Activos: ${reporte.avisosActivos}
+                  • En negociación: ${reporte.avisosNegociando}
+                  • Cerrados: ${reporte.avisosCerrados}
+                
+                📨 Propuestas: ${reporte.totalPropuestas}
+                  • Pendientes: ${reporte.propuestasPendientes}
+                  • Aceptadas: ${reporte.propuestasAceptadas}
+                
+                💬 Chats: ${reporte.totalChats}
+                  • Activos: ${reporte.chatsActivos}
+                
+                🔔 Notificaciones: ${reporte.totalNotificaciones}
+                  • No leídas: ${reporte.notificacionesNoLeidas}
+                
+                🏷️ Por categoría:
+                  • Inmuebles: ${reporte.categorias.inmuebles}
+                  • Autos: ${reporte.categorias.autos}
+                  • Motos: ${reporte.categorias.motos}
+            `;
+            
+            // Mostrar en alerta (en un sistema real, sería un modal bonito)
+            alert(mensaje);
+            showToast('Reporte generado exitosamente. Verifica la consola para más detalles.', 'success');
         }
 
         function resetSystem() {
-            if (confirm('¿Estás seguro de resetear el sistema? Esto eliminará todos los datos excepto los usuarios administradores.')) {
+            if (confirm('⚠️ ¿Estás seguro de resetear el sistema? Esto eliminará todos los datos excepto los usuarios administradores y sus configuraciones.')) {
                 const data = getData();
                 
                 // Mantener solo usuarios administradores
@@ -5590,9 +6003,11 @@
                 adminUsers.forEach(user => {
                     user.totalAvisos = 0;
                     user.totalPropuestas = 0;
+                    // Mantener categorías si es vendedor convertido a admin
+                    if (!user.categorias) user.categorias = [];
                 });
                 
-                // Resetear datos
+                // Resetear datos pero mantener estructura
                 const newData = {
                     users: adminUsers,
                     avisos: [],
@@ -5609,10 +6024,18 @@
                 };
                 
                 saveData(newData);
-                showToast('Sistema reseteado exitosamente', 'success');
                 
-                // Recargar página
-                location.reload();
+                // Si el usuario actual no es admin, cerrar sesión
+                if (currentUser && currentUser.role !== 'admin') {
+                    logout();
+                }
+                
+                showToast('✅ Sistema reseteado exitosamente. Todos los datos han sido limpiados.', 'success');
+                
+                // Recargar vista actual
+                if (currentUser && currentUser.role === 'admin') {
+                    loadAdminPanel();
+                }
             }
         }
 
@@ -5642,12 +6065,42 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             
+            // Configurar evento para mostrar/ocultar categorías en registro
+            const roleRadios = document.querySelectorAll('input[name="role"]');
+            roleRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const categoriasDiv = document.getElementById('vendedor-categorias');
+                    if (this.value === 'vendedor') {
+                        categoriasDiv.classList.remove('hidden');
+                    } else {
+                        categoriasDiv.classList.add('hidden');
+                    }
+                });
+            });
+            
             // Inicializar service worker para PWA
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').catch(error => {
                     console.log('Service Worker registration failed:', error);
                 });
             }
+            
+            // Cerrar modales al hacer clic fuera
+            document.addEventListener('click', function(event) {
+                // Cerrar modal de notificaciones
+                const notificationsModal = document.getElementById('notifications-modal');
+                if (!notificationsModal.classList.contains('hidden') && 
+                    event.target === notificationsModal) {
+                    closeModal('notifications-modal');
+                }
+                
+                // Cerrar modal de imagen
+                const imageModal = document.getElementById('image-modal');
+                if (!imageModal.classList.contains('hidden') && 
+                    event.target === imageModal) {
+                    cerrarModalImagen();
+                }
+            });
         });
     </script>
 </body>
