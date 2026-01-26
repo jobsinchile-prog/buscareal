@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarketPlace Inverso | Conectando Compradores y Vendedores</title>
+    <title>MarketConnect Pro | Sistema Segmentado</title>
     <link rel="manifest" id="manifest-placeholder">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔄</text></svg>">
     <style>
@@ -211,6 +211,19 @@
             background-color: rgba(248, 249, 250, 0.8);
             color: var(--gray-dark);
             border-color: rgba(0,0,0,0.1);
+        }
+
+        .badge-premium {
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            color: #000;
+            border-color: #ff9500;
+            font-weight: 800;
+        }
+
+        .badge-free {
+            background-color: rgba(108, 117, 125, 0.15);
+            color: var(--gray);
+            border-color: var(--gray-light);
         }
 
         .empty-state {
@@ -707,6 +720,42 @@
             gap: 10px;
         }
 
+        /* OVERLAY PREMIUM */
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(2px);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .premium-lock {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--warning);
+        }
+
+        .premium-overlay h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .premium-overlay p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            max-width: 300px;
+        }
+
         /* DETALLE AVISO */
         .detalle-aviso-container {
             display: flex;
@@ -781,6 +830,44 @@
             white-space: pre-line;
         }
 
+        /* INFORMACIÓN SENSIBLE */
+        .sensitive-info {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #ffd54f;
+        }
+
+        .sensitive-info h4 {
+            color: #e65100;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .info-value {
+            color: var(--dark);
+            font-weight: 500;
+        }
+
         /* SECCIÓN PROPUESTAS EN DETALLE */
         .propuestas-section {
             margin-top: 40px;
@@ -841,7 +928,7 @@
             flex-wrap: wrap;
         }
 
-        /* SECCIÓN CHAT EN DETALLE - CORREGIDA */
+        /* SECCIÓN CHAT EN DETALLE */
         .chat-section {
             background: white;
             border-radius: var(--border-radius);
@@ -946,7 +1033,7 @@
             line-height: 1.5;
         }
 
-        /* CORRECCIÓN: ÁREA DE INPUT DEL CHAT MEJORADA */
+        /* ÁREA DE INPUT DEL CHAT */
         .chat-input-area {
             padding: 20px;
             background: white;
@@ -972,7 +1059,7 @@
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
         }
 
-        /* CORRECCIÓN: ACCIONES DEL CHAT VISIBLES */
+        /* ACCIONES DEL CHAT */
         .chat-actions {
             display: flex;
             gap: 10px;
@@ -1087,21 +1174,6 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-        }
-
-        .range-inputs {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .range-inputs .form-control {
-            flex: 1;
-        }
-
-        .range-separator {
-            color: var(--gray);
-            font-weight: 600;
         }
 
         /* PANEL ADMIN */
@@ -1496,6 +1568,154 @@
             50% { opacity: 0.8; }
             100% { opacity: 0; }
         }
+
+        /* FORM MONEDA */
+        .moneda-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .moneda-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .moneda-option:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .moneda-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* UPGRADE BANNER */
+        .upgrade-banner {
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            color: #000;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .upgrade-content {
+            flex: 1;
+        }
+
+        .upgrade-banner h3 {
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .upgrade-banner p {
+            color: rgba(0,0,0,0.8);
+            margin-bottom: 0;
+        }
+
+        /* SUBSCRIPTION MANAGEMENT */
+        .subscription-card {
+            border: 2px solid;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .subscription-free {
+            border-color: var(--gray-light);
+        }
+
+        .subscription-premium {
+            border-color: #ffd700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 149, 0, 0.05));
+        }
+
+        .subscription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .subscription-price {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .subscription-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .subscription-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subscription-features li i {
+            color: var(--success);
+        }
+
+        /* PRICE DISPLAY */
+        .price-display {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .price-currency {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        /* BLURRED CONTENT */
+        .blurred-content {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ADMIN TOOLS */
+        .admin-tools {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-action-btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius-sm);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-enable {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-disable {
+            background-color: var(--danger);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -1504,7 +1724,7 @@
         <div class="container header-content">
             <a href="#" class="logo" onclick="showView('landing'); return false;">
                 <span class="logo-icon">🔄</span>
-                <span>MarketConnect</span>
+                <span>MarketConnect Pro</span>
             </a>
             
             <nav class="desktop-nav">
@@ -1517,11 +1737,13 @@
                 </a>
                 <a href="#" onclick="showView('perfil'); return false;" id="nav-perfil" class="hidden">Perfil</a>
                 <a href="#" onclick="showView('admin'); return false;" id="nav-admin" class="hidden">Admin</a>
+                <a href="#" onclick="showView('suscripciones'); return false;" id="nav-suscripciones" class="hidden">Suscripciones</a>
             </nav>
             
             <div class="user-menu">
                 <div id="user-info" class="hidden">
                     <span id="user-role-badge" class="badge"></span>
+                    <span id="user-subscription-badge" class="badge hidden" style="margin-left: 8px;"></span>
                 </div>
                 <div id="user-avatar-container" style="position: relative;">
                     <div id="user-avatar" class="user-avatar hidden" onclick="toggleUserMenu()"></div>
@@ -1533,6 +1755,7 @@
                                 <div>
                                     <div id="dropdown-email" style="font-weight: 600; margin-bottom: 5px;"></div>
                                     <div id="dropdown-role" class="badge"></div>
+                                    <div id="dropdown-subscription" class="badge" style="margin-top: 5px;"></div>
                                 </div>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1544,6 +1767,9 @@
                                 <button class="btn btn-sm btn-outline" onclick="toggleNotifications(); toggleUserMenu()">
                                     🔔 Notificaciones
                                     <span id="dropdown-notif-count" class="badge badge-warning hidden" style="margin-left: auto;">0</span>
+                                </button>
+                                <button id="dropdown-upgrade-btn" class="btn btn-sm btn-warning hidden" onclick="showView('suscripciones'); toggleUserMenu()">
+                                    ⭐ Upgrade a Premium
                                 </button>
                                 <button class="btn btn-sm btn-danger" onclick="logout()">Cerrar Sesión</button>
                             </div>
@@ -1561,8 +1787,8 @@
         <!-- LANDING -->
         <section id="landing" class="view active">
             <div class="hero">
-                <h1>Conectamos lo que buscas con quien lo ofrece</h1>
-                <p>Publica lo que necesitas y deja que los mejores vendedores compitan por ofrecerte la mejor solución. Tu demanda, nuestras propuestas.</p>
+                <h1>Sistema de Contactos Segmentado</h1>
+                <p>Compradores publican necesidades, vendedores acceden según su nivel de suscripción. Información segmentada para optimizar tus negociaciones.</p>
                 <div class="hero-actions">
                     <button class="btn btn-primary btn-lg" onclick="showView('register')">
                         <span>🚀</span> Comenzar Gratis
@@ -1578,19 +1804,19 @@
             
             <div class="features" id="features-section">
                 <div class="feature">
-                    <div class="feature-icon">📝</div>
-                    <h3>Crea tu Aviso</h3>
-                    <p>Describe exactamente lo que necesitas con todos los detalles importantes. Cuanto más específico seas, mejores propuestas recibirás.</p>
+                    <div class="feature-icon">👥</div>
+                    <h3>Sistema Segmentado</h3>
+                    <p>Información visible según tipo de usuario. Compradores solo ven sus avisos, vendedores ven según suscripción.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <h3>Tres Monedas</h3>
+                    <p>Publica y visualiza en Pesos Chilenos, Dólares o UF. Cada aviso mantiene su moneda original.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">🏆</div>
-                    <h3>Recibe Propuestas</h3>
-                    <p>Los vendedores competirán para ofrecerte la mejor solución. Recibe múltiples opciones y compara precios, condiciones y calidad.</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🤝</div>
-                    <h3>Negocia Directo</h3>
-                    <p>Chat integrado para aclarar dudas, negociar condiciones y cerrar el trato perfecto. Todo en un solo lugar, sin intermediarios.</p>
+                    <h3>Vendedores Premium</h3>
+                    <p>Acceso completo a información de contacto, presupuestos exactos y funciones avanzadas de negociación.</p>
                 </div>
             </div>
         </section>
@@ -1634,8 +1860,12 @@
                         <input type="password" id="register-password" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
                     </div>
                     <div class="form-group">
-                        <label for="register-name">Nombre (opcional)</label>
-                        <input type="text" id="register-name" class="form-control" placeholder="Cómo quieres que te llamen">
+                        <label for="register-name">Nombre Completo *</label>
+                        <input type="text" id="register-name" class="form-control" placeholder="Nombre y apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-phone">Teléfono *</label>
+                        <input type="tel" id="register-phone" class="form-control" placeholder="+56 9 1234 5678" required>
                     </div>
                     <div class="form-group">
                         <label>¿Qué quieres hacer en la plataforma?</label>
@@ -1643,12 +1873,12 @@
                             <label class="radio-option">
                                 <input type="radio" name="role" value="comprador" checked>
                                 <div class="radio-custom"></div>
-                                <span>Buscar productos/servicios</span>
+                                <span>Publicar necesidades (Comprador)</span>
                             </label>
                             <label class="radio-option">
                                 <input type="radio" name="role" value="vendedor">
                                 <div class="radio-custom"></div>
-                                <span>Ofrecer productos/servicios</span>
+                                <span>Ofrecer productos/servicios (Vendedor)</span>
                             </label>
                         </div>
                     </div>
@@ -1668,6 +1898,25 @@
                             </div>
                         </div>
                         <input type="hidden" id="register-categorias" name="categorias" value="inmueble,auto,moto">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Moneda preferida *</label>
+                        <div class="moneda-selector">
+                            <div class="moneda-option active" onclick="seleccionarMoneda(this, 'CLP')">
+                                <div style="font-weight: 600;">CLP</div>
+                                <div style="font-size: 0.9rem;">Pesos Chilenos</div>
+                            </div>
+                            <div class="moneda-option" onclick="seleccionarMoneda(this, 'USD')">
+                                <div style="font-weight: 600;">USD</div>
+                                <div style="font-size: 0.9rem;">Dólares</div>
+                            </div>
+                            <div class="moneda-option" onclick="seleccionarMoneda(this, 'UF')">
+                                <div style="font-weight: 600;">UF</div>
+                                <div style="font-size: 0.9rem;">Unidades de Fomento</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="register-moneda" value="CLP">
                     </div>
                     
                     <button type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
@@ -1693,6 +1942,17 @@
                         <span>🔄</span> Actualizar
                     </button>
                 </div>
+            </div>
+            
+            <!-- BANNER DE UPGRADE PARA VENDEDORES GRATUITOS -->
+            <div id="upgrade-banner-dashboard" class="upgrade-banner hidden">
+                <div class="upgrade-content">
+                    <h3>⭐ Upgrade a Premium</h3>
+                    <p>Desbloquea información completa de compradores, presupuestos exactos y funciones avanzadas de contacto.</p>
+                </div>
+                <button class="btn btn-warning" onclick="showView('suscripciones')">
+                    Ver Planes Premium
+                </button>
             </div>
             
             <div class="stats">
@@ -1760,6 +2020,17 @@
                 </div>
             </div>
             
+            <!-- BANNER DE UPGRADE PARA VENDEDORES GRATUITOS -->
+            <div id="upgrade-banner-avisos" class="upgrade-banner hidden">
+                <div class="upgrade-content">
+                    <h3>🔒 Información Limitada</h3>
+                    <p>Como vendedor gratuito solo ves información básica. Upgrade a Premium para ver contactos completos y presupuestos exactos.</p>
+                </div>
+                <button class="btn btn-warning" onclick="showView('suscripciones')">
+                    ⭐ Ver Plan Premium
+                </button>
+            </div>
+            
             <!-- FILTROS AVANZADOS -->
             <div id="filters-container" class="filters">
                 <div class="filters-header">
@@ -1777,16 +2048,25 @@
                         </select>
                     </div>
                     <div>
-                        <label for="filter-presupuesto-min">Presupuesto Mínimo</label>
-                        <input type="number" id="filter-presupuesto-min" class="form-control" placeholder="USD" min="0">
-                    </div>
-                    <div>
-                        <label for="filter-presupuesto-max">Presupuesto Máximo</label>
-                        <input type="number" id="filter-presupuesto-max" class="form-control" placeholder="USD" min="0">
-                    </div>
-                    <div>
                         <label for="filter-zona">Zona/Ubicación</label>
                         <input type="text" id="filter-zona" class="form-control" placeholder="Ej: Santiago Centro">
+                    </div>
+                    <div>
+                        <label for="filter-fecha">Fecha de publicación</label>
+                        <select id="filter-fecha" class="form-control">
+                            <option value="">Cualquier fecha</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-estado">Estado</label>
+                        <select id="filter-estado" class="form-control">
+                            <option value="">Todos</option>
+                            <option value="abierto">Abierto</option>
+                            <option value="negociando">Negociando</option>
+                        </select>
                     </div>
                 </div>
                 
@@ -1878,30 +2158,11 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h4><i>🛣️</i> Kilometraje</h4>
+                        <h4><i>🛣️</i> Kilometraje Máximo</h4>
                         <div class="filter-row">
                             <div>
-                                <label>Mínimo (km)</label>
-                                <input type="number" id="filter-km-min" class="form-control" placeholder="Ej: 0" min="0">
-                            </div>
-                            <div>
-                                <label>Máximo (km)</label>
                                 <input type="number" id="filter-km-max" class="form-control" placeholder="Ej: 50000" min="0">
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-section">
-                        <h4><i>⚙️</i> Características</h4>
-                        <div class="filter-options">
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Automático</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Manual</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Diesel</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Gasolina</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Híbrido</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Eléctrico</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">4x4</div>
-                            <div class="filter-option" onclick="toggleFilterOption(this, 'caracteristicas-auto')">Aire Acondicionado</div>
                         </div>
                     </div>
                 </div>
@@ -1947,14 +2208,9 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h4><i>🛣️</i> Kilometraje</h4>
+                        <h4><i>🛣️</i> Kilometraje Máximo</h4>
                         <div class="filter-row">
                             <div>
-                                <label>Mínimo (km)</label>
-                                <input type="number" id="filter-moto-km-min" class="form-control" placeholder="Ej: 0" min="0">
-                            </div>
-                            <div>
-                                <label>Máximo (km)</label>
                                 <input type="number" id="filter-moto-km-max" class="form-control" placeholder="Ej: 20000" min="0">
                             </div>
                         </div>
@@ -2073,12 +2329,34 @@
                     <span class="dashboard-title-icon">👤</span>
                     <span>Mi Perfil</span>
                 </div>
-                <button class="btn btn-outline" onclick="editarPerfil()">
-                    <span>✏️</span> Editar Perfil
-                </button>
+                <div>
+                    <button class="btn btn-outline" onclick="editarPerfil()">
+                        <span>✏️</span> Editar Perfil
+                    </button>
+                    <button class="btn btn-outline" onclick="showChangePasswordModal()">
+                        <span>🔐</span> Cambiar Contraseña
+                    </button>
+                </div>
             </div>
             
             <div id="profile-content" class="detalle-content">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </section>
+
+        <!-- SUSCRIPCIONES -->
+        <section id="suscripciones" class="view">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <span class="dashboard-title-icon">⭐</span>
+                    <span>Planes de Suscripción</span>
+                </div>
+                <button class="btn btn-outline" onclick="showView('dashboard')">
+                    ← Volver al Dashboard
+                </button>
+            </div>
+            
+            <div id="subscription-content" class="detalle-content">
                 <!-- Se llena dinámicamente -->
             </div>
         </section>
@@ -2114,13 +2392,13 @@
                     <div class="stat-label">Propuestas Totales</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="admin-total-chats">0</div>
-                    <div class="stat-label">Conversaciones</div>
+                    <div class="stat-number" id="admin-premium-users">0</div>
+                    <div class="stat-label">Vendedores Premium</div>
                 </div>
             </div>
             
             <div class="admin-section">
-                <h3>Usuarios Registrados</h3>
+                <h3>Gestión de Vendedores</h3>
                 <div style="overflow-x: auto;">
                     <table class="data-table">
                         <thead>
@@ -2128,15 +2406,14 @@
                                 <th>ID</th>
                                 <th>Email</th>
                                 <th>Nombre</th>
-                                <th>Rol</th>
+                                <th>Suscripción</th>
                                 <th>Categorías</th>
                                 <th>Registro</th>
-                                <th>Avisos</th>
                                 <th>Propuestas</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-users-list">
+                        <tbody id="admin-vendedores-list">
                             <!-- Se llena dinámicamente -->
                         </tbody>
                     </table>
@@ -2151,8 +2428,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Título</th>
-                                <th>Tipo</th>
-                                <th>Usuario</th>
+                                <th>Categoría</th>
+                                <th>Comprador</th>
                                 <th>Presupuesto</th>
                                 <th>Estado</th>
                                 <th>Propuestas</th>
@@ -2167,24 +2444,24 @@
             </div>
             
             <div class="admin-section">
-                <h3>Todas las Propuestas</h3>
-                <div style="overflow-x: auto;">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Aviso</th>
-                                <th>Vendedor</th>
-                                <th>Precio</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-propuestas-list">
-                            <!-- Se llena dinámicamente -->
-                        </tbody>
-                    </table>
+                <h3>Sistema de Suscripciones</h3>
+                <div class="card">
+                    <h4 style="margin-bottom: 20px;">Configuración del Sistema</h4>
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="admin-dias-prueba">Días de prueba gratis</label>
+                            <input type="number" id="admin-dias-prueba" class="form-control" value="7" min="0" max="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-limite-avisos">Límite avisos gratuitos</label>
+                            <input type="number" id="admin-limite-avisos" class="form-control" value="3" min="1" max="10">
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="guardarConfiguracion()">
+                            💾 Guardar Configuración
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -2351,8 +2628,6 @@
                             <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Gasolina</div>
                             <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Híbrido</div>
                             <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Eléctrico</div>
-                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">4x4</div>
-                            <div class="filter-option" onclick="toggleCaracteristica(this, 'auto')">Aire Acondicionado</div>
                         </div>
                     </div>
                 </div>
@@ -2408,10 +2683,15 @@
                                 <option value="250">250cc</option>
                                 <option value="500">500cc</option>
                                 <option value="600">600cc</option>
-                                <option value="750">750cc</option>
-                                <option value="1000">1000cc+</option>
+                                <option value="750">750cc</div>
+                                <option value="1000">1000cc+</div>
                             </select>
                         </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="moto-km-max">Kilometraje máximo (opcional)</label>
+                        <input type="number" id="moto-km-max" class="form-control" placeholder="Ej: 20000" min="0">
                     </div>
                 </div>
                 
@@ -2429,17 +2709,32 @@
                     
                     <div class="form-group">
                         <label for="aviso-moneda">Moneda *</label>
-                        <select id="aviso-moneda" class="form-control" required>
-                            <option value="USD">USD</option>
-                            <option value="CLP">CLP</option>
-                            <option value="UF">UF</option>
-                        </select>
+                        <div class="moneda-selector">
+                            <div class="moneda-option active" onclick="seleccionarMonedaModal(this, 'CLP')">
+                                <div style="font-weight: 600;">CLP</div>
+                                <div style="font-size: 0.9rem;">Pesos Chilenos</div>
+                            </div>
+                            <div class="moneda-option" onclick="seleccionarMonedaModal(this, 'USD')">
+                                <div style="font-weight: 600;">USD</div>
+                                <div style="font-size: 0.9rem;">Dólares</div>
+                            </div>
+                            <div class="moneda-option" onclick="seleccionarMonedaModal(this, 'UF')">
+                                <div style="font-weight: 600;">UF</div>
+                                <div style="font-size: 0.9rem;">Unidades de Fomento</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="aviso-moneda" value="CLP">
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="aviso-zona">Zona o ubicación *</label>
                     <input type="text" id="aviso-zona" class="form-control" placeholder="Ej: Santiago Centro, Providencia, Las Condes, etc." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aviso-direccion">Dirección exacta (solo visible para vendedores premium)</label>
+                    <input type="text" id="aviso-direccion" class="form-control" placeholder="Calle, número, departamento, etc.">
                 </div>
                 
                 <div style="display: flex; gap: 15px; margin-top: 30px;">
@@ -2460,8 +2755,15 @@
                 <input type="hidden" id="propuesta-aviso-id">
                 
                 <div class="form-group">
-                    <label for="propuesta-precio">Precio ofrecido (USD) *</label>
-                    <input type="number" id="propuesta-precio" class="form-control" min="0" step="100" required>
+                    <label for="propuesta-precio">Precio ofrecido *</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="propuesta-precio" class="form-control" min="0" step="100" required style="flex: 1;">
+                        <select id="propuesta-moneda" class="form-control" style="width: 120px;">
+                            <option value="CLP">CLP</option>
+                            <option value="USD">USD</option>
+                            <option value="UF">UF</option>
+                        </select>
+                    </div>
                     <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;" id="propuesta-presupuesto-info"></div>
                 </div>
                 
@@ -2511,8 +2813,8 @@
                     <div class="form-group">
                         <label for="editar-aviso-moneda">Moneda *</label>
                         <select id="editar-aviso-moneda" class="form-control" required>
-                            <option value="USD">USD</option>
                             <option value="CLP">CLP</option>
+                            <option value="USD">USD</option>
                             <option value="UF">UF</option>
                         </select>
                     </div>
@@ -2608,6 +2910,115 @@
         <img id="expanded-image" src="" alt="Imagen ampliada">
     </div>
 
+    <!-- MODAL CAMBIO CONTRASEÑA -->
+    <div id="change-password-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Cambiar Contraseña</h2>
+                <button class="modal-close" onclick="closeModal('change-password-modal')">×</button>
+            </div>
+            <form id="change-password-form" onsubmit="cambiarContraseña(event)">
+                <div class="form-group">
+                    <label for="current-password">Contraseña actual *</label>
+                    <input type="password" id="current-password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Nueva contraseña *</label>
+                    <input type="password" id="new-password" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar nueva contraseña *</label>
+                    <input type="password" id="confirm-password" class="form-control" placeholder="Repite la nueva contraseña" required minlength="6">
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('change-password-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL RECUPERAR CONTRASEÑA -->
+    <div id="recover-password-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Recuperar Contraseña</h2>
+                <button class="modal-close" onclick="closeModal('recover-password-modal')">×</button>
+            </div>
+            <div id="recover-step-1">
+                <div class="form-group">
+                    <label for="recover-email">Email registrado</label>
+                    <input type="email" id="recover-email" class="form-control" placeholder="tu@email.com" required>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="solicitarCodigoRecuperacion()">
+                    Enviar Código de Recuperación
+                </button>
+            </div>
+            <div id="recover-step-2" class="hidden">
+                <div class="form-group">
+                    <label for="recover-code">Código de verificación</label>
+                    <input type="text" id="recover-code" class="form-control" placeholder="Código de 6 dígitos" maxlength="6" required>
+                    <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                        Revisa tu bandeja de entrada o spam
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="recover-new-password">Nueva contraseña</label>
+                    <input type="password" id="recover-new-password" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="verificarCodigoRecuperacion()">
+                    Cambiar Contraseña
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR PERFIL -->
+    <div id="edit-profile-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Perfil</h2>
+                <button class="modal-close" onclick="closeModal('edit-profile-modal')">×</button>
+            </div>
+            <form id="edit-profile-form" onsubmit="guardarPerfil(event)">
+                <div class="form-group">
+                    <label for="edit-nombre">Nombre Completo *</label>
+                    <input type="text" id="edit-nombre" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-telefono">Teléfono *</label>
+                    <input type="tel" id="edit-telefono" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-email">Email *</label>
+                    <input type="email" id="edit-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Moneda preferida *</label>
+                    <div class="moneda-selector">
+                        <div class="moneda-option" onclick="seleccionarMonedaPerfil(this, 'CLP')" id="moneda-clp">
+                            <div style="font-weight: 600;">CLP</div>
+                            <div style="font-size: 0.9rem;">Pesos Chilenos</div>
+                        </div>
+                        <div class="moneda-option" onclick="seleccionarMonedaPerfil(this, 'USD')" id="moneda-usd">
+                            <div style="font-weight: 600;">USD</div>
+                            <div style="font-size: 0.9rem;">Dólares</div>
+                        </div>
+                        <div class="moneda-option" onclick="seleccionarMonedaPerfil(this, 'UF')" id="moneda-uf">
+                            <div style="font-weight: 600;">UF</div>
+                            <div style="font-size: 0.9rem;">Unidades de Fomento</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="edit-moneda" value="CLP">
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('edit-profile-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- SCRIPT PRINCIPAL -->
     <script>
         // ============================================
@@ -2615,18 +3026,11 @@
         // ============================================
         let currentUser = null;
         let deferredPrompt = null;
-        const APP_KEY = 'marketplace_inverso_pro_data';
+        const APP_KEY = 'marketconnect_pro_data_v2';
         let currentAvisoId = null;
         let currentPropuestaId = null;
         let notifications = [];
         let unreadMessages = 0;
-        let activeFilters = {
-            categoria: '',
-            presupuestoMin: null,
-            presupuestoMax: null,
-            zona: '',
-            categoriaEspecifica: {}
-        };
         
         // Variables para manejo de cámara
         let cameraStream = null;
@@ -2645,52 +3049,72 @@
                     email: "comprador@demo.com", 
                     password: "123456", 
                     name: "Juan Comprador",
+                    phone: "+56 9 1234 5678",
                     role: "comprador", 
+                    subscription: "free",
                     createdAt: new Date().toISOString(),
                     avatarColor: "#4361ee",
                     rating: 4.8,
                     totalAvisos: 3,
                     totalPropuestas: 0,
-                    categorias: []
+                    categorias: [],
+                    monedaPreferida: "CLP",
+                    emailVerified: true
                 },
                 { 
                     id: 2, 
-                    email: "vendedor@demo.com", 
+                    email: "vendedor.free@demo.com", 
                     password: "123456", 
-                    name: "María Inmobiliaria",
+                    name: "María Vendedora Free",
+                    phone: "+56 9 8765 4321",
                     role: "vendedor", 
+                    subscription: "free",
                     createdAt: new Date().toISOString(),
                     avatarColor: "#7209b7",
-                    rating: 4.9,
+                    rating: 4.5,
                     totalAvisos: 0,
-                    totalPropuestas: 5,
-                    categorias: ["inmueble"]
+                    totalPropuestas: 2,
+                    categorias: ["inmueble", "auto"],
+                    monedaPreferida: "CLP",
+                    emailVerified: true,
+                    subscriptionExpires: null,
+                    trialUsed: false
                 },
                 { 
                     id: 3, 
                     email: "admin@demo.com", 
                     password: "admin123", 
                     name: "Admin Sistema",
+                    phone: "+56 9 5555 5555",
                     role: "admin", 
+                    subscription: "premium",
                     createdAt: new Date().toISOString(),
                     avatarColor: "#f72585",
                     rating: 5.0,
                     totalAvisos: 0,
                     totalPropuestas: 0,
-                    categorias: []
+                    categorias: [],
+                    monedaPreferida: "CLP",
+                    emailVerified: true
                 },
                 { 
                     id: 4, 
-                    email: "vendedor2@demo.com", 
+                    email: "vendedor.premium@demo.com", 
                     password: "123456", 
-                    name: "Carlos Automotriz",
+                    name: "Carlos Vendedor Premium",
+                    phone: "+56 9 9999 8888",
                     role: "vendedor", 
+                    subscription: "premium",
                     createdAt: new Date(Date.now() - 86400000).toISOString(),
                     avatarColor: "#4cc9f0",
-                    rating: 4.5,
+                    rating: 4.9,
                     totalAvisos: 0,
                     totalPropuestas: 8,
-                    categorias: ["auto", "moto"]
+                    categorias: ["auto", "moto"],
+                    monedaPreferida: "USD",
+                    emailVerified: true,
+                    subscriptionExpires: new Date(Date.now() + 30 * 86400000).toISOString(),
+                    trialUsed: true
                 }
             ],
             avisos: [
@@ -2703,6 +3127,7 @@
                     presupuesto: 350000, 
                     moneda: "USD",
                     zona: "Providencia, Santiago", 
+                    direccion: "Av. Providencia 1234, Depto 501, Providencia",
                     estado: "abierto",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
@@ -2714,7 +3139,23 @@
                     },
                     propuestas: [1, 2],
                     vistas: 25,
-                    destacado: true
+                    destacado: true,
+                    infoPublica: {
+                        categoria: "inmueble",
+                        titulo: "Busco departamento 3 dormitorios",
+                        descripcion: "Necesito departamento para familia, mínimo 3 dormitorios, 2 baños.",
+                        zona: "Providencia, Santiago",
+                        fecha: new Date().toISOString(),
+                        estado: "abierto"
+                    },
+                    infoPrivada: {
+                        nombreComprador: "Juan Comprador",
+                        email: "comprador@demo.com",
+                        telefono: "+56 9 1234 5678",
+                        presupuestoExacto: 350000,
+                        moneda: "USD",
+                        direccionExacta: "Av. Providencia 1234, Depto 501, Providencia"
+                    }
                 },
                 { 
                     id: 2, 
@@ -2725,6 +3166,7 @@
                     presupuesto: 35000, 
                     moneda: "USD",
                     zona: "Región Metropolitana", 
+                    direccion: "Se coordina entrega en comuna del comprador",
                     estado: "abierto",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
@@ -2733,11 +3175,27 @@
                         marca: "toyota",
                         modelo: "RAV4",
                         ano: 2021,
-                        caracteristicas: ["automatico", "gasolina", "aire acondicionado", "4x4"]
+                        caracteristicas: ["automatico", "gasolina", "aire acondicionado"]
                     },
                     propuestas: [3],
                     vistas: 42,
-                    destacado: false
+                    destacado: false,
+                    infoPublica: {
+                        categoria: "auto",
+                        titulo: "Busco SUV familiar 2020-2022",
+                        descripcion: "Necesito SUV familiar con espacio para 5 personas.",
+                        zona: "Región Metropolitana",
+                        fecha: new Date().toISOString(),
+                        estado: "abierto"
+                    },
+                    infoPrivada: {
+                        nombreComprador: "Juan Comprador",
+                        email: "comprador@demo.com",
+                        telefono: "+56 9 1234 5678",
+                        presupuestoExacto: 35000,
+                        moneda: "USD",
+                        direccionExacta: "Se coordina entrega en comuna del comprador"
+                    }
                 },
                 { 
                     id: 3, 
@@ -2748,6 +3206,7 @@
                     presupuesto: 8000, 
                     moneda: "USD",
                     zona: "Santiago y alrededores", 
+                    direccion: "Dirección a coordinar",
                     estado: "abierto",
                     createdAt: new Date(Date.now() - 86400000).toISOString(),
                     updatedAt: new Date().toISOString(),
@@ -2757,11 +3216,27 @@
                         modelo: "YZF-R6",
                         ano: 2019,
                         cilindrada: "600",
-                        caracteristicas: ["inyeccion", "abs", "llantas nuevas"]
+                        kmMax: 20000
                     },
                     propuestas: [],
                     vistas: 18,
-                    destacado: true
+                    destacado: true,
+                    infoPublica: {
+                        categoria: "moto",
+                        titulo: "Busco moto deportiva 600cc",
+                        descripcion: "Busco moto deportiva en buen estado para uso urbano.",
+                        zona: "Santiago y alrededores",
+                        fecha: new Date(Date.now() - 86400000).toISOString(),
+                        estado: "abierto"
+                    },
+                    infoPrivada: {
+                        nombreComprador: "Juan Comprador",
+                        email: "comprador@demo.com",
+                        telefono: "+56 9 1234 5678",
+                        presupuestoExacto: 8000,
+                        moneda: "USD",
+                        direccionExacta: "Dirección a coordinar"
+                    }
                 }
             ],
             propuestas: [
@@ -2770,6 +3245,7 @@
                     avisoId: 1, 
                     vendedorId: 2, 
                     precio: 340000, 
+                    moneda: "USD",
                     mensaje: "Tengo departamento en Providencia, 3 dormitorios, 2 baños, 90m2, amoblado. Edificio con piscina y gimnasio. Disponible inmediatamente.",
                     detalles: "Departamento en piso 12, vista despejada, cocina integral nueva, estacionamiento y bodega incluidos. Condominio con seguridad 24/7.",
                     estado: "pendiente",
@@ -2782,6 +3258,7 @@
                     avisoId: 1, 
                     vendedorId: 4, 
                     precio: 330000, 
+                    moneda: "USD",
                     mensaje: "Departamento en Providencia, 3 dormitorios, 85m2, semi-amoblado. Excelente ubicación cerca de metro y comercios.",
                     detalles: "Edificio nuevo (2020), departamento con terraza, estacionamiento, cerca de parques y colegios. Precio negociable.",
                     estado: "pendiente",
@@ -2794,6 +3271,7 @@
                     avisoId: 2, 
                     vendedorId: 2, 
                     precio: 33500, 
+                    moneda: "USD",
                     mensaje: "Toyota RAV4 2021, 35,000 km, excelente estado. Único dueño, mantenimientos al día en agencia.",
                     detalles: "Color blanco perla, techo panorámico, sistema de sonido premium, cámaras 360°, sensores de estacionamiento. Historial completo disponible.",
                     estado: "pendiente",
@@ -2848,18 +3326,29 @@
                     userId: 1,
                     type: "propuesta_nueva",
                     title: "📨 Nueva propuesta recibida",
-                    message: "María Inmobiliaria envió una propuesta a tu aviso 'Busco departamento 3 dormitorios'",
+                    message: "María Vendedora Free envió una propuesta a tu aviso 'Busco departamento 3 dormitorios'",
                     data: { avisoId: 1, propuestaId: 1 },
                     read: false,
                     createdAt: new Date(Date.now() - 3600000).toISOString()
                 }
             ],
+            recoveryCodes: [],
+            systemConfig: {
+                trialDays: 7,
+                freeAvisoLimit: 3,
+                premiumPrice: {
+                    CLP: 19990,
+                    USD: 25,
+                    UF: 0.5
+                }
+            },
             nextIds: {
                 users: 5,
                 avisos: 4,
                 propuestas: 4,
                 chats: 2,
-                notifications: 3
+                notifications: 3,
+                recoveryCodes: 1
             }
         };
 
@@ -2893,6 +3382,30 @@
         // ============================================
         // FUNCIONES DE AUTENTICACIÓN
         // ============================================
+        function seleccionarMoneda(element, moneda) {
+            document.querySelectorAll('.moneda-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+            document.getElementById('register-moneda').value = moneda;
+        }
+
+        function seleccionarMonedaModal(element, moneda) {
+            document.querySelectorAll('#create-aviso-modal .moneda-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+            document.getElementById('aviso-moneda').value = moneda;
+        }
+
+        function seleccionarMonedaPerfil(element, moneda) {
+            document.querySelectorAll('#edit-profile-modal .moneda-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+            document.getElementById('edit-moneda').value = moneda;
+        }
+
         function toggleCategoriaRegistro(element, categoria) {
             element.classList.toggle('active');
             
@@ -2912,8 +3425,10 @@
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const name = document.getElementById('register-name').value;
+            const phone = document.getElementById('register-phone').value;
             const role = document.querySelector('input[name="role"]:checked').value;
             const categoriasInput = document.getElementById('register-categorias').value;
+            const moneda = document.getElementById('register-moneda').value;
             const data = getData();
             
             if (data.users.find(u => u.email === email)) {
@@ -2922,6 +3437,10 @@
             }
             
             let categorias = [];
+            let subscription = "free";
+            let subscriptionExpires = null;
+            let trialUsed = false;
+            
             if (role === 'vendedor') {
                 if (categoriasInput) {
                     categorias = categoriasInput.split(',').filter(c => c.trim());
@@ -2929,6 +3448,9 @@
                 if (categorias.length === 0) {
                     categorias = ["inmueble", "auto", "moto"];
                 }
+                // Nuevos vendedores tienen 7 días de prueba
+                subscriptionExpires = new Date(Date.now() + data.systemConfig.trialDays * 86400000).toISOString();
+                trialUsed = true;
             }
             
             const avatarColors = ['#4361ee', '#7209b7', '#4cc9f0', '#f72585', '#ef233c', '#7209b7'];
@@ -2938,25 +3460,37 @@
                 id: data.nextIds.users++,
                 email,
                 password,
-                name: name || email.split('@')[0],
+                name,
+                phone,
                 role,
+                subscription,
                 createdAt: new Date().toISOString(),
                 avatarColor: randomColor,
                 rating: 5.0,
                 totalAvisos: 0,
                 totalPropuestas: 0,
-                categorias: categorias
+                categorias: categorias,
+                monedaPreferida: moneda,
+                emailVerified: false,
+                subscriptionExpires: subscriptionExpires,
+                trialUsed: trialUsed
             };
             
             data.users.push(newUser);
             saveData(data);
             
-            showToast(`¡Cuenta creada exitosamente! Bienvenid@ a MarketConnect`, 'success');
+            showToast(`¡Cuenta creada exitosamente! ${role === 'vendedor' ? 'Tienes 7 días de prueba premium.' : ''}`, 'success');
             
             currentUser = newUser;
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             showUserUI();
-            showView('avisos');
+            
+            if (role === 'comprador') {
+                showView('avisos');
+            } else if (role === 'vendedor') {
+                showView('avisos');
+            }
+            
             loadAvisos();
         }
 
@@ -2969,6 +3503,16 @@
             const user = data.users.find(u => u.email === email && u.password === password);
             
             if (user) {
+                // Verificar si la suscripción premium ha expirado
+                if (user.role === 'vendedor' && user.subscription === 'premium') {
+                    if (user.subscriptionExpires && new Date(user.subscriptionExpires) < new Date()) {
+                        user.subscription = 'free';
+                        user.subscriptionExpires = null;
+                        saveData(data);
+                        showToast('Tu suscripción premium ha expirado. Contáctate con el administrador para renovar.', 'warning');
+                    }
+                }
+                
                 currentUser = user;
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 showUserUI();
@@ -2984,7 +3528,7 @@
                 loadAvisos();
                 updateDashboard();
                 updateNotifications();
-                showToast(`¡Bienvenido ${user.name || user.email}!`, 'success');
+                showToast(`¡Bienvenido ${user.name}!`, 'success');
             } else {
                 showToast('Email o contraseña incorrectos', 'error');
             }
@@ -3002,6 +3546,14 @@
             const userData = localStorage.getItem('currentUser');
             if (userData) {
                 currentUser = JSON.parse(userData);
+                const data = getData();
+                const userInDb = data.users.find(u => u.id === currentUser.id);
+                
+                if (userInDb) {
+                    currentUser = userInDb;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+                
                 showUserUI();
                 
                 if (currentUser.role === 'comprador') {
@@ -3050,6 +3602,8 @@
                     document.getElementById('nav-perfil').classList.add('active-nav');
                 } else if (viewId === 'admin') {
                     document.getElementById('nav-admin').classList.add('active-nav');
+                } else if (viewId === 'suscripciones') {
+                    document.getElementById('nav-suscripciones').classList.add('active-nav');
                 }
             }
             
@@ -3064,6 +3618,14 @@
                     document.getElementById('avisos-title').textContent = 
                         currentUser.role === 'comprador' ? 'Mis Avisos' : 'Avisos Disponibles';
                     loadAvisos();
+                    
+                    // Mostrar u ocultar banner de upgrade
+                    const banner = document.getElementById('upgrade-banner-avisos');
+                    if (currentUser.role === 'vendedor' && currentUser.subscription === 'free') {
+                        banner.classList.remove('hidden');
+                    } else {
+                        banner.classList.add('hidden');
+                    }
                 }
                 
                 if (viewId === 'propuestas') {
@@ -3089,6 +3651,10 @@
                             }
                         });
                     });
+                }
+                
+                if (viewId === 'suscripciones') {
+                    loadSubscriptionPage();
                 }
             }
             
@@ -3120,6 +3686,9 @@
                         showView('dashboard');
                     }
                     break;
+                case 'suscripciones':
+                    loadSubscriptionPage();
+                    break;
             }
         }
 
@@ -3138,12 +3707,31 @@
             document.getElementById('dropdown-avatar').textContent = firstLetter;
             document.getElementById('dropdown-avatar').style.background = currentUser.avatarColor;
             document.getElementById('dropdown-email').textContent = currentUser.email;
-            document.getElementById('dropdown-role').textContent = 
-                currentUser.role === 'comprador' ? 'Comprador' : 
-                currentUser.role === 'vendedor' ? 'Vendedor' : 'Administrador';
-            document.getElementById('dropdown-role').className = 'badge ' + 
+            
+            const roleBadge = document.getElementById('dropdown-role');
+            roleBadge.textContent = currentUser.role === 'comprador' ? 'Comprador' : 
+                                   currentUser.role === 'vendedor' ? 'Vendedor' : 'Administrador';
+            roleBadge.className = 'badge ' + 
                 (currentUser.role === 'comprador' ? 'badge-info' : 
                  currentUser.role === 'vendedor' ? 'badge-success' : 'badge-warning');
+            
+            const subscriptionBadge = document.getElementById('dropdown-subscription');
+            if (currentUser.role === 'vendedor') {
+                subscriptionBadge.textContent = currentUser.subscription === 'premium' ? '⭐ Premium' : 'Free';
+                subscriptionBadge.className = 'badge ' + (currentUser.subscription === 'premium' ? 'badge-premium' : 'badge-free');
+                subscriptionBadge.classList.remove('hidden');
+                
+                // Mostrar botón de upgrade si es free
+                const upgradeBtn = document.getElementById('dropdown-upgrade-btn');
+                if (currentUser.subscription === 'free') {
+                    upgradeBtn.classList.remove('hidden');
+                } else {
+                    upgradeBtn.classList.add('hidden');
+                }
+            } else {
+                subscriptionBadge.classList.add('hidden');
+                document.getElementById('dropdown-upgrade-btn').classList.add('hidden');
+            }
             
             document.getElementById('user-role-badge').textContent = 
                 currentUser.role === 'comprador' ? 'Comprador' : 
@@ -3151,6 +3739,16 @@
             document.getElementById('user-role-badge').className = 'badge ' + 
                 (currentUser.role === 'comprador' ? 'badge-info' : 
                  currentUser.role === 'vendedor' ? 'badge-success' : 'badge-warning');
+            
+            // Mostrar badge de suscripción
+            const userSubscriptionBadge = document.getElementById('user-subscription-badge');
+            if (currentUser.role === 'vendedor') {
+                userSubscriptionBadge.textContent = currentUser.subscription === 'premium' ? '⭐ Premium' : 'Free';
+                userSubscriptionBadge.className = 'badge ' + (currentUser.subscription === 'premium' ? 'badge-premium' : 'badge-free');
+                userSubscriptionBadge.classList.remove('hidden');
+            } else {
+                userSubscriptionBadge.classList.add('hidden');
+            }
             
             document.getElementById('nav-dashboard').classList.remove('hidden');
             document.getElementById('nav-avisos').classList.remove('hidden');
@@ -3160,6 +3758,9 @@
             
             if (currentUser.role === 'admin') {
                 document.getElementById('nav-admin').classList.remove('hidden');
+                document.getElementById('nav-suscripciones').classList.remove('hidden');
+            } else if (currentUser.role === 'vendedor') {
+                document.getElementById('nav-suscripciones').classList.remove('hidden');
             }
             
             document.querySelector('.mobile-nav').classList.remove('hidden');
@@ -3245,6 +3846,14 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
+        function showChangePasswordModal() {
+            showModal('change-password-modal');
+        }
+
+        function showPasswordReset() {
+            showModal('recover-password-modal');
+        }
+
         // ============================================
         // FUNCIONES DE FILTROS
         // ============================================
@@ -3303,9 +3912,9 @@
 
         function limpiarFiltros() {
             document.getElementById('filter-categoria').value = '';
-            document.getElementById('filter-presupuesto-min').value = '';
-            document.getElementById('filter-presupuesto-max').value = '';
             document.getElementById('filter-zona').value = '';
+            document.getElementById('filter-fecha').value = '';
+            document.getElementById('filter-estado').value = '';
             
             document.querySelectorAll('.category-filters').forEach(el => {
                 el.classList.remove('active');
@@ -3363,6 +3972,16 @@
                 el.classList.remove('active');
             });
             
+            // Seleccionar moneda por defecto del usuario
+            const monedaOptions = document.querySelectorAll('#create-aviso-modal .moneda-option');
+            monedaOptions.forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.querySelector('div').textContent === currentUser.monedaPreferida) {
+                    opt.classList.add('active');
+                    document.getElementById('aviso-moneda').value = currentUser.monedaPreferida;
+                }
+            });
+            
             showModal('create-aviso-modal');
         }
 
@@ -3371,6 +3990,19 @@
             
             const data = getData();
             const categoria = document.getElementById('aviso-categoria').value;
+            
+            // Verificar límite de avisos para compradores free
+            if (currentUser.role === 'comprador' && currentUser.subscription === 'free') {
+                const avisosActivos = data.avisos.filter(a => 
+                    a.userId === currentUser.id && 
+                    a.estado === 'abierto'
+                ).length;
+                
+                if (avisosActivos >= data.systemConfig.freeAvisoLimit) {
+                    showToast(`Límite de ${data.systemConfig.freeAvisoLimit} avisos activos alcanzado. Cierra alguno o upgrade a premium.`, 'error');
+                    return;
+                }
+            }
             
             let detalles = {};
             
@@ -3426,6 +4058,7 @@
                 const modelo = document.getElementById('moto-modelo').value;
                 const ano = document.getElementById('moto-ano').value;
                 const cilindrada = document.getElementById('moto-cilindrada').value;
+                const kmMax = document.getElementById('moto-km-max').value;
                 
                 if (!tipo || !marca || !modelo || !ano || !cilindrada) {
                     showToast('Por favor completa todos los campos específicos de moto', 'error');
@@ -3437,7 +4070,8 @@
                     marca: marca,
                     modelo: modelo,
                     ano: parseInt(ano),
-                    cilindrada: cilindrada
+                    cilindrada: cilindrada,
+                    kmMax: kmMax ? parseInt(kmMax) : null
                 };
             }
             
@@ -3450,13 +4084,32 @@
                 presupuesto: parseInt(document.getElementById('aviso-presupuesto').value),
                 moneda: document.getElementById('aviso-moneda').value,
                 zona: document.getElementById('aviso-zona').value,
+                direccion: document.getElementById('aviso-direccion').value,
                 estado: 'abierto',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 detalles: detalles,
                 propuestas: [],
                 vistas: 0,
-                destacado: false
+                destacado: false,
+                infoPublica: {
+                    categoria: categoria,
+                    titulo: document.getElementById('aviso-titulo').value.substring(0, 50),
+                    descripcion: document.getElementById('aviso-descripcion').value ? 
+                        document.getElementById('aviso-descripcion').value.substring(0, 100) : 
+                        'Sin descripción',
+                    zona: document.getElementById('aviso-zona').value,
+                    fecha: new Date().toISOString(),
+                    estado: 'abierto'
+                },
+                infoPrivada: {
+                    nombreComprador: currentUser.name,
+                    email: currentUser.email,
+                    telefono: currentUser.phone,
+                    presupuestoExacto: parseInt(document.getElementById('aviso-presupuesto').value),
+                    moneda: document.getElementById('aviso-moneda').value,
+                    direccionExacta: document.getElementById('aviso-direccion').value
+                }
             };
             
             data.avisos.push(nuevoAviso);
@@ -3470,6 +4123,7 @@
                 'moto': 'Motos'
             }[categoria] || categoria;
             
+            // Notificar a vendedores interesados
             const vendedoresInteresados = data.users.filter(u => 
                 u.role === 'vendedor' && 
                 u.categorias && 
@@ -3482,7 +4136,7 @@
                     userId: vendedor.id,
                     type: "aviso_nuevo",
                     title: `📢 Nuevo aviso en ${categoriaText}`,
-                    message: `${user.name || user.email} busca: "${nuevoAviso.titulo}" en ${nuevoAviso.zona}`,
+                    message: `${user.name} busca: "${nuevoAviso.infoPublica.titulo}" en ${nuevoAviso.zona}`,
                     data: { 
                         avisoId: nuevoAviso.id, 
                         categoria: nuevoAviso.categoria,
@@ -3496,7 +4150,7 @@
             saveData(data);
             
             closeModal('create-aviso-modal');
-            showToast(`¡Aviso publicado exitosamente! Notificación enviada a ${vendedoresInteresados.length} vendedores especializados.`, 'success');
+            showToast(`¡Aviso publicado exitosamente!`, 'success');
             
             currentAvisoId = nuevoAviso.id;
             showView('detalle-aviso');
@@ -3511,6 +4165,7 @@
             let avisos = [];
             
             if (currentUser.role === 'comprador') {
+                // Compradores solo ven sus propios avisos
                 avisos = data.avisos.filter(a => a.userId === currentUser.id);
             } else if (currentUser.role === 'vendedor') {
                 const categoriasVendedor = currentUser.categorias || [];
@@ -3519,22 +4174,36 @@
                     categoriasVendedor.push("inmueble", "auto", "moto");
                 }
                 
+                // Vendedores ven avisos de otros usuarios en sus categorías
                 avisos = data.avisos.filter(a => 
                     a.userId !== currentUser.id && 
                     a.estado === 'abierto' &&
                     categoriasVendedor.includes(a.categoria)
                 );
                 
+                // Aplicar filtros
                 const categoria = document.getElementById('filter-categoria')?.value;
-                const presupuestoMin = document.getElementById('filter-presupuesto-min')?.value;
-                const presupuestoMax = document.getElementById('filter-presupuesto-max')?.value;
                 const zona = document.getElementById('filter-zona')?.value;
+                const fecha = document.getElementById('filter-fecha')?.value;
+                const estado = document.getElementById('filter-estado')?.value;
                 
                 if (categoria) avisos = avisos.filter(a => a.categoria === categoria);
-                if (presupuestoMin) avisos = avisos.filter(a => a.presupuesto >= parseInt(presupuestoMin));
-                if (presupuestoMax) avisos = avisos.filter(a => a.presupuesto <= parseInt(presupuestoMax));
                 if (zona) avisos = avisos.filter(a => a.zona.toLowerCase().includes(zona.toLowerCase()));
+                if (estado) avisos = avisos.filter(a => a.estado === estado);
+                if (fecha) {
+                    const now = new Date();
+                    let fechaLimite = new Date();
+                    if (fecha === 'hoy') {
+                        fechaLimite.setHours(0, 0, 0, 0);
+                    } else if (fecha === 'semana') {
+                        fechaLimite.setDate(now.getDate() - 7);
+                    } else if (fecha === 'mes') {
+                        fechaLimite.setMonth(now.getMonth() - 1);
+                    }
+                    avisos = avisos.filter(a => new Date(a.createdAt) >= fechaLimite);
+                }
                 
+                // Filtros específicos por categoría
                 if (categoria === 'inmueble') {
                     const tipoFiltros = [];
                     document.querySelectorAll('#filtros-inmueble .filter-option.active[onclick*="tipo"]').forEach(el => {
@@ -3583,12 +4252,19 @@
                     
                     const anoMin = document.getElementById('filter-ano-min')?.value;
                     const anoMax = document.getElementById('filter-ano-max')?.value;
+                    const kmMax = document.getElementById('filter-km-max')?.value;
                     
                     if (anoMin) {
                         avisos = avisos.filter(a => a.detalles && a.detalles.ano >= parseInt(anoMin));
                     }
                     if (anoMax) {
                         avisos = avisos.filter(a => a.detalles && a.detalles.ano <= parseInt(anoMax));
+                    }
+                    if (kmMax) {
+                        avisos = avisos.filter(a => {
+                            // Solo filtrar si el aviso tiene km máximo especificado
+                            return !a.detalles.kmMax || a.detalles.kmMax <= parseInt(kmMax);
+                        });
                     }
                     
                 } else if (categoria === 'moto') {
@@ -3612,6 +4288,13 @@
                     if (cilindradaFiltros.length > 0) {
                         avisos = avisos.filter(a => {
                             return a.detalles && cilindradaFiltros.includes(a.detalles.cilindrada);
+                        });
+                    }
+                    
+                    const kmMax = document.getElementById('filter-moto-km-max')?.value;
+                    if (kmMax) {
+                        avisos = avisos.filter(a => {
+                            return !a.detalles.kmMax || a.detalles.kmMax <= parseInt(kmMax);
                         });
                     }
                 }
@@ -3655,6 +4338,9 @@
                     'moto': 'Moto'
                 }[aviso.categoria] || aviso.categoria;
                 
+                const esCreador = aviso.userId === currentUser.id;
+                const esVendedorPremium = currentUser.role === 'vendedor' && currentUser.subscription === 'premium';
+                
                 let detallesHTML = '';
                 if (aviso.detalles) {
                     if (aviso.categoria === 'inmueble') {
@@ -3686,8 +4372,60 @@
                     }
                 }
                 
+                // Determinar qué información mostrar según el rol y suscripción
+                let presupuestoHTML = '';
+                let nombreCompradorHTML = '';
+                
+                if (esCreador) {
+                    // Comprador ve su propio presupuesto
+                    presupuestoHTML = `
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">
+                                ${aviso.moneda === 'CLP' ? '$' : aviso.moneda === 'USD' ? 'US$' : 'UF'}${aviso.presupuesto.toLocaleString()}
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto (${aviso.moneda})</div>
+                        </div>
+                    `;
+                    nombreCompradorHTML = `<span><strong>👤 Publicado por:</strong> ${user.name}</span>`;
+                } else if (currentUser.role === 'vendedor') {
+                    if (esVendedorPremium) {
+                        // Vendedor premium ve información completa
+                        presupuestoHTML = `
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">
+                                    ${aviso.moneda === 'CLP' ? '$' : aviso.moneda === 'USD' ? 'US$' : 'UF'}${aviso.presupuesto.toLocaleString()}
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto (${aviso.moneda})</div>
+                            </div>
+                        `;
+                        nombreCompradorHTML = `<span><strong>👤 Comprador:</strong> ${user.name}</span>`;
+                    } else {
+                        // Vendedor gratuito ve información limitada
+                        presupuestoHTML = `
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">
+                                    ${aviso.moneda === 'CLP' ? 'Desde $' : aviso.moneda === 'USD' ? 'Desde US$' : 'Desde UF'}***
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto disponible</div>
+                            </div>
+                        `;
+                        nombreCompradorHTML = `<span><strong>👤 Comprador:</strong> ***</span>`;
+                    }
+                }
+                
                 return `
-                    <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})">
+                    <div class="aviso-card" onclick="verDetalleAviso(${aviso.id})" style="position: relative;">
+                        ${!esCreador && currentUser.role === 'vendedor' && !esVendedorPremium ? `
+                            <div class="premium-overlay">
+                                <div class="premium-lock">🔒</div>
+                                <h3>Información Premium</h3>
+                                <p>Upgrade a Premium para ver datos de contacto, presupuesto exacto y dirección del comprador.</p>
+                                <button class="btn btn-warning" onclick="event.stopPropagation(); showView('suscripciones')">
+                                    ⭐ Desbloquear Premium
+                                </button>
+                            </div>
+                        ` : ''}
+                        
                         <div class="aviso-header">
                             <div>
                                 <div class="aviso-title">${aviso.titulo}</div>
@@ -3701,12 +4439,7 @@
                                     ${aviso.destacado ? '<span class="badge badge-warning">⭐ Destacado</span>' : ''}
                                 </div>
                             </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">
-                                    ${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}
-                                </div>
-                                <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto (${aviso.moneda})</div>
-                            </div>
+                            ${presupuestoHTML}
                         </div>
                         
                         ${detallesHTML}
@@ -3714,7 +4447,7 @@
                         <div class="aviso-meta">
                             <span><strong>📍 Zona:</strong> ${aviso.zona}</span>
                             <span><strong>💬 Propuestas:</strong> ${propuestasCount}</span>
-                            ${currentUser.role === 'vendedor' ? `<span><strong>👤 Publicado por:</strong> ${user.name || user.email}</span>` : ''}
+                            ${nombreCompradorHTML}
                         </div>
                         
                         <div class="aviso-description">
@@ -3726,7 +4459,7 @@
                                 Ver Detalles
                             </button>
                             
-                            ${currentUser.role === 'comprador' ? `
+                            ${esCreador ? `
                                 <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); editarAviso(${aviso.id})">
                                     ✏️ Editar
                                 </button>
@@ -3735,9 +4468,15 @@
                                 </button>
                             ` : ''}
                             
-                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' ? `
-                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); iniciarChatConComprador(${aviso.id})">
+                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && esVendedorPremium ? `
+                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); enviarPropuestaModal(${aviso.id})">
                                     💬 Enviar Propuesta
+                                </button>
+                            ` : ''}
+                            
+                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esVendedorPremium ? `
+                                <button class="btn btn-sm btn-warning" onclick="event.stopPropagation(); showView('suscripciones')">
+                                    ⭐ Upgrade para contactar
                                 </button>
                             ` : ''}
                         </div>
@@ -3785,6 +4524,7 @@
             }[aviso.categoria] || aviso.categoria;
             
             const esCreador = aviso.userId === currentUser.id;
+            const esVendedorPremium = currentUser.role === 'vendedor' && currentUser.subscription === 'premium';
             
             let detallesEspecificosHTML = '';
             if (aviso.detalles) {
@@ -3871,9 +4611,78 @@
                                 <div class="meta-label">Cilindrada</div>
                                 <div class="meta-value">${aviso.detalles.cilindrada || 'No especificado'} cc</div>
                             </div>
+                            ${aviso.detalles.kmMax ? `
+                                <div class="meta-card">
+                                    <div class="meta-label">Kilometraje máximo</div>
+                                    <div class="meta-value">${aviso.detalles.kmMax.toLocaleString()} km</div>
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 }
+            }
+            
+            // Información sensible solo para vendedores premium o el creador
+            let infoSensibleHTML = '';
+            if (esCreador || (currentUser.role === 'vendedor' && esVendedorPremium)) {
+                infoSensibleHTML = `
+                    <div class="sensitive-info">
+                        <h4><span>🔒</span> Información de Contacto</h4>
+                        <div class="info-row">
+                            <span class="info-label">Nombre del comprador:</span>
+                            <span class="info-value">${aviso.infoPrivada.nombreComprador}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value">${aviso.infoPrivada.email}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Teléfono:</span>
+                            <span class="info-value">${aviso.infoPrivada.telefono}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Presupuesto exacto:</span>
+                            <span class="info-value">
+                                ${aviso.infoPrivada.moneda === 'CLP' ? '$' : aviso.infoPrivada.moneda === 'USD' ? 'US$' : 'UF'}
+                                ${aviso.infoPrivada.presupuestoExacto.toLocaleString()} (${aviso.infoPrivada.moneda})
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Dirección exacta:</span>
+                            <span class="info-value">${aviso.infoPrivada.direccionExacta}</span>
+                        </div>
+                    </div>
+                `;
+            } else if (currentUser.role === 'vendedor' && !esVendedorPremium) {
+                infoSensibleHTML = `
+                    <div class="sensitive-info" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2);">
+                        <h4><span>🔒</span> Información Premium Bloqueada</h4>
+                        <p style="margin-bottom: 15px;">Esta información solo está disponible para vendedores Premium.</p>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Nombre del comprador</div>
+                                <div style="font-weight: 600; color: var(--dark);">🔒 Bloqueado</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Datos de contacto</div>
+                                <div style="font-weight: 600; color: var(--dark);">🔒 Bloqueado</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Presupuesto exacto</div>
+                                <div style="font-weight: 600; color: var(--dark);">🔒 Bloqueado</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.9rem; color: var(--gray);">Dirección exacta</div>
+                                <div style="font-weight: 600; color: var(--dark);">🔒 Bloqueado</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 25px;">
+                            <button class="btn btn-warning" onclick="showView('suscripciones')">
+                                ⭐ Upgrade a Premium para desbloquear
+                            </button>
+                        </div>
+                    </div>
+                `;
             }
             
             container.innerHTML = `
@@ -3894,7 +4703,10 @@
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">
-                                    ${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}
+                                    ${esCreador || (currentUser.role === 'vendedor' && esVendedorPremium) ? 
+                                        `${aviso.moneda === 'CLP' ? '$' : aviso.moneda === 'USD' ? 'US$' : 'UF'}${aviso.presupuesto.toLocaleString()}` :
+                                        `${aviso.moneda === 'CLP' ? 'Desde $' : aviso.moneda === 'USD' ? 'Desde US$' : 'Desde UF'}***`
+                                    }
                                 </div>
                                 <div style="font-size: 1rem; color: var(--gray);">Presupuesto máximo (${aviso.moneda})</div>
                             </div>
@@ -3905,7 +4717,11 @@
                         <div class="detalle-meta-grid">
                             <div class="meta-card">
                                 <div class="meta-label">Publicado por</div>
-                                <div class="meta-value">${user.name || user.email}</div>
+                                <div class="meta-value">
+                                    ${esCreador || (currentUser.role === 'vendedor' && esVendedorPremium) ? 
+                                        user.name : '🔒 Información Premium'
+                                    }
+                                </div>
                             </div>
                             <div class="meta-card">
                                 <div class="meta-label">Fecha de publicación</div>
@@ -3920,6 +4736,8 @@
                                 <div class="meta-value">${aviso.zona}</div>
                             </div>
                         </div>
+                        
+                        ${infoSensibleHTML}
                         
                         <div class="detalle-description">
                             ${aviso.descripcion ? aviso.descripcion.replace(/\n/g, '<br>') : '<em>Sin descripción</em>'}
@@ -3959,9 +4777,15 @@
                                 ` : ''}
                             ` : ''}
                             
-                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador ? `
-                                <button class="btn btn-secondary" onclick="iniciarChatConComprador(${aviso.id})">
-                                    💬 Enviar Propuesta por Chat
+                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador && esVendedorPremium ? `
+                                <button class="btn btn-secondary" onclick="enviarPropuestaModal(${aviso.id})">
+                                    💬 Enviar Propuesta
+                                </button>
+                            ` : ''}
+                            
+                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador && !esVendedorPremium ? `
+                                <button class="btn btn-warning" onclick="showView('suscripciones')">
+                                    ⭐ Upgrade para enviar propuesta
                                 </button>
                             ` : ''}
                         </div>
@@ -3988,6 +4812,9 @@
                                             <div>
                                                 <div style="font-weight: 700; font-size: 1.1rem;">${vendedor.name || vendedor.email}</div>
                                                 <div style="font-size: 0.9rem; color: var(--gray);">⭐ ${vendedor.rating || 5.0}/5.0</div>
+                                                <div style="font-size: 0.8rem; color: var(--gray);">
+                                                    ${vendedor.subscription === 'premium' ? '⭐ Premium' : 'Free'}
+                                                </div>
                                             </div>
                                         </div>
                                         <div>
@@ -4001,7 +4828,7 @@
                                     
                                     <div style="text-align: right; margin: 15px 0;">
                                         <div style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">
-                                            $${propuesta.precio.toLocaleString()}
+                                            ${propuesta.moneda === 'CLP' ? '$' : propuesta.moneda === 'USD' ? 'US$' : 'UF'}${propuesta.precio.toLocaleString()}
                                         </div>
                                         <div style="font-size: 0.9rem; color: var(--gray);">
                                             ${propuesta.precio <= aviso.presupuesto ? '✅ Dentro del presupuesto' : '⚠️ Supera el presupuesto'}
@@ -4037,10 +4864,6 @@
                                             <button class="btn btn-sm btn-outline" onclick="iniciarChatConComprador(${aviso.id}, ${propuesta.id})">
                                                 💬 Iniciar Chat
                                             </button>
-                                        ` : esCreador ? `
-                                            <button class="btn btn-sm btn-primary" onclick="iniciarChatConVendedor(${aviso.id}, ${propuesta.id})">
-                                                💬 Chatear con ${vendedor.name || vendedor.email}
-                                            </button>
                                         ` : ''}
                                         
                                         ${propuesta.destacada ? '<span class="badge badge-warning" style="margin-left: auto;">⭐ Destacada</span>' : ''}
@@ -4061,9 +4884,13 @@
                                         'Sé el primero en enviar una propuesta'
                                     }
                                 </p>
-                                ${!esCreador && currentUser.role === 'vendedor' ? `
-                                    <button class="btn btn-primary" onclick="iniciarChatConComprador(${aviso.id})">
+                                ${!esCreador && currentUser.role === 'vendedor' && esVendedorPremium ? `
+                                    <button class="btn btn-primary" onclick="enviarPropuestaModal(${aviso.id})">
                                         💬 Enviar Primera Propuesta
+                                    </button>
+                                ` : !esCreador && currentUser.role === 'vendedor' && !esVendedorPremium ? `
+                                    <button class="btn btn-warning" onclick="showView('suscripciones')">
+                                        ⭐ Upgrade para enviar propuesta
                                     </button>
                                 ` : ''}
                             </div>
@@ -4164,9 +4991,13 @@
                                         'Envía una propuesta para iniciar un chat con el comprador'
                                     }
                                 </p>
-                                ${!esCreador && currentUser.role === 'vendedor' && aviso.estado === 'abierto' ? `
-                                    <button class="btn btn-primary" onclick="iniciarChatConComprador(${aviso.id})">
+                                ${!esCreador && currentUser.role === 'vendedor' && aviso.estado === 'abierto' && esVendedorPremium ? `
+                                    <button class="btn btn-primary" onclick="enviarPropuestaModal(${aviso.id})">
                                         💬 Enviar Propuesta y Chatear
+                                    </button>
+                                ` : !esCreador && currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esVendedorPremium ? `
+                                    <button class="btn btn-warning" onclick="showView('suscripciones')">
+                                        ⭐ Upgrade para chatear
                                     </button>
                                 ` : ''}
                             </div>
@@ -4180,8 +5011,8 @@
                             <span>Acciones Rápidas</span>
                         </h3>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
-                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador ? `
-                                <button class="btn btn-secondary btn-block" onclick="iniciarChatConComprador(${aviso.id})">
+                            ${currentUser.role === 'vendedor' && aviso.estado === 'abierto' && !esCreador && esVendedorPremium ? `
+                                <button class="btn btn-secondary btn-block" onclick="enviarPropuestaModal(${aviso.id})">
                                     💬 Enviar Propuesta
                                 </button>
                             ` : ''}
@@ -4216,13 +5047,126 @@
         // ============================================
         // FUNCIONES DE PROPUESTAS
         // ============================================
-        function mostrarEnviarPropuesta(avisoId) {
-            showToast('Las propuestas ahora se envían por chat', 'info');
+        function enviarPropuestaModal(avisoId) {
+            if (currentUser.role !== 'vendedor') {
+                showToast('Solo los vendedores pueden enviar propuestas', 'error');
+                return;
+            }
+            
+            if (currentUser.subscription !== 'premium') {
+                showToast('Necesitas ser Premium para enviar propuestas', 'error');
+                showView('suscripciones');
+                return;
+            }
+            
+            const data = getData();
+            const aviso = data.avisos.find(a => a.id === avisoId);
+            
+            if (!aviso) {
+                showToast('El aviso no existe', 'error');
+                return;
+            }
+            
+            document.getElementById('propuesta-aviso-id').value = avisoId;
+            document.getElementById('propuesta-modal-title').textContent = `Enviar Propuesta: ${aviso.titulo.substring(0, 30)}...`;
+            document.getElementById('propuesta-precio').value = '';
+            document.getElementById('propuesta-mensaje').value = '';
+            document.getElementById('propuesta-detalles').value = '';
+            
+            // Configurar moneda por defecto
+            const monedaSelect = document.getElementById('propuesta-moneda');
+            monedaSelect.value = currentUser.monedaPreferida || 'CLP';
+            
+            // Mostrar información del presupuesto
+            const presupuestoInfo = document.getElementById('propuesta-presupuesto-info');
+            presupuestoInfo.textContent = `Presupuesto del comprador: ${aviso.moneda === 'CLP' ? '$' : aviso.moneda === 'USD' ? 'US$' : 'UF'}${aviso.presupuesto.toLocaleString()} (${aviso.moneda})`;
+            
+            showModal('enviar-propuesta-modal');
         }
 
         function enviarPropuesta(event) {
             event.preventDefault();
-            showToast('Las propuestas ahora se envían por chat', 'info');
+            
+            if (currentUser.role !== 'vendedor' || currentUser.subscription !== 'premium') {
+                showToast('Necesitas ser vendedor Premium para enviar propuestas', 'error');
+                return;
+            }
+            
+            const avisoId = parseInt(document.getElementById('propuesta-aviso-id').value);
+            const data = getData();
+            const aviso = data.avisos.find(a => a.id === avisoId);
+            const comprador = data.users.find(u => u.id === aviso.userId);
+            
+            if (!aviso || !comprador) {
+                showToast('Error al enviar la propuesta', 'error');
+                return;
+            }
+            
+            const nuevaPropuesta = {
+                id: data.nextIds.propuestas++,
+                avisoId: avisoId,
+                vendedorId: currentUser.id,
+                precio: parseInt(document.getElementById('propuesta-precio').value),
+                moneda: document.getElementById('propuesta-moneda').value,
+                mensaje: document.getElementById('propuesta-mensaje').value,
+                detalles: document.getElementById('propuesta-detalles').value,
+                estado: 'pendiente',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                destacada: false
+            };
+            
+            data.propuestas.push(nuevaPropuesta);
+            
+            if (!aviso.propuestas) aviso.propuestas = [];
+            aviso.propuestas.push(nuevaPropuesta.id);
+            
+            const user = data.users.find(u => u.id === currentUser.id);
+            user.totalPropuestas = (user.totalPropuestas || 0) + 1;
+            
+            // Crear chat automáticamente
+            const nuevoChat = {
+                id: data.nextIds.chats++,
+                avisoId: avisoId,
+                propuestaId: nuevaPropuesta.id,
+                participantes: [aviso.userId, currentUser.id],
+                mensajes: [
+                    {
+                        id: 1,
+                        userId: currentUser.id,
+                        text: document.getElementById('propuesta-mensaje').value,
+                        timestamp: new Date().toISOString(),
+                        leido: false,
+                        tipo: 'texto'
+                    }
+                ],
+                unreadCount: 1,
+                lastMessage: document.getElementById('propuesta-mensaje').value.substring(0, 100),
+                lastMessageTime: new Date().toISOString(),
+                activo: true
+            };
+            
+            data.chats.push(nuevoChat);
+            
+            // Notificación al comprador
+            data.notifications.push({
+                id: data.nextIds.notifications++,
+                userId: comprador.id,
+                type: "propuesta_nueva",
+                title: "¡Nueva propuesta recibida!",
+                message: `${user.name} envió una propuesta de ${nuevaPropuesta.moneda === 'CLP' ? '$' : nuevaPropuesta.moneda === 'USD' ? 'US$' : 'UF'}${nuevaPropuesta.precio.toLocaleString()} a tu aviso`,
+                data: { avisoId: avisoId, propuestaId: nuevaPropuesta.id },
+                read: false,
+                createdAt: new Date().toISOString()
+            });
+            
+            saveData(data);
+            
+            closeModal('enviar-propuesta-modal');
+            showToast('¡Propuesta enviada exitosamente! Se ha iniciado un chat con el comprador.', 'success');
+            
+            currentAvisoId = avisoId;
+            showView('detalle-aviso');
         }
 
         function loadPropuestas() {
@@ -4319,7 +5263,7 @@
                         </div>
                         
                         <div class="propuesta-meta">
-                            <span><strong>💰 Precio:</strong> $${propuesta.precio.toLocaleString()}</span>
+                            <span><strong>💰 Precio:</strong> ${propuesta.moneda === 'CLP' ? '$' : propuesta.moneda === 'USD' ? 'US$' : 'UF'}${propuesta.precio.toLocaleString()}</span>
                             <span><strong>📅 Fecha:</strong> ${new Date(propuesta.createdAt).toLocaleDateString()}</span>
                             <span><strong>💬 Chat:</strong> ${chat ? (chat.unreadCount > 0 ? `${chat.unreadCount} nuevos` : 'Activo') : 'No iniciado'}</span>
                         </div>
@@ -4623,146 +5567,26 @@
                 return;
             }
             
-            if (!propuestaId) {
-                let chat = data.chats.find(c => 
-                    c.avisoId === avisoId && 
-                    c.participantes.includes(currentUser.id) && 
-                    c.participantes.includes(aviso.userId)
-                );
-                
-                if (!chat) {
-                    const nuevaPropuesta = {
-                        id: data.nextIds.propuestas++,
-                        avisoId: avisoId,
-                        vendedorId: currentUser.id,
-                        precio: 0,
-                        mensaje: "He iniciado un chat para enviar una propuesta",
-                        detalles: "",
-                        estado: 'pendiente',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                        destacada: false
-                    };
-                    
-                    data.propuestas.push(nuevaPropuesta);
-                    
-                    if (!aviso.propuestas) aviso.propuestas = [];
-                    aviso.propuestas.push(nuevaPropuesta.id);
-                    
-                    const user = data.users.find(u => u.id === currentUser.id);
-                    user.totalPropuestas = (user.totalPropuestas || 0) + 1;
-                    
-                    const comprador = data.users.find(u => u.id === aviso.userId);
-                    data.notifications.push({
-                        id: data.nextIds.notifications++,
-                        userId: comprador.id,
-                        type: "propuesta_nueva",
-                        title: "¡Nueva propuesta recibida!",
-                        message: `${user.name || user.email} envió una propuesta a tu aviso: "${aviso.titulo}"`,
-                        data: { avisoId: avisoId, propuestaId: nuevaPropuesta.id },
-                        read: false,
-                        createdAt: new Date().toISOString()
-                    });
-                    
-                    propuestaId = nuevaPropuesta.id;
-                }
-            }
-            
-            let chat = data.chats.find(c => c.propuestaId === propuestaId);
-            
-            if (!chat) {
-                chat = {
-                    id: data.nextIds.chats++,
-                    avisoId: avisoId,
-                    propuestaId: propuestaId,
-                    participantes: [aviso.userId, currentUser.id],
-                    mensajes: [
-                        {
-                            id: 1,
-                            userId: currentUser.id,
-                            text: `Hola, estoy interesado en tu aviso "${aviso.titulo}". ¿Podemos conversar más detalles?`,
-                            timestamp: new Date().toISOString(),
-                            leido: false,
-                            tipo: 'texto'
-                        }
-                    ],
-                    unreadCount: 1,
-                    lastMessage: `Hola, estoy interesado en tu aviso "${aviso.titulo}". ¿Podemos conversar más detalles?`,
-                    lastMessageTime: new Date().toISOString(),
-                    activo: true
-                };
-                
-                data.chats.push(chat);
-                saveData(data);
-                
-                const comprador = data.users.find(u => u.id === aviso.userId);
-                data.notifications.push({
-                    id: data.nextIds.notifications++,
-                    userId: comprador.id,
-                    type: "mensaje_nuevo",
-                    title: "Nuevo mensaje en el chat",
-                    message: `${currentUser.name || currentUser.email} inició un chat sobre tu aviso`,
-                    data: { chatId: chat.id, avisoId: avisoId },
-                    read: false,
-                    createdAt: new Date().toISOString()
-                });
-                
-                saveData(data);
-            }
-            
-            currentAvisoId = avisoId;
-            showView('detalle-aviso');
-        }
-
-        function iniciarChatConVendedor(avisoId, propuestaId) {
-            const data = getData();
-            const aviso = data.avisos.find(a => a.id === avisoId);
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
-            
-            if (!aviso || !propuesta) {
-                showToast('No se pudo iniciar el chat', 'error');
+            if (currentUser.role !== 'vendedor' || currentUser.subscription !== 'premium') {
+                showToast('Necesitas ser vendedor Premium para iniciar chats', 'error');
+                showView('suscripciones');
                 return;
             }
             
-            let chat = data.chats.find(c => c.propuestaId === propuestaId);
+            let chat = data.chats.find(c => 
+                c.avisoId === avisoId && 
+                c.participantes.includes(currentUser.id) && 
+                c.participantes.includes(aviso.userId)
+            );
+            
+            if (!chat && propuestaId) {
+                chat = data.chats.find(c => c.propuestaId === propuestaId);
+            }
             
             if (!chat) {
-                chat = {
-                    id: data.nextIds.chats++,
-                    avisoId: avisoId,
-                    propuestaId: propuestaId,
-                    participantes: [aviso.userId, propuesta.vendedorId],
-                    mensajes: [
-                        {
-                            id: 1,
-                            userId: currentUser.id,
-                            text: `Hola, estoy interesado en tu propuesta de $${propuesta.precio.toLocaleString()}. ¿Podemos conversar más detalles?`,
-                            timestamp: new Date().toISOString(),
-                            leido: false,
-                            tipo: 'texto'
-                        }
-                    ],
-                    unreadCount: 1,
-                    lastMessage: `Hola, estoy interesado en tu propuesta de $${propuesta.precio.toLocaleString()}. ¿Podemos conversar más detalles?`,
-                    lastMessageTime: new Date().toISOString(),
-                    activo: true
-                };
-                
-                data.chats.push(chat);
-                saveData(data);
-                
-                data.notifications.push({
-                    id: data.nextIds.notifications++,
-                    userId: propuesta.vendedorId,
-                    type: "mensaje_nuevo",
-                    title: "Nuevo mensaje en el chat",
-                    message: `${currentUser.name || currentUser.email} inició un chat sobre tu propuesta`,
-                    data: { chatId: chat.id, avisoId: avisoId },
-                    read: false,
-                    createdAt: new Date().toISOString()
-                });
-                
-                saveData(data);
+                showToast('Primero debes enviar una propuesta para iniciar un chat', 'info');
+                enviarPropuestaModal(avisoId);
+                return;
             }
             
             currentAvisoId = avisoId;
@@ -5005,7 +5829,7 @@
                                     <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--gray-light);">
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <span style="font-weight: 600; color: var(--primary);">
-                                                $${propuesta.precio.toLocaleString()}
+                                                ${propuesta.moneda === 'CLP' ? '$' : propuesta.moneda === 'USD' ? 'US$' : 'UF'}${propuesta.precio.toLocaleString()}
                                             </span>
                                             <span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : 
                                                                propuesta.estado === 'aceptada' ? 'badge-success' : 
@@ -5161,7 +5985,7 @@
                 userId: propuesta.vendedorId,
                 type: "propuesta_aceptada",
                 title: "¡Propuesta aceptada!",
-                message: `${currentUser.name || currentUser.email} aceptó tu propuesta de $${propuesta.precio.toLocaleString()}`,
+                message: `${currentUser.name || currentUser.email} aceptó tu propuesta de ${propuesta.moneda === 'CLP' ? '$' : propuesta.moneda === 'USD' ? 'US$' : 'UF'}${propuesta.precio.toLocaleString()}`,
                 data: { avisoId: avisoId, propuestaId: propuestaId },
                 read: false,
                 createdAt: new Date().toISOString()
@@ -5242,7 +6066,7 @@
             document.getElementById('editar-aviso-titulo').value = aviso.titulo;
             document.getElementById('editar-aviso-descripcion').value = aviso.descripcion || '';
             document.getElementById('editar-aviso-presupuesto').value = aviso.presupuesto;
-            document.getElementById('editar-aviso-moneda').value = aviso.moneda || 'USD';
+            document.getElementById('editar-aviso-moneda').value = aviso.moneda || 'CLP';
             document.getElementById('editar-aviso-zona').value = aviso.zona;
             document.getElementById('editar-aviso-estado').value = aviso.estado;
             
@@ -5268,6 +6092,14 @@
             aviso.zona = document.getElementById('editar-aviso-zona').value;
             aviso.estado = document.getElementById('editar-aviso-estado').value;
             aviso.updatedAt = new Date().toISOString();
+            
+            // Actualizar info pública y privada
+            aviso.infoPublica.titulo = aviso.titulo.substring(0, 50);
+            aviso.infoPublica.descripcion = aviso.descripcion ? aviso.descripcion.substring(0, 100) : 'Sin descripción';
+            aviso.infoPublica.estado = aviso.estado;
+            
+            aviso.infoPrivada.presupuestoExacto = aviso.presupuesto;
+            aviso.infoPrivada.moneda = aviso.moneda;
             
             saveData(data);
             closeModal('editar-aviso-modal');
@@ -5321,6 +6153,14 @@
             
             const data = getData();
             
+            // Mostrar u ocultar banner de upgrade
+            const banner = document.getElementById('upgrade-banner-dashboard');
+            if (currentUser.role === 'vendedor' && currentUser.subscription === 'free') {
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
+            
             if (currentUser.role === 'comprador') {
                 const misAvisos = data.avisos.filter(a => a.userId === currentUser.id);
                 const propuestasRecibidas = data.propuestas.filter(p => 
@@ -5349,7 +6189,7 @@
                                               aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">
                                 ${aviso.estado}
                             </span>
-                            <span class="badge badge-light">${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}</span>
+                            <span class="badge badge-light">${aviso.moneda === 'CLP' ? '$' : aviso.moneda === 'USD' ? 'US$' : 'UF'}${aviso.presupuesto.toLocaleString()}</span>
                         </div>
                         <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
                             ${aviso.propuestas?.length || 0} propuestas
@@ -5370,7 +6210,7 @@
                         <div class="propuesta-card" onclick="verDetalleAviso(${aviso.id})">
                             <div style="font-weight: 700; margin-bottom: 10px;">${aviso.titulo.substring(0, 30)}...</div>
                             <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 10px;">
-                                $${propuesta.precio.toLocaleString()}
+                                ${propuesta.moneda === 'CLP' ? '$' : propuesta.moneda === 'USD' ? 'US$' : 'UF'}${propuesta.precio.toLocaleString()}
                             </div>
                             <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
                                 De: ${vendedor.name || vendedor.email}
@@ -5432,6 +6272,30 @@
                 chatsActivos: data.chats.filter(c => c.participantes.includes(currentUser.id) && c.activo).length
             };
             
+            // Determinar estado de suscripción
+            let estadoSuscripcion = '';
+            if (currentUser.role === 'vendedor') {
+                if (currentUser.subscription === 'premium') {
+                    if (currentUser.subscriptionExpires) {
+                        const fechaExp = new Date(currentUser.subscriptionExpires);
+                        const diasRestantes = Math.ceil((fechaExp - new Date()) / (1000 * 60 * 60 * 24));
+                        estadoSuscripcion = `⭐ Premium (expira en ${diasRestantes} días)`;
+                    } else {
+                        estadoSuscripcion = '⭐ Premium (permanente)';
+                    }
+                } else if (currentUser.trialUsed && currentUser.subscriptionExpires) {
+                    const fechaExp = new Date(currentUser.subscriptionExpires);
+                    if (fechaExp > new Date()) {
+                        const diasRestantes = Math.ceil((fechaExp - new Date()) / (1000 * 60 * 60 * 24));
+                        estadoSuscripcion = `🆓 Free (prueba premium por ${diasRestantes} días más)`;
+                    } else {
+                        estadoSuscripcion = '🆓 Free (prueba expirada)';
+                    }
+                } else {
+                    estadoSuscripcion = '🆓 Free';
+                }
+            }
+            
             container.innerHTML = `
                 <div style="display: flex; flex-direction: column; gap: 30px;">
                     <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
@@ -5446,11 +6310,18 @@
                                     ${currentUser.role === 'comprador' ? 'Comprador' : 
                                      currentUser.role === 'vendedor' ? 'Vendedor' : 'Administrador'}
                                 </span>
+                                ${currentUser.role === 'vendedor' ? `
+                                    <span class="badge ${currentUser.subscription === 'premium' ? 'badge-premium' : 'badge-free'}">
+                                        ${estadoSuscripcion}
+                                    </span>
+                                ` : ''}
                                 <span class="badge badge-light">⭐ ${currentUser.rating || 5.0}/5.0</span>
                                 <span class="badge badge-light">Miembro desde: ${new Date(currentUser.createdAt).toLocaleDateString()}</span>
                             </div>
                             <div style="color: var(--gray);">
                                 <div style="margin-bottom: 5px;"><strong>Email:</strong> ${currentUser.email}</div>
+                                <div style="margin-bottom: 5px;"><strong>Teléfono:</strong> ${currentUser.phone}</div>
+                                <div style="margin-bottom: 5px;"><strong>Moneda preferida:</strong> ${currentUser.monedaPreferida}</div>
                                 ${currentUser.role === 'vendedor' && currentUser.categorias && currentUser.categorias.length > 0 ? `
                                     <div style="margin-top: 10px;">
                                         <strong>Especializado en:</strong>
@@ -5478,6 +6349,12 @@
                             <div class="meta-label">Chats Activos</div>
                             <div class="meta-value">${userStats.chatsActivos}</div>
                         </div>
+                        ${currentUser.role === 'comprador' && currentUser.subscription === 'free' ? `
+                            <div class="meta-card">
+                                <div class="meta-label">Límite Avisos</div>
+                                <div class="meta-value">${userStats.avisosActivos}/${data.systemConfig.freeAvisoLimit}</div>
+                            </div>
+                        ` : ''}
                     </div>
                     
                     ${currentUser.role === 'vendedor' ? `
@@ -5551,7 +6428,344 @@
         }
 
         function editarPerfil() {
-            showToast('Función de edición completa de perfil en desarrollo', 'info');
+            const data = getData();
+            const user = data.users.find(u => u.id === currentUser.id);
+            
+            document.getElementById('edit-nombre').value = user.name;
+            document.getElementById('edit-telefono').value = user.phone;
+            document.getElementById('edit-email').value = user.email;
+            document.getElementById('edit-moneda').value = user.monedaPreferida || 'CLP';
+            
+            // Seleccionar moneda actual
+            document.querySelectorAll('#edit-profile-modal .moneda-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.id === `moneda-${user.monedaPreferida?.toLowerCase()}`) {
+                    opt.classList.add('active');
+                }
+            });
+            
+            showModal('edit-profile-modal');
+        }
+
+        function guardarPerfil(event) {
+            event.preventDefault();
+            
+            const data = getData();
+            const user = data.users.find(u => u.id === currentUser.id);
+            
+            if (!user) {
+                showToast('Error al guardar el perfil', 'error');
+                return;
+            }
+            
+            user.name = document.getElementById('edit-nombre').value;
+            user.phone = document.getElementById('edit-telefono').value;
+            user.email = document.getElementById('edit-email').value;
+            user.monedaPreferida = document.getElementById('edit-moneda').value;
+            
+            // Actualizar información en avisos existentes
+            data.avisos.forEach(aviso => {
+                if (aviso.userId === user.id) {
+                    aviso.infoPrivada.nombreComprador = user.name;
+                    aviso.infoPrivada.email = user.email;
+                    aviso.infoPrivada.telefono = user.phone;
+                }
+            });
+            
+            saveData(data);
+            
+            // Actualizar currentUser
+            currentUser.name = user.name;
+            currentUser.phone = user.phone;
+            currentUser.email = user.email;
+            currentUser.monedaPreferida = user.monedaPreferida;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            closeModal('edit-profile-modal');
+            showToast('Perfil actualizado exitosamente', 'success');
+            
+            loadProfile();
+        }
+
+        function cambiarContraseña(event) {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (newPassword !== confirmPassword) {
+                showToast('Las contraseñas no coinciden', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showToast('La nueva contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
+            const data = getData();
+            const user = data.users.find(u => u.id === currentUser.id);
+            
+            if (user.password !== currentPassword) {
+                showToast('La contraseña actual es incorrecta', 'error');
+                return;
+            }
+            
+            user.password = newPassword;
+            saveData(data);
+            
+            currentUser.password = newPassword;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            closeModal('change-password-modal');
+            showToast('Contraseña cambiada exitosamente', 'success');
+        }
+
+        function solicitarCodigoRecuperacion() {
+            const email = document.getElementById('recover-email').value;
+            const data = getData();
+            const user = data.users.find(u => u.email === email);
+            
+            if (!user) {
+                showToast('No existe una cuenta con este email', 'error');
+                return;
+            }
+            
+            // Generar código de recuperación
+            const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+            const expires = new Date(Date.now() + 3600000); // 1 hora
+            
+            data.recoveryCodes.push({
+                id: data.nextIds.recoveryCodes++,
+                email: email,
+                code: codigo,
+                expires: expires.toISOString(),
+                used: false
+            });
+            
+            saveData(data);
+            
+            // Mostrar código (en producción se enviaría por email)
+            showToast(`Código de recuperación: ${codigo} (válido por 1 hora)`, 'success');
+            
+            document.getElementById('recover-step-1').classList.add('hidden');
+            document.getElementById('recover-step-2').classList.remove('hidden');
+        }
+
+        function verificarCodigoRecuperacion() {
+            const email = document.getElementById('recover-email').value;
+            const code = document.getElementById('recover-code').value;
+            const newPassword = document.getElementById('recover-new-password').value;
+            
+            if (newPassword.length < 6) {
+                showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
+            const data = getData();
+            const recoveryCode = data.recoveryCodes.find(rc => 
+                rc.email === email && 
+                rc.code === code && 
+                !rc.used && 
+                new Date(rc.expires) > new Date()
+            );
+            
+            if (!recoveryCode) {
+                showToast('Código inválido o expirado', 'error');
+                return;
+            }
+            
+            const user = data.users.find(u => u.email === email);
+            if (!user) {
+                showToast('Error al recuperar la cuenta', 'error');
+                return;
+            }
+            
+            user.password = newPassword;
+            recoveryCode.used = true;
+            
+            saveData(data);
+            
+            closeModal('recover-password-modal');
+            showToast('Contraseña restablecida exitosamente. Puedes iniciar sesión.', 'success');
+        }
+
+        // ============================================
+        // FUNCIONES DE SUSCRIPCIONES
+        // ============================================
+        function loadSubscriptionPage() {
+            const data = getData();
+            const container = document.getElementById('subscription-content');
+            
+            const esVendedor = currentUser.role === 'vendedor';
+            const esAdmin = currentUser.role === 'admin';
+            
+            let contenido = '';
+            
+            if (esAdmin) {
+                contenido = `
+                    <h2 style="margin-bottom: 30px;">Gestión de Suscripciones</h2>
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px;">Configuración del Sistema</h3>
+                        <div class="filter-row">
+                            <div class="form-group">
+                                <label for="admin-dias-prueba">Días de prueba gratis</label>
+                                <input type="number" id="admin-dias-prueba" class="form-control" value="${data.systemConfig.trialDays}" min="0" max="30">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-limite-avisos">Límite avisos gratuitos</label>
+                                <input type="number" id="admin-limite-avisos" class="form-control" value="${data.systemConfig.freeAvisoLimit}" min="1" max="10">
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div class="form-group">
+                                <label>Precio Premium (CLP)</label>
+                                <input type="number" id="admin-precio-clp" class="form-control" value="${data.systemConfig.premiumPrice.CLP}" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Precio Premium (USD)</label>
+                                <input type="number" id="admin-precio-usd" class="form-control" value="${data.systemConfig.premiumPrice.USD}" min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Precio Premium (UF)</label>
+                                <input type="number" id="admin-precio-uf" class="form-control" value="${data.systemConfig.premiumPrice.UF}" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="guardarConfiguracion()">
+                                💾 Guardar Configuración
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (esVendedor) {
+                const esPremium = currentUser.subscription === 'premium';
+                const tieneTrial = currentUser.trialUsed && currentUser.subscriptionExpires && new Date(currentUser.subscriptionExpires) > new Date();
+                
+                contenido = `
+                    <h2 style="margin-bottom: 30px;">Planes de Suscripción</h2>
+                    
+                    <div class="subscription-card subscription-free">
+                        <div class="subscription-header">
+                            <div>
+                                <h3 style="margin: 0;">Plan Free</h3>
+                                <div style="color: var(--gray); margin-top: 5px;">Para comenzar</div>
+                            </div>
+                            <div class="subscription-price">Gratis</div>
+                        </div>
+                        <ul class="subscription-features">
+                            <li><i>✅</i> Ver lista de avisos básica</li>
+                            <li><i>✅</i> Información limitada de compradores</li>
+                            <li><i>❌</i> Sin datos de contacto</li>
+                            <li><i>❌</i> Sin presupuestos exactos</li>
+                            <li><i>❌</i> No puede enviar propuestas</li>
+                            <li><i>❌</i> No puede iniciar chats</li>
+                        </ul>
+                        ${!esPremium ? `
+                            <div style="text-align: center; padding: 20px; background: var(--primary-light); border-radius: var(--border-radius-sm); margin: 20px 0;">
+                                <strong>Tu plan actual</strong>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="subscription-card subscription-premium">
+                        <div class="subscription-header">
+                            <div>
+                                <h3 style="margin: 0;">Plan Premium</h3>
+                                <div style="color: var(--gray); margin-top: 5px;">Para profesionales</div>
+                            </div>
+                            <div class="subscription-price">
+                                ${data.systemConfig.premiumPrice.CLP.toLocaleString()} CLP/mes
+                            </div>
+                        </div>
+                        <ul class="subscription-features">
+                            <li><i>✅</i> Ver información completa de compradores</li>
+                            <li><i>✅</i> Nombres y datos de contacto</li>
+                            <li><i>✅</i> Presupuestos exactos en moneda original</li>
+                            <li><i>✅</i> Direcciones específicas</li>
+                            <li><i>✅</i> Enviar propuestas directamente</li>
+                            <li><i>✅</i> Iniciar chats con compradores</li>
+                            <li><i>✅</i> Acceso a funciones avanzadas</li>
+                        </ul>
+                        ${esPremium ? `
+                            <div style="text-align: center; padding: 20px; background: rgba(255, 215, 0, 0.1); border-radius: var(--border-radius-sm); margin: 20px 0;">
+                                <strong>⭐ Tu plan actual</strong>
+                                ${currentUser.subscriptionExpires ? `
+                                    <div style="margin-top: 10px; font-size: 0.9rem;">
+                                        Expira: ${new Date(currentUser.subscriptionExpires).toLocaleDateString()}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        ` : `
+                            <div style="text-align: center; margin-top: 30px;">
+                                <button class="btn btn-warning btn-lg" onclick="solicitarUpgrade()">
+                                    ⭐ Solicitar Upgrade a Premium
+                                </button>
+                                <div style="font-size: 0.9rem; color: var(--gray); margin-top: 15px;">
+                                    El administrador habilitará manualmente tu cuenta premium
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                    
+                    ${tieneTrial ? `
+                        <div class="card" style="margin-top: 30px; background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
+                            <h3 style="margin-bottom: 15px;">🆓 Prueba Premium Activa</h3>
+                            <p>Actualmente estás disfrutando de una prueba premium gratuita por ${data.systemConfig.trialDays} días.</p>
+                            <div style="margin-top: 15px;">
+                                <strong>Expira:</strong> ${new Date(currentUser.subscriptionExpires).toLocaleDateString()}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+            } else {
+                contenido = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💰</div>
+                        <h3>Solo para Vendedores</h3>
+                        <p>Los planes de suscripción están disponibles solo para usuarios vendedores.</p>
+                        <button class="btn btn-primary" onclick="showView('dashboard')">
+                            ← Volver al Dashboard
+                        </button>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = contenido;
+        }
+
+        function solicitarUpgrade() {
+            if (currentUser.role !== 'vendedor') {
+                showToast('Solo los vendedores pueden solicitar upgrade', 'error');
+                return;
+            }
+            
+            if (currentUser.subscription === 'premium') {
+                showToast('Ya tienes cuenta premium', 'info');
+                return;
+            }
+            
+            const data = getData();
+            
+            // Notificar al administrador
+            const admin = data.users.find(u => u.role === 'admin');
+            if (admin) {
+                data.notifications.push({
+                    id: data.nextIds.notifications++,
+                    userId: admin.id,
+                    type: "solicitud_upgrade",
+                    title: "📈 Solicitud de Upgrade a Premium",
+                    message: `${currentUser.name} (${currentUser.email}) solicita upgrade a cuenta premium`,
+                    data: { userId: currentUser.id },
+                    read: false,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            saveData(data);
+            
+            showToast('Solicitud enviada al administrador. Te contactaremos pronto.', 'success');
         }
 
         // ============================================
@@ -5569,32 +6783,70 @@
             document.getElementById('admin-total-users').textContent = data.users.length;
             document.getElementById('admin-total-avisos').textContent = data.avisos.length;
             document.getElementById('admin-total-propuestas').textContent = data.propuestas.length;
-            document.getElementById('admin-total-chats').textContent = data.chats.length;
+            document.getElementById('admin-premium-users').textContent = data.users.filter(u => u.role === 'vendedor' && u.subscription === 'premium').length;
             
-            const usersList = document.getElementById('admin-users-list');
-            usersList.innerHTML = data.users.map(user => {
-                const categoriasTexto = user.categorias && user.categorias.length > 0 ? 
-                    user.categorias.map(cat => categoriasNombres[cat] || cat).join(', ') : 
+            // Lista de vendedores
+            const vendedoresList = document.getElementById('admin-vendedores-list');
+            const vendedores = data.users.filter(u => u.role === 'vendedor');
+            
+            vendedoresList.innerHTML = vendedores.map(vendedor => {
+                const categoriasTexto = vendedor.categorias && vendedor.categorias.length > 0 ? 
+                    vendedor.categorias.map(cat => categoriasNombres[cat] || cat).join(', ') : 
                     'Sin categorías';
+                
+                const propuestasCount = data.propuestas.filter(p => p.vendedorId === vendedor.id).length;
+                
+                let estadoSuscripcion = '';
+                if (vendedor.subscription === 'premium') {
+                    if (vendedor.subscriptionExpires) {
+                        const fechaExp = new Date(vendedor.subscriptionExpires);
+                        const diasRestantes = Math.ceil((fechaExp - new Date()) / (1000 * 60 * 60 * 24));
+                        estadoSuscripcion = `Premium (${diasRestantes}d)`;
+                    } else {
+                        estadoSuscripcion = 'Premium';
+                    }
+                } else if (vendedor.trialUsed && vendedor.subscriptionExpires && new Date(vendedor.subscriptionExpires) > new Date()) {
+                    const fechaExp = new Date(vendedor.subscriptionExpires);
+                    const diasRestantes = Math.ceil((fechaExp - new Date()) / (1000 * 60 * 60 * 24));
+                    estadoSuscripcion = `Free (prueba: ${diasRestantes}d)`;
+                } else {
+                    estadoSuscripcion = 'Free';
+                }
                 
                 return `
                     <tr>
-                        <td>${user.id}</td>
-                        <td>${user.email}</td>
-                        <td>${user.name || 'Sin nombre'}</td>
-                        <td><span class="badge ${user.role === 'comprador' ? 'badge-info' : user.role === 'vendedor' ? 'badge-success' : 'badge-warning'}">${user.role}</span></td>
-                        <td>${categoriasTexto}</td>
-                        <td>${new Date(user.createdAt).toLocaleDateString()}</td>
-                        <td>${user.totalAvisos || 0}</td>
-                        <td>${user.totalPropuestas || 0}</td>
+                        <td>${vendedor.id}</td>
+                        <td>${vendedor.email}</td>
+                        <td>${vendedor.name}</td>
                         <td>
-                            <button class="btn btn-xs btn-outline" onclick="adminEditarUsuario(${user.id})">Editar</button>
-                            ${user.id !== currentUser.id ? `<button class="btn btn-xs btn-danger" onclick="adminEliminarUsuario(${user.id})">Eliminar</button>` : ''}
+                            <span class="badge ${vendedor.subscription === 'premium' ? 'badge-premium' : 'badge-free'}">
+                                ${estadoSuscripcion}
+                            </span>
+                        </td>
+                        <td>${categoriasTexto}</td>
+                        <td>${new Date(vendedor.createdAt).toLocaleDateString()}</td>
+                        <td>${propuestasCount}</td>
+                        <td class="admin-tools">
+                            ${vendedor.subscription !== 'premium' ? `
+                                <button class="admin-action-btn btn-enable" onclick="habilitarPremium(${vendedor.id})">
+                                    Habilitar Premium
+                                </button>
+                            ` : `
+                                <button class="admin-action-btn btn-disable" onclick="deshabilitarPremium(${vendedor.id})">
+                                    Deshabilitar Premium
+                                </button>
+                            `}
+                            ${vendedor.id !== currentUser.id ? `
+                                <button class="admin-action-btn btn-danger" onclick="adminEliminarUsuario(${vendedor.id})">
+                                    Eliminar
+                                </button>
+                            ` : ''}
                         </td>
                     </tr>
                 `;
             }).join('');
             
+            // Lista de avisos
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
@@ -5606,7 +6858,7 @@
                         <td>${aviso.titulo.substring(0, 30)}...</td>
                         <td>${categoriaTexto}</td>
                         <td>${user?.email || 'Usuario eliminado'}</td>
-                        <td>${aviso.moneda === 'USD' ? '$' : aviso.moneda === 'CLP' ? '$' : 'UF'}${aviso.presupuesto.toLocaleString()}</td>
+                        <td>${aviso.moneda === 'CLP' ? '$' : aviso.moneda === 'USD' ? 'US$' : 'UF'}${aviso.presupuesto.toLocaleString()}</td>
                         <td><span class="badge ${aviso.estado === 'abierto' ? 'badge-success' : aviso.estado === 'negociando' ? 'badge-warning' : aviso.estado === 'cerrado' ? 'badge-info' : 'badge-danger'}">${aviso.estado}</span></td>
                         <td>${aviso.propuestas?.length || 0}</td>
                         <td>
@@ -5617,25 +6869,100 @@
                 `;
             }).join('');
             
-            const propuestasList = document.getElementById('admin-propuestas-list');
-            propuestasList.innerHTML = data.propuestas.map(propuesta => {
-                const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
-                const vendedor = data.users.find(u => u.id === propuesta.vendedorId);
-                return `
-                    <tr>
-                        <td>${propuesta.id}</td>
-                        <td>${aviso?.titulo.substring(0, 30) || 'Aviso eliminado'}...</td>
-                        <td>${vendedor?.email || 'Usuario eliminado'}</td>
-                        <td>$${propuesta.precio.toLocaleString()}</td>
-                        <td><span class="badge ${propuesta.estado === 'pendiente' ? 'badge-warning' : propuesta.estado === 'aceptada' ? 'badge-success' : propuesta.estado === 'rechazada' ? 'badge-danger' : 'badge-info'}">${propuesta.estado}</span></td>
-                        <td>${new Date(propuesta.createdAt).toLocaleDateString()}</td>
-                        <td>
-                            <button class="btn btn-xs btn-outline" onclick="adminVerPropuesta(${propuesta.id})">Ver</button>
-                            <button class="btn btn-xs btn-danger" onclick="adminEliminarPropuesta(${propuesta.id})">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            // Cargar configuración
+            document.getElementById('admin-dias-prueba').value = data.systemConfig.trialDays;
+            document.getElementById('admin-limite-avisos').value = data.systemConfig.freeAvisoLimit;
+            document.getElementById('admin-precio-clp').value = data.systemConfig.premiumPrice.CLP;
+            document.getElementById('admin-precio-usd').value = data.systemConfig.premiumPrice.USD;
+            document.getElementById('admin-precio-uf').value = data.systemConfig.premiumPrice.UF;
+        }
+
+        function habilitarPremium(userId) {
+            if (!confirm('¿Habilitar cuenta premium para este vendedor?')) return;
+            
+            const data = getData();
+            const user = data.users.find(u => u.id === userId);
+            
+            if (!user) return;
+            
+            user.subscription = 'premium';
+            user.subscriptionExpires = new Date(Date.now() + 30 * 86400000).toISOString(); // 30 días
+            user.trialUsed = true;
+            
+            // Notificar al usuario
+            data.notifications.push({
+                id: data.nextIds.notifications++,
+                userId: user.id,
+                type: "premium_habilitado",
+                title: "⭐ ¡Cuenta Premium Habilitada!",
+                message: "Tu cuenta ha sido actualizada a Premium. Ahora tienes acceso completo a todas las funciones.",
+                data: { subscription: 'premium' },
+                read: false,
+                createdAt: new Date().toISOString()
+            });
+            
+            saveData(data);
+            
+            // Si es el usuario actual, actualizar en tiempo real
+            if (currentUser.id === userId) {
+                currentUser.subscription = 'premium';
+                currentUser.subscriptionExpires = user.subscriptionExpires;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showUserUI();
+            }
+            
+            showToast(`Cuenta premium habilitada para ${user.email}`, 'success');
+            loadAdminPanel();
+        }
+
+        function deshabilitarPremium(userId) {
+            if (!confirm('¿Deshabilitar cuenta premium para este vendedor?')) return;
+            
+            const data = getData();
+            const user = data.users.find(u => u.id === userId);
+            
+            if (!user) return;
+            
+            user.subscription = 'free';
+            user.subscriptionExpires = null;
+            
+            // Notificar al usuario
+            data.notifications.push({
+                id: data.nextIds.notifications++,
+                userId: user.id,
+                type: "premium_deshabilitado",
+                title: "Cuenta Premium Deshabilitada",
+                message: "Tu cuenta premium ha sido deshabilitada. Contacta al administrador para más información.",
+                data: { subscription: 'free' },
+                read: false,
+                createdAt: new Date().toISOString()
+            });
+            
+            saveData(data);
+            
+            // Si es el usuario actual, actualizar en tiempo real
+            if (currentUser.id === userId) {
+                currentUser.subscription = 'free';
+                currentUser.subscriptionExpires = null;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showUserUI();
+            }
+            
+            showToast(`Cuenta premium deshabilitada para ${user.email}`, 'success');
+            loadAdminPanel();
+        }
+
+        function guardarConfiguracion() {
+            const data = getData();
+            
+            data.systemConfig.trialDays = parseInt(document.getElementById('admin-dias-prueba').value);
+            data.systemConfig.freeAvisoLimit = parseInt(document.getElementById('admin-limite-avisos').value);
+            data.systemConfig.premiumPrice.CLP = parseInt(document.getElementById('admin-precio-clp').value);
+            data.systemConfig.premiumPrice.USD = parseFloat(document.getElementById('admin-precio-usd').value);
+            data.systemConfig.premiumPrice.UF = parseFloat(document.getElementById('admin-precio-uf').value);
+            
+            saveData(data);
+            showToast('Configuración guardada exitosamente', 'success');
         }
 
         function adminEditarUsuario(userId) {
@@ -5703,54 +7030,11 @@
             loadAdminPanel();
         }
 
-        function adminVerPropuesta(propuestaId) {
-            const data = getData();
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
-            if (propuesta) {
-                currentAvisoId = propuesta.avisoId;
-                currentPropuestaId = propuestaId;
-                showView('detalle-aviso');
-            }
-        }
-
-        function adminEliminarPropuesta(propuestaId) {
-            if (!confirm('¿Estás seguro de eliminar esta propuesta? Esta acción también eliminará el chat asociado.')) {
-                return;
-            }
-            
-            const data = getData();
-            const propuesta = data.propuestas.find(p => p.id === propuestaId);
-            
-            if (!propuesta) return;
-            
-            data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
-            
-            data.notifications = data.notifications.filter(n => 
-                !n.data.propuestaId || n.data.propuestaId !== propuestaId
-            );
-            
-            const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
-            if (aviso && aviso.propuestas) {
-                aviso.propuestas = aviso.propuestas.filter(id => id !== propuestaId);
-            }
-            
-            data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
-            
-            saveData(data);
-            showToast('Propuesta eliminada exitosamente', 'success');
-            
-            loadAdminPanel();
-        }
-
         // ============================================
         // FUNCIONES UTILITARIAS
         // ============================================
         function scrollToFeatures() {
             document.getElementById('features-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showPasswordReset() {
-            showToast('Función de recuperación de contraseña en desarrollo', 'info');
         }
 
         function generarReporte() {
@@ -5761,6 +7045,8 @@
                 totalUsuarios: data.users.length,
                 totalCompradores: data.users.filter(u => u.role === 'comprador').length,
                 totalVendedores: data.users.filter(u => u.role === 'vendedor').length,
+                vendedoresPremium: data.users.filter(u => u.role === 'vendedor' && u.subscription === 'premium').length,
+                vendedoresFree: data.users.filter(u => u.role === 'vendedor' && u.subscription === 'free').length,
                 totalAvisos: data.avisos.length,
                 avisosActivos: data.avisos.filter(a => a.estado === 'abierto').length,
                 avisosNegociando: data.avisos.filter(a => a.estado === 'negociando').length,
@@ -5787,6 +7073,8 @@
                 👥 Usuarios: ${reporte.totalUsuarios}
                   • Compradores: ${reporte.totalCompradores}
                   • Vendedores: ${reporte.totalVendedores}
+                    - Premium: ${reporte.vendedoresPremium}
+                    - Free: ${reporte.vendedoresFree}
                 
                 📝 Avisos: ${reporte.totalAvisos}
                   • Activos: ${reporte.avisosActivos}
@@ -5830,12 +7118,15 @@
                     propuestas: [],
                     chats: [],
                     notifications: [],
+                    recoveryCodes: [],
+                    systemConfig: data.systemConfig,
                     nextIds: {
                         users: adminUsers.length + 1,
                         avisos: 1,
                         propuestas: 1,
                         chats: 1,
-                        notifications: 1
+                        notifications: 1,
+                        recoveryCodes: 1
                     }
                 };
                 
