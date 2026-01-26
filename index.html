@@ -841,7 +841,7 @@
             flex-wrap: wrap;
         }
 
-        /* SECCIÓN CHAT EN DETALLE */
+        /* SECCIÓN CHAT EN DETALLE - CORREGIDA */
         .chat-section {
             background: white;
             border-radius: var(--border-radius);
@@ -946,6 +946,7 @@
             line-height: 1.5;
         }
 
+        /* CORRECCIÓN: ÁREA DE INPUT DEL CHAT MEJORADA */
         .chat-input-area {
             padding: 20px;
             background: white;
@@ -953,6 +954,7 @@
             display: flex;
             gap: 15px;
             align-items: center;
+            position: relative;
         }
 
         .chat-input {
@@ -968,6 +970,15 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        /* CORRECCIÓN: ACCIONES DEL CHAT VISIBLES */
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            position: relative;
+            z-index: 10;
         }
 
         /* ESTADOS */
@@ -992,7 +1003,7 @@
             font-size: 1.2rem;
         }
 
-        /* FILTROS - NUEVOS ESTILOS ESPECÍFICOS */
+        /* FILTROS */
         .filters {
             background: white;
             border-radius: var(--border-radius);
@@ -1264,7 +1275,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ESTILOS PARA CÁMARA - MEJORADOS */
+        /* ESTILOS PARA CÁMARA */
         .camera-modal {
             max-width: 95%;
             max-height: 95vh;
@@ -1381,13 +1392,6 @@
             color: #4cc9f0;
             text-decoration: underline;
             word-break: break-all;
-        }
-
-        /* BOTONES DE ACCIÓN EN CHAT */
-        .chat-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
         }
 
         /* PREVIEW DE FOTOS EN CHAT */
@@ -1649,7 +1653,7 @@
                         </div>
                     </div>
                     
-                    <!-- SELECCIÓN DE CATEGORÍAS PARA VENDEDORES (visible sólo cuando se selecciona vendedor) -->
+                    <!-- SELECCIÓN DE CATEGORÍAS PARA VENDEDORES -->
                     <div id="vendedor-categorias" class="form-group hidden">
                         <label>¿En qué categorías quieres recibir avisos? (múltiple opción)</label>
                         <div class="filter-options">
@@ -1739,7 +1743,7 @@
             </div>
         </section>
 
-        <!-- AVISOS - VISTA PRINCIPAL PARA VENDEDORES -->
+        <!-- AVISOS -->
         <section id="avisos" class="view">
             <div class="dashboard-header">
                 <div class="dashboard-title">
@@ -2587,7 +2591,7 @@
                         </button>
                     </div>
 
-                    <!-- Botón de enviar foto (oculto inicialmente) -->
+                    <!-- Botón de enviar foto -->
                     <div id="camera-send-container" style="display: none; margin-top: 20px; text-align: center;">
                         <button type="button" class="btn btn-primary" onclick="enviarFotoDesdeCamara()" style="padding: 12px 30px;">
                             <span>📤</span> Enviar Foto
@@ -2626,13 +2630,13 @@
         
         // Variables para manejo de cámara
         let cameraStream = null;
-        let currentCamera = 'environment'; // 'environment' (trasera) o 'user' (frontal)
+        let currentCamera = 'environment';
         let flashOn = false;
         let selectedPhoto = null;
         let currentChatIdForCamera = null;
 
         // ============================================
-        // DATOS INICIALES DE EJEMPLO (MEJORADOS CON CATEGORÍAS)
+        // DATOS INICIALES DE EJEMPLO
         // ============================================
         const initialData = {
             users: [
@@ -2647,7 +2651,7 @@
                     rating: 4.8,
                     totalAvisos: 3,
                     totalPropuestas: 0,
-                    categorias: [] // Compradores no tienen categorías
+                    categorias: []
                 },
                 { 
                     id: 2, 
@@ -2660,7 +2664,7 @@
                     rating: 4.9,
                     totalAvisos: 0,
                     totalPropuestas: 5,
-                    categorias: ["inmueble"] // ESPECIALIZADA EN INMUEBLES
+                    categorias: ["inmueble"]
                 },
                 { 
                     id: 3, 
@@ -2686,7 +2690,7 @@
                     rating: 4.5,
                     totalAvisos: 0,
                     totalPropuestas: 8,
-                    categorias: ["auto", "moto"] // ESPECIALIZADO EN VEHÍCULOS
+                    categorias: ["auto", "moto"]
                 }
             ],
             avisos: [
@@ -2887,12 +2891,11 @@
         }
 
         // ============================================
-        // FUNCIONES DE AUTENTICACIÓN (CON CATEGORÍAS)
+        // FUNCIONES DE AUTENTICACIÓN
         // ============================================
         function toggleCategoriaRegistro(element, categoria) {
             element.classList.toggle('active');
             
-            // Actualizar el campo oculto con las categorías seleccionadas
             const categoriasSeleccionadas = [];
             document.querySelectorAll('#vendedor-categorias .filter-option.active').forEach(el => {
                 const text = el.textContent.trim();
@@ -2913,25 +2916,21 @@
             const categoriasInput = document.getElementById('register-categorias').value;
             const data = getData();
             
-            // Verificar si el usuario ya existe
             if (data.users.find(u => u.email === email)) {
                 showToast('Este email ya está registrado', 'error');
                 return;
             }
             
-            // Procesar categorías
             let categorias = [];
             if (role === 'vendedor') {
                 if (categoriasInput) {
                     categorias = categoriasInput.split(',').filter(c => c.trim());
                 }
-                // Si no seleccionó ninguna, asignar todas por defecto
                 if (categorias.length === 0) {
                     categorias = ["inmueble", "auto", "moto"];
                 }
             }
             
-            // Colores para avatares
             const avatarColors = ['#4361ee', '#7209b7', '#4cc9f0', '#f72585', '#ef233c', '#7209b7'];
             const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
             
@@ -2954,7 +2953,6 @@
             
             showToast(`¡Cuenta creada exitosamente! Bienvenid@ a MarketConnect`, 'success');
             
-            // Auto-login después del registro
             currentUser = newUser;
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             showUserUI();
@@ -2975,7 +2973,6 @@
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 showUserUI();
                 
-                // Redirigir según rol
                 if (user.role === 'comprador') {
                     showView('avisos');
                 } else if (user.role === 'vendedor') {
@@ -3007,7 +3004,6 @@
                 currentUser = JSON.parse(userData);
                 showUserUI();
                 
-                // Redirigir según rol
                 if (currentUser.role === 'comprador') {
                     showView('avisos');
                 } else if (currentUser.role === 'vendedor') {
@@ -3026,12 +3022,10 @@
         // FUNCIONES DE INTERFAZ
         // ============================================
         function showView(viewId) {
-            // Ocultar todas las vistas
             document.querySelectorAll('.view').forEach(view => {
                 view.classList.remove('active');
             });
             
-            // Actualizar navegación activa
             document.querySelectorAll('.desktop-nav a').forEach(a => {
                 a.classList.remove('active-nav');
             });
@@ -3040,12 +3034,10 @@
                 item.classList.remove('active');
             });
             
-            // Mostrar la vista solicitada
             const targetView = document.getElementById(viewId);
             if (targetView) {
                 targetView.classList.add('active');
                 
-                // Marcar navegación activa
                 if (viewId === 'dashboard') {
                     document.getElementById('nav-dashboard').classList.add('active-nav');
                 } else if (viewId === 'avisos') {
@@ -3061,7 +3053,6 @@
                 }
             }
             
-            // Actualizar título dinámico
             if (currentUser) {
                 if (viewId === 'dashboard') {
                     document.getElementById('dashboard-title-text').textContent = 
@@ -3081,13 +3072,11 @@
                     loadPropuestas();
                 }
                 
-                // Mostrar/ocultar botones según rol
                 const createBtn1 = document.getElementById('create-aviso-btn');
                 const createBtn2 = document.getElementById('create-aviso-btn-2');
                 if (createBtn1) createBtn1.classList.toggle('hidden', currentUser?.role !== 'comprador');
                 if (createBtn2) createBtn2.classList.toggle('hidden', currentUser?.role !== 'comprador');
                 
-                // Mostrar selección de categorías en registro si es vendedor
                 const roleRadios = document.querySelectorAll('input[name="role"]');
                 if (roleRadios.length > 0) {
                     roleRadios.forEach(radio => {
@@ -3103,7 +3092,6 @@
                 }
             }
             
-            // Cargar datos específicos de la vista
             switch(viewId) {
                 case 'dashboard':
                     updateDashboard();
@@ -3136,20 +3124,17 @@
         }
 
         function showUserUI() {
-            // Mostrar elementos para usuario autenticado
             document.getElementById('login-btn').classList.add('hidden');
             document.getElementById('logout-btn').classList.remove('hidden');
             document.getElementById('user-info').classList.remove('hidden');
             document.getElementById('user-avatar').classList.remove('hidden');
             document.getElementById('user-avatar-container').classList.remove('hidden');
             
-            // Actualizar info de usuario
             const displayName = currentUser.name || currentUser.email.split('@')[0];
             const firstLetter = displayName.charAt(0).toUpperCase();
             document.getElementById('user-avatar').textContent = firstLetter;
             document.getElementById('user-avatar').style.background = currentUser.avatarColor;
             
-            // Actualizar dropdown
             document.getElementById('dropdown-avatar').textContent = firstLetter;
             document.getElementById('dropdown-avatar').style.background = currentUser.avatarColor;
             document.getElementById('dropdown-email').textContent = currentUser.email;
@@ -3160,7 +3145,6 @@
                 (currentUser.role === 'comprador' ? 'badge-info' : 
                  currentUser.role === 'vendedor' ? 'badge-success' : 'badge-warning');
             
-            // Actualizar badge de rol
             document.getElementById('user-role-badge').textContent = 
                 currentUser.role === 'comprador' ? 'Comprador' : 
                 currentUser.role === 'vendedor' ? 'Vendedor' : 'Admin';
@@ -3168,7 +3152,6 @@
                 (currentUser.role === 'comprador' ? 'badge-info' : 
                  currentUser.role === 'vendedor' ? 'badge-success' : 'badge-warning');
             
-            // Mostrar navegación según rol
             document.getElementById('nav-dashboard').classList.remove('hidden');
             document.getElementById('nav-avisos').classList.remove('hidden');
             document.getElementById('nav-propuestas').classList.remove('hidden');
@@ -3179,15 +3162,12 @@
                 document.getElementById('nav-admin').classList.remove('hidden');
             }
             
-            // Mostrar menú móvil
             document.querySelector('.mobile-nav').classList.remove('hidden');
             
-            // Actualizar notificaciones
             updateNotificationBadges();
         }
 
         function hideUserUI() {
-            // Ocultar elementos de usuario autenticado
             document.getElementById('login-btn').classList.remove('hidden');
             document.getElementById('logout-btn').classList.add('hidden');
             document.getElementById('user-info').classList.add('hidden');
@@ -3195,13 +3175,11 @@
             document.getElementById('user-avatar-container').classList.add('hidden');
             document.getElementById('user-dropdown').classList.add('hidden');
             
-            // Ocultar navegación
             document.querySelectorAll('.desktop-nav a').forEach(a => {
                 if (!a.onclick || a.onclick.toString().includes('landing')) return;
                 a.classList.add('hidden');
             });
             
-            // Ocultar menú móvil
             document.querySelector('.mobile-nav').classList.add('hidden');
         }
 
@@ -3209,7 +3187,6 @@
             const dropdown = document.getElementById('user-dropdown');
             dropdown.classList.toggle('hidden');
             
-            // Cerrar al hacer click fuera
             if (!dropdown.classList.contains('hidden')) {
                 setTimeout(() => {
                     document.addEventListener('click', closeUserMenuOnClickOutside);
@@ -3228,7 +3205,6 @@
         }
 
         function showToast(message, type = 'info') {
-            // Crear toast
             const toast = document.createElement('div');
             toast.style.cssText = `
                 position: fixed;
@@ -3252,7 +3228,6 @@
             toast.innerHTML = `<span style="font-size: 1.2rem;">${icon}</span><span>${message}</span>`;
             document.body.appendChild(toast);
             
-            // Remover después de 4 segundos
             setTimeout(() => {
                 toast.style.animation = 'fadeOut 0.3s ease';
                 setTimeout(() => document.body.removeChild(toast), 300);
@@ -3276,12 +3251,10 @@
         function mostrarFiltrosEspecificos() {
             const categoria = document.getElementById('filter-categoria').value;
             
-            // Ocultar todos los filtros específicos primero
             document.querySelectorAll('.category-filters').forEach(el => {
                 el.classList.remove('active');
             });
             
-            // Mostrar filtros específicos según categoría
             if (categoria === 'inmueble') {
                 document.getElementById('filtros-inmueble').classList.add('active');
             } else if (categoria === 'auto') {
@@ -3294,12 +3267,10 @@
         function mostrarCamposEspecificos() {
             const categoria = document.getElementById('aviso-categoria').value;
             
-            // Ocultar todos los campos específicos primero
             document.querySelectorAll('.category-fields').forEach(el => {
                 el.classList.add('hidden');
             });
             
-            // Mostrar campos específicos según categoría
             if (categoria === 'inmueble') {
                 document.getElementById('campos-inmueble').classList.remove('hidden');
             } else if (categoria === 'auto') {
@@ -3331,28 +3302,23 @@
         }
 
         function limpiarFiltros() {
-            // Limpiar todos los campos de filtro
             document.getElementById('filter-categoria').value = '';
             document.getElementById('filter-presupuesto-min').value = '';
             document.getElementById('filter-presupuesto-max').value = '';
             document.getElementById('filter-zona').value = '';
             
-            // Ocultar filtros específicos
             document.querySelectorAll('.category-filters').forEach(el => {
                 el.classList.remove('active');
             });
             
-            // Limpiar opciones activas
             document.querySelectorAll('.filter-option.active').forEach(el => {
                 el.classList.remove('active');
             });
             
-            // Limpiar campos específicos
             document.querySelectorAll('#filtros-inmueble input, #filtros-auto input, #filtros-moto input').forEach(input => {
                 input.value = '';
             });
             
-            // Recargar avisos sin filtros
             loadAvisos();
             showToast('Filtros limpiados', 'success');
         }
@@ -3381,7 +3347,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE AVISOS (CON NOTIFICACIONES SEGMENTADAS)
+        // FUNCIONES DE AVISOS
         // ============================================
         function showCreateAvisoModal() {
             if (currentUser?.role !== 'comprador') {
@@ -3389,7 +3355,6 @@
                 return;
             }
             
-            // Limpiar formulario
             document.getElementById('create-aviso-form').reset();
             document.querySelectorAll('.category-fields').forEach(el => {
                 el.classList.add('hidden');
@@ -3407,7 +3372,6 @@
             const data = getData();
             const categoria = document.getElementById('aviso-categoria').value;
             
-            // Validar campos específicos según categoría
             let detalles = {};
             
             if (categoria === 'inmueble') {
@@ -3420,7 +3384,6 @@
                     return;
                 }
                 
-                // Obtener características seleccionadas
                 const caracteristicas = [];
                 document.querySelectorAll('#campos-inmueble .filter-option.active').forEach(el => {
                     caracteristicas.push(el.textContent.toLowerCase());
@@ -3444,7 +3407,6 @@
                     return;
                 }
                 
-                // Obtener características seleccionadas
                 const caracteristicas = [];
                 document.querySelectorAll('#campos-auto .filter-option.active').forEach(el => {
                     caracteristicas.push(el.textContent.toLowerCase());
@@ -3499,27 +3461,21 @@
             
             data.avisos.push(nuevoAviso);
             
-            // Actualizar contador del usuario
             const user = data.users.find(u => u.id === currentUser.id);
             user.totalAvisos = (user.totalAvisos || 0) + 1;
             
-            // ============================================
-            // CORRECCIÓN: NOTIFICACIONES SÓLO PARA VENDEDORES DE LA CATEGORÍA
-            // ============================================
             const categoriaText = {
                 'inmueble': 'Inmuebles',
                 'auto': 'Automóviles',
                 'moto': 'Motos'
             }[categoria] || categoria;
             
-            // Filtrar vendedores por categoría
             const vendedoresInteresados = data.users.filter(u => 
                 u.role === 'vendedor' && 
                 u.categorias && 
                 u.categorias.includes(categoria)
             );
             
-            // Crear notificaciones segmentadas
             vendedoresInteresados.forEach(vendedor => {
                 data.notifications.push({
                     id: data.nextIds.notifications++,
@@ -3542,7 +3498,6 @@
             closeModal('create-aviso-modal');
             showToast(`¡Aviso publicado exitosamente! Notificación enviada a ${vendedoresInteresados.length} vendedores especializados.`, 'success');
             
-            // Redirigir al detalle del aviso
             currentAvisoId = nuevoAviso.id;
             showView('detalle-aviso');
         }
@@ -3556,15 +3511,10 @@
             let avisos = [];
             
             if (currentUser.role === 'comprador') {
-                // Mostrar solo los avisos del usuario
                 avisos = data.avisos.filter(a => a.userId === currentUser.id);
             } else if (currentUser.role === 'vendedor') {
-                // ============================================
-                // CORRECCIÓN: SOLO MOSTRAR AVISOS DE LAS CATEGORÍAS DEL VENDEDOR
-                // ============================================
                 const categoriasVendedor = currentUser.categorias || [];
                 
-                // Si el vendedor no tiene categorías, mostrar todos (para retrocompatibilidad)
                 if (categoriasVendedor.length === 0) {
                     categoriasVendedor.push("inmueble", "auto", "moto");
                 }
@@ -3572,10 +3522,9 @@
                 avisos = data.avisos.filter(a => 
                     a.userId !== currentUser.id && 
                     a.estado === 'abierto' &&
-                    categoriasVendedor.includes(a.categoria) // <- FILTRO POR CATEGORÍA
+                    categoriasVendedor.includes(a.categoria)
                 );
                 
-                // Aplicar filtros si existen
                 const categoria = document.getElementById('filter-categoria')?.value;
                 const presupuestoMin = document.getElementById('filter-presupuesto-min')?.value;
                 const presupuestoMax = document.getElementById('filter-presupuesto-max')?.value;
@@ -3586,7 +3535,6 @@
                 if (presupuestoMax) avisos = avisos.filter(a => a.presupuesto <= parseInt(presupuestoMax));
                 if (zona) avisos = avisos.filter(a => a.zona.toLowerCase().includes(zona.toLowerCase()));
                 
-                // Aplicar filtros específicos por categoría
                 if (categoria === 'inmueble') {
                     const tipoFiltros = [];
                     document.querySelectorAll('#filtros-inmueble .filter-option.active[onclick*="tipo"]').forEach(el => {
@@ -3599,7 +3547,6 @@
                         });
                     }
                     
-                    // Filtrar por dormitorios
                     const dormitoriosFiltros = [];
                     document.querySelectorAll('#filtros-inmueble .filter-option.active[onclick*="dormitorios"]').forEach(el => {
                         dormitoriosFiltros.push(parseInt(el.textContent));
@@ -3612,7 +3559,6 @@
                     }
                     
                 } else if (categoria === 'auto') {
-                    // Filtrar por tipo de vehículo
                     const tipoFiltros = [];
                     document.querySelectorAll('#filtros-auto .filter-option.active[onclick*="tipo-vehiculo"]').forEach(el => {
                         tipoFiltros.push(el.textContent.toLowerCase());
@@ -3624,7 +3570,6 @@
                         });
                     }
                     
-                    // Filtrar por marca
                     const marcaFiltros = [];
                     document.querySelectorAll('#filtros-auto .filter-option.active[onclick*="marca"]').forEach(el => {
                         marcaFiltros.push(el.textContent.toLowerCase());
@@ -3636,7 +3581,6 @@
                         });
                     }
                     
-                    // Filtrar por año
                     const anoMin = document.getElementById('filter-ano-min')?.value;
                     const anoMax = document.getElementById('filter-ano-max')?.value;
                     
@@ -3648,7 +3592,6 @@
                     }
                     
                 } else if (categoria === 'moto') {
-                    // Filtrar por tipo de moto
                     const tipoFiltros = [];
                     document.querySelectorAll('#filtros-moto .filter-option.active[onclick*="tipo-moto"]').forEach(el => {
                         tipoFiltros.push(el.textContent.toLowerCase());
@@ -3660,7 +3603,6 @@
                         });
                     }
                     
-                    // Filtrar por cilindrada
                     const cilindradaFiltros = [];
                     document.querySelectorAll('#filtros-moto .filter-option.active[onclick*="cilindrada"]').forEach(el => {
                         const text = el.textContent;
@@ -3695,28 +3637,24 @@
                 return;
             }
             
-            // Ordenar por fecha (más recientes primero)
             avisos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             
             container.innerHTML = avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
                 const propuestasCount = aviso.propuestas ? aviso.propuestas.length : 0;
                 
-                // Icono según categoría
                 const icono = {
                     'inmueble': '🏠',
                     'auto': '🚗',
                     'moto': '🏍️'
                 }[aviso.categoria] || '📦';
                 
-                // Texto de categoría
                 const categoriaText = {
                     'inmueble': 'Inmueble',
                     'auto': 'Automóvil',
                     'moto': 'Moto'
                 }[aviso.categoria] || aviso.categoria;
                 
-                // Detalles específicos según categoría
                 let detallesHTML = '';
                 if (aviso.detalles) {
                     if (aviso.categoria === 'inmueble') {
@@ -3824,37 +3762,30 @@
                 return;
             }
             
-            // Incrementar vistas
             aviso.vistas = (aviso.vistas || 0) + 1;
             saveData(data);
             
-            // Obtener propuestas para este aviso
             const propuestas = data.propuestas.filter(p => p.avisoId === aviso.id);
             
-            // Obtener chats relacionados
             const chats = data.chats.filter(c => c.avisoId === aviso.id && c.participantes.includes(currentUser.id));
             const chatActivo = chats.find(c => c.activo) || (chats.length > 0 ? chats[0] : null);
             
             const container = document.getElementById('detalle-aviso-content');
             
-            // Icono según categoría
             const icono = {
                 'inmueble': '🏠',
                 'auto': '🚗',
                 'moto': '🏍️'
             }[aviso.categoria] || '📦';
             
-            // Texto de categoría
             const categoriaText = {
                 'inmueble': 'Inmueble',
                 'auto': 'Automóvil',
                 'moto': 'Moto'
             }[aviso.categoria] || aviso.categoria;
             
-            // Determinar si el usuario actual es el creador del aviso
             const esCreador = aviso.userId === currentUser.id;
             
-            // Generar detalles específicos según categoría
             let detallesEspecificosHTML = '';
             if (aviso.detalles) {
                 if (aviso.categoria === 'inmueble') {
@@ -4169,7 +4100,6 @@
                                     const esMio = mensaje.userId === currentUser.id;
                                     const usuario = data.users.find(u => u.id === mensaje.userId);
                                     
-                                    // Determinar contenido del mensaje según tipo
                                     let contenidoHTML = '';
                                     if (mensaje.tipo === 'foto') {
                                         contenidoHTML = `
@@ -4273,7 +4203,6 @@
                 </div>
             `;
             
-            // Auto-scroll al final del chat si existe
             setTimeout(() => {
                 if (chatActivo) {
                     const messagesContainer = document.getElementById(`chat-messages-detalle-${chatActivo.id}`);
@@ -4305,21 +4234,17 @@
             let propuestas = [];
             
             if (currentUser.role === 'comprador') {
-                // Obtener avisos del comprador
                 const misAvisosIds = data.avisos
                     .filter(a => a.userId === currentUser.id)
                     .map(a => a.id);
                 
-                // Obtener propuestas para esos avisos
                 propuestas = data.propuestas
                     .filter(p => misAvisosIds.includes(p.avisoId));
             } else if (currentUser.role === 'vendedor') {
-                // Obtener propuestas del vendedor
                 propuestas = data.propuestas
                     .filter(p => p.vendedorId === currentUser.id);
             }
             
-            // Aplicar filtros
             const estado = document.getElementById('filter-propuesta-estado')?.value;
             const tipo = document.getElementById('filter-propuesta-tipo')?.value;
             const orden = document.getElementById('filter-propuesta-orden')?.value;
@@ -4332,7 +4257,6 @@
                 });
             }
             
-            // Ordenar
             if (orden === 'fecha') {
                 propuestas.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             } else if (orden === 'precio_asc') {
@@ -4369,7 +4293,6 @@
                 
                 if (!aviso || !otroUsuario) return '';
                 
-                // Icono según categoría
                 const icono = {
                     'inmueble': '🏠',
                     'auto': '🚗',
@@ -4438,7 +4361,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE CÁMARA (MEJORADAS)
+        // FUNCIONES DE CÁMARA
         // ============================================
         function abrirCamaraChat(chatId) {
             currentChatIdForCamera = chatId;
@@ -4451,20 +4374,16 @@
                 return;
             }
             
-            // Resetear estado
             flashOn = false;
             selectedPhoto = null;
-            currentCamera = 'environment'; // Cámara trasera por defecto
+            currentCamera = 'environment';
             
-            // Actualizar indicadores
             document.getElementById('flash-indicator').textContent = 'Flash: Apagado';
             document.getElementById('toggle-flash-btn').innerHTML = '<span>⚡</span> Flash: Apagado';
             document.getElementById('toggle-camera-btn').innerHTML = '<span>🔄</span> Cambiar a frontal';
             
-            // Ocultar botón de enviar
             document.getElementById('camera-send-container').style.display = 'none';
             
-            // Iniciar cámara
             iniciarCamara();
             
             showModal('camera-modal');
@@ -4490,7 +4409,6 @@
                     const video = document.getElementById('camera-video');
                     video.srcObject = stream;
                     
-                    // Intentar activar flash si está encendido y es cámara trasera
                     if (flashOn && currentCamera === 'environment') {
                         activarFlash();
                     }
@@ -4498,7 +4416,6 @@
                 .catch(err => {
                     console.error('Error al acceder a la cámara:', err);
                     
-                    // Si falla la cámara trasera, intentar con la frontal
                     if (currentCamera === 'environment') {
                         currentCamera = 'user';
                         document.getElementById('toggle-camera-btn').innerHTML = '<span>🔄</span> Cambiar a trasera';
@@ -4512,8 +4429,6 @@
         }
 
         function activarFlash() {
-            // Esta función intenta activar el flash si el dispositivo lo soporta
-            // Nota: Esta funcionalidad es limitada en navegadores web
             const video = document.getElementById('camera-video');
             
             if (video && video.srcObject) {
@@ -4543,7 +4458,6 @@
                 flashBtn.innerHTML = '<span>⚡</span> Flash: Encendido';
                 indicator.textContent = 'Flash: Encendido';
                 
-                // Solo activar flash si es cámara trasera
                 if (currentCamera === 'environment') {
                     activarFlash();
                 } else {
@@ -4552,7 +4466,7 @@
             } else {
                 flashBtn.innerHTML = '<span>⚡</span> Flash: Apagado';
                 indicator.textContent = 'Flash: Apagado';
-                activarFlash(); // Apagar flash
+                activarFlash();
             }
         }
 
@@ -4564,7 +4478,6 @@
                 '<span>🔄</span> Cambiar a frontal' : 
                 '<span>🔄</span> Cambiar a trasera';
             
-            // Apagar flash si cambiamos a cámara frontal
             if (currentCamera === 'user' && flashOn) {
                 flashOn = false;
                 document.getElementById('toggle-flash-btn').innerHTML = '<span>⚡</span> Flash: Apagado';
@@ -4578,22 +4491,18 @@
             const video = document.getElementById('camera-video');
             const canvas = document.createElement('canvas');
             
-            // Usar dimensiones del video
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             
             const ctx = canvas.getContext('2d');
             
-            // Aplicar efecto flash si está activado
             if (flashOn && currentCamera === 'environment') {
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
             
-            // Dibujar el video
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            // Efecto de captura (flash visual)
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -4611,15 +4520,12 @@
             setTimeout(() => {
                 document.body.removeChild(overlay);
                 
-                // Convertir a data URL
                 selectedPhoto = canvas.toDataURL('image/jpeg', 0.8);
                 
-                // Mostrar contador
                 const counter = document.getElementById('photo-counter-circle');
                 counter.textContent = '1';
                 counter.style.background = 'var(--primary)';
                 
-                // Mostrar botón de enviar
                 document.getElementById('camera-send-container').style.display = 'block';
                 
                 showToast('Foto tomada. Puedes enviarla o tomar otra.', 'success');
@@ -4638,12 +4544,10 @@
                     reader.onload = function(e) {
                         selectedPhoto = e.target.result;
                         
-                        // Mostrar contador
                         const counter = document.getElementById('photo-counter-circle');
                         counter.textContent = '1';
                         counter.style.background = 'var(--primary)';
                         
-                        // Mostrar botón de enviar
                         document.getElementById('camera-send-container').style.display = 'block';
                         
                         showToast('Foto seleccionada. Puedes enviarla o tomar otra.', 'success');
@@ -4685,7 +4589,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE CHAT (CON CÁMARA Y ARCHIVOS)
+        // FUNCIONES DE CHAT
         // ============================================
         function abrirChat(chatId, avisoId) {
             const data = getData();
@@ -4696,7 +4600,6 @@
                 return;
             }
             
-            // Marcar mensajes como leídos
             chat.mensajes.forEach(mensaje => {
                 if (mensaje.userId !== currentUser.id) {
                     mensaje.leido = true;
@@ -4705,10 +4608,8 @@
             chat.unreadCount = 0;
             saveData(data);
             
-            // Actualizar notificaciones
             updateNotifications();
             
-            // Redirigir al aviso con el chat abierto
             currentAvisoId = avisoId;
             showView('detalle-aviso');
         }
@@ -4722,9 +4623,7 @@
                 return;
             }
             
-            // Si no hay propuestaId, significa que es un vendedor iniciando un chat nuevo
             if (!propuestaId) {
-                // Verificar si ya existe un chat para este aviso y vendedor
                 let chat = data.chats.find(c => 
                     c.avisoId === avisoId && 
                     c.participantes.includes(currentUser.id) && 
@@ -4732,12 +4631,11 @@
                 );
                 
                 if (!chat) {
-                    // Crear nueva propuesta automáticamente
                     const nuevaPropuesta = {
                         id: data.nextIds.propuestas++,
                         avisoId: avisoId,
                         vendedorId: currentUser.id,
-                        precio: 0, // El vendedor establecerá el precio en el chat
+                        precio: 0,
                         mensaje: "He iniciado un chat para enviar una propuesta",
                         detalles: "",
                         estado: 'pendiente',
@@ -4748,15 +4646,12 @@
                     
                     data.propuestas.push(nuevaPropuesta);
                     
-                    // Añadir propuesta al aviso
                     if (!aviso.propuestas) aviso.propuestas = [];
                     aviso.propuestas.push(nuevaPropuesta.id);
                     
-                    // Actualizar contador del usuario
                     const user = data.users.find(u => u.id === currentUser.id);
                     user.totalPropuestas = (user.totalPropuestas || 0) + 1;
                     
-                    // Crear notificación para el comprador
                     const comprador = data.users.find(u => u.id === aviso.userId);
                     data.notifications.push({
                         id: data.nextIds.notifications++,
@@ -4773,11 +4668,9 @@
                 }
             }
             
-            // Verificar si ya existe un chat
             let chat = data.chats.find(c => c.propuestaId === propuestaId);
             
             if (!chat) {
-                // Crear nuevo chat
                 chat = {
                     id: data.nextIds.chats++,
                     avisoId: avisoId,
@@ -4802,7 +4695,6 @@
                 data.chats.push(chat);
                 saveData(data);
                 
-                // Crear notificación
                 const comprador = data.users.find(u => u.id === aviso.userId);
                 data.notifications.push({
                     id: data.nextIds.notifications++,
@@ -4818,7 +4710,6 @@
                 saveData(data);
             }
             
-            // Redirigir al aviso con el chat abierto
             currentAvisoId = avisoId;
             showView('detalle-aviso');
         }
@@ -4833,11 +4724,9 @@
                 return;
             }
             
-            // Verificar si ya existe un chat
             let chat = data.chats.find(c => c.propuestaId === propuestaId);
             
             if (!chat) {
-                // Crear nuevo chat
                 chat = {
                     id: data.nextIds.chats++,
                     avisoId: avisoId,
@@ -4862,7 +4751,6 @@
                 data.chats.push(chat);
                 saveData(data);
                 
-                // Crear notificación
                 data.notifications.push({
                     id: data.nextIds.notifications++,
                     userId: propuesta.vendedorId,
@@ -4877,7 +4765,6 @@
                 saveData(data);
             }
             
-            // Redirigir al aviso con el chat abierto
             currentAvisoId = avisoId;
             showView('detalle-aviso');
         }
@@ -4891,7 +4778,6 @@
             const input = document.getElementById(`chat-input-detalle-${chatId}`);
             let texto = input.value.trim();
             
-            // Verificar si hay foto seleccionada (desde la cámara)
             if (selectedPhoto) {
                 enviarFotoChat(chatId, avisoId, selectedPhoto);
                 selectedPhoto = null;
@@ -4908,7 +4794,6 @@
             
             if (!chat) return;
             
-            // Determinar tipo de mensaje
             let tipo = 'texto';
             if (esEnlace(texto)) {
                 tipo = 'link';
@@ -4929,7 +4814,6 @@
             chat.unreadCount += 1;
             chat.activo = true;
             
-            // Crear notificación para el otro participante
             const otroUsuarioId = chat.participantes.find(id => id !== currentUser.id);
             data.notifications.push({
                 id: data.nextIds.notifications++,
@@ -4944,11 +4828,9 @@
             
             saveData(data);
             
-            // Limpiar input y actualizar vista
             input.value = '';
             loadDetalleAviso(avisoId);
             
-            // Actualizar notificaciones
             updateNotifications();
         }
 
@@ -4975,7 +4857,6 @@
             chat.unreadCount += 1;
             chat.activo = true;
             
-            // Crear notificación para el otro participante
             const otroUsuarioId = chat.participantes.find(id => id !== currentUser.id);
             data.notifications.push({
                 id: data.nextIds.notifications++,
@@ -4990,10 +4871,8 @@
             
             saveData(data);
             
-            // Actualizar vista
             loadDetalleAviso(avisoId);
             
-            // Actualizar notificaciones
             updateNotifications();
             
             showToast('Foto enviada exitosamente', 'success');
@@ -5042,7 +4921,6 @@
             modal.classList.add('hidden');
         }
 
-        // Cerrar modal al hacer clic fuera de la imagen
         document.addEventListener('click', function(event) {
             const modal = document.getElementById('image-modal');
             if (!modal.classList.contains('hidden') && event.target === modal) {
@@ -5056,7 +4934,6 @@
             
             if (!container) return;
             
-            // Obtener chats del usuario
             const userChats = data.chats.filter(c => c.participantes.includes(currentUser.id));
             
             if (userChats.length === 0) {
@@ -5076,7 +4953,6 @@
                 return;
             }
             
-            // Ordenar por último mensaje (más recientes primero)
             userChats.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
             
             container.innerHTML = userChats.map(chat => {
@@ -5087,7 +4963,6 @@
                 
                 if (!otroUsuario || !aviso) return '';
                 
-                // Icono para último mensaje
                 let lastMessageIcon = '';
                 const lastMessage = chat.mensajes[chat.mensajes.length - 1];
                 if (lastMessage) {
@@ -5156,7 +5031,6 @@
             
             const unreadCount = notifications.filter(n => !n.read).length;
             
-            // Actualizar badges
             document.getElementById('notification-count').textContent = unreadCount;
             document.getElementById('dropdown-notif-count').textContent = unreadCount;
             
@@ -5168,7 +5042,6 @@
                 document.getElementById('dropdown-notif-count').classList.add('hidden');
             }
             
-            // Actualizar contador de mensajes no leídos en chats
             const userChats = data.chats.filter(c => c.participantes.includes(currentUser.id));
             unreadMessages = userChats.reduce((total, chat) => total + (chat.unreadCount || 0), 0);
             
@@ -5193,7 +5066,6 @@
             const modal = document.getElementById('notifications-modal');
             const list = document.getElementById('notifications-list');
             
-            // Marcar todas como leídas
             const data = getData();
             data.notifications.forEach(n => {
                 if (n.userId === currentUser.id && !n.read) {
@@ -5203,7 +5075,6 @@
             saveData(data);
             updateNotifications();
             
-            // Mostrar notificaciones
             list.innerHTML = notifications.length > 0 ? notifications.map(notif => {
                 const icon = notif.type === 'propuesta_nueva' ? '📨' : 
                             notif.type === 'propuesta_aceptada' ? '✅' : 
@@ -5238,12 +5109,10 @@
             
             if (!notification) return;
             
-            // Marcar como leída
             notification.read = true;
             saveData(data);
             updateNotifications();
             
-            // Navegar según el tipo de notificación
             if (notification.data.avisoId) {
                 currentAvisoId = notification.data.avisoId;
                 showView('detalle-aviso');
@@ -5274,15 +5143,12 @@
                 return;
             }
             
-            // Cambiar estado de la propuesta
             propuesta.estado = 'aceptada';
             propuesta.updatedAt = new Date().toISOString();
             
-            // Cambiar estado del aviso a negociando
             aviso.estado = 'negociando';
             aviso.updatedAt = new Date().toISOString();
             
-            // Rechazar otras propuestas pendientes
             data.propuestas.forEach(p => {
                 if (p.avisoId === avisoId && p.id !== propuestaId && p.estado === 'pendiente') {
                     p.estado = 'rechazada';
@@ -5290,7 +5156,6 @@
                 }
             });
             
-            // Crear notificación para el vendedor
             data.notifications.push({
                 id: data.nextIds.notifications++,
                 userId: propuesta.vendedorId,
@@ -5305,7 +5170,6 @@
             saveData(data);
             showToast('¡Propuesta aceptada! El aviso ahora está en negociación.', 'success');
             
-            // Actualizar vista
             loadDetalleAviso(avisoId);
         }
 
@@ -5325,7 +5189,6 @@
             propuesta.estado = 'rechazada';
             propuesta.updatedAt = new Date().toISOString();
             
-            // Crear notificación para el vendedor
             data.notifications.push({
                 id: data.nextIds.notifications++,
                 userId: propuesta.vendedorId,
@@ -5340,7 +5203,6 @@
             saveData(data);
             showToast('Propuesta rechazada', 'info');
             
-            // Actualizar vista
             loadDetalleAviso(avisoId);
         }
 
@@ -5376,7 +5238,6 @@
                 return;
             }
             
-            // Llenar el formulario
             document.getElementById('editar-aviso-id').value = aviso.id;
             document.getElementById('editar-aviso-titulo').value = aviso.titulo;
             document.getElementById('editar-aviso-descripcion').value = aviso.descripcion || '';
@@ -5400,7 +5261,6 @@
                 return;
             }
             
-            // Actualizar aviso
             aviso.titulo = document.getElementById('editar-aviso-titulo').value;
             aviso.descripcion = document.getElementById('editar-aviso-descripcion').value;
             aviso.presupuesto = parseInt(document.getElementById('editar-aviso-presupuesto').value);
@@ -5413,7 +5273,6 @@
             closeModal('editar-aviso-modal');
             showToast('Aviso actualizado exitosamente', 'success');
             
-            // Actualizar vista
             loadDetalleAviso(avisoId);
         }
 
@@ -5424,23 +5283,18 @@
             
             const data = getData();
             
-            // Eliminar propuestas asociadas
             data.propuestas = data.propuestas.filter(p => p.avisoId !== avisoId);
             
-            // Eliminar chats asociados
             data.chats = data.chats.filter(c => c.avisoId !== avisoId);
             
-            // Eliminar aviso
             data.avisos = data.avisos.filter(a => a.id !== avisoId);
             
-            // Actualizar contador del usuario
             const user = data.users.find(u => u.id === currentUser.id);
             user.totalAvisos = Math.max(0, (user.totalAvisos || 0) - 1);
             
             saveData(data);
             showToast('Aviso eliminado exitosamente', 'success');
             
-            // Redirigir a avisos
             showView('avisos');
         }
 
@@ -5453,8 +5307,6 @@
                 return;
             }
             
-            // En un entorno real, esto usaría las APIs de compartir
-            // Por ahora, mostramos un mensaje
             const url = window.location.href.split('#')[0] + `#aviso-${avisoId}`;
             navigator.clipboard.writeText(url).then(() => {
                 showToast('Enlace copiado al portapapeles. Compártelo con tus contactos.', 'success');
@@ -5485,7 +5337,6 @@
                 document.getElementById('stat-negociaciones').textContent = 
                     misAvisos.filter(a => a.estado === 'negociando').length;
                 
-                // Avisos recientes
                 const avisosContainer = document.getElementById('dashboard-avisos');
                 const avisosRecientes = misAvisos.slice(0, 4);
                 
@@ -5509,7 +5360,6 @@
                     </div>
                 `).join('') : '<div class="empty-state" style="padding: 30px;">No tienes avisos activos</div>';
                 
-                // Propuestas recientes
                 const propuestasContainer = document.getElementById('dashboard-propuestas');
                 const propuestasRecientes = propuestasRecibidas.slice(0, 4);
                 
@@ -5533,7 +5383,6 @@
                 }).join('') : '<div class="empty-state" style="padding: 30px;">No hay propuestas recibidas</div>';
                 
             } else if (currentUser.role === 'vendedor') {
-                // SOLO CONTAR AVISOS DE LAS CATEGORÍAS DEL VENDEDOR
                 const categoriasVendedor = currentUser.categorias || ["inmueble", "auto", "moto"];
                 const avisosActivos = data.avisos.filter(a => 
                     a.userId !== currentUser.id && 
@@ -5558,7 +5407,7 @@
         }
 
         // ============================================
-        // FUNCIONES DE PERFIL (CON CATEGORÍAS)
+        // FUNCIONES DE PERFIL
         // ============================================
         function loadProfile() {
             if (!currentUser) return;
@@ -5566,7 +5415,6 @@
             const data = getData();
             const container = document.getElementById('profile-content');
             
-            // Convertir códigos de categoría a nombres
             const categoriasNombres = {
                 'inmueble': '🏠 Inmuebles',
                 'auto': '🚗 Automóviles',
@@ -5697,37 +5545,32 @@
             
             showToast('Categorías actualizadas correctamente', 'success');
             
-            // Recargar vista de avisos para reflejar los cambios
             if (document.getElementById('avisos').classList.contains('active')) {
                 loadAvisos();
             }
         }
 
         function editarPerfil() {
-            // En una versión más completa, esto abriría un modal para editar perfil
             showToast('Función de edición completa de perfil en desarrollo', 'info');
         }
 
         // ============================================
-        // FUNCIONES DEL PANEL ADMIN (MEJORADO)
+        // FUNCIONES DEL PANEL ADMIN
         // ============================================
         function loadAdminPanel() {
             const data = getData();
             
-            // Convertir códigos de categoría a nombres
             const categoriasNombres = {
                 'inmueble': '🏠 Inmuebles',
                 'auto': '🚗 Automóviles',
                 'moto': '🏍️ Motos'
             };
             
-            // Actualizar estadísticas
             document.getElementById('admin-total-users').textContent = data.users.length;
             document.getElementById('admin-total-avisos').textContent = data.avisos.length;
             document.getElementById('admin-total-propuestas').textContent = data.propuestas.length;
             document.getElementById('admin-total-chats').textContent = data.chats.length;
             
-            // Lista de usuarios
             const usersList = document.getElementById('admin-users-list');
             usersList.innerHTML = data.users.map(user => {
                 const categoriasTexto = user.categorias && user.categorias.length > 0 ? 
@@ -5752,7 +5595,6 @@
                 `;
             }).join('');
             
-            // Lista de avisos
             const avisosList = document.getElementById('admin-avisos-list');
             avisosList.innerHTML = data.avisos.map(aviso => {
                 const user = data.users.find(u => u.id === aviso.userId);
@@ -5775,7 +5617,6 @@
                 `;
             }).join('');
             
-            // Lista de propuestas
             const propuestasList = document.getElementById('admin-propuestas-list');
             propuestasList.innerHTML = data.propuestas.map(propuesta => {
                 const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
@@ -5808,37 +5649,29 @@
             
             const data = getData();
             
-            // No permitir eliminar al usuario actual
             if (userId === currentUser.id) {
                 showToast('No puedes eliminarte a ti mismo', 'error');
                 return;
             }
             
-            // Eliminar avisos del usuario
             const avisosUsuario = data.avisos.filter(a => a.userId === userId);
             const avisosIds = avisosUsuario.map(a => a.id);
             
-            // Eliminar propuestas del usuario
             data.propuestas = data.propuestas.filter(p => 
                 p.vendedorId !== userId && !avisosIds.includes(p.avisoId)
             );
             
-            // Eliminar avisos del usuario
             data.avisos = data.avisos.filter(a => a.userId !== userId);
             
-            // Eliminar chats donde participa el usuario
             data.chats = data.chats.filter(c => !c.participantes.includes(userId));
             
-            // Eliminar notificaciones del usuario
             data.notifications = data.notifications.filter(n => n.userId !== userId);
             
-            // Eliminar usuario
             data.users = data.users.filter(u => u.id !== userId);
             
             saveData(data);
             showToast('Usuario eliminado exitosamente', 'success');
             
-            // Recargar panel admin
             loadAdminPanel();
         }
 
@@ -5854,24 +5687,19 @@
             
             const data = getData();
             
-            // Eliminar propuestas asociadas
             data.propuestas = data.propuestas.filter(p => p.avisoId !== avisoId);
             
-            // Eliminar chats asociados
             data.chats = data.chats.filter(c => c.avisoId !== avisoId);
             
-            // Eliminar notificaciones asociadas
             data.notifications = data.notifications.filter(n => 
                 !n.data.avisoId || n.data.avisoId !== avisoId
             );
             
-            // Eliminar aviso
             data.avisos = data.avisos.filter(a => a.id !== avisoId);
             
             saveData(data);
             showToast('Aviso eliminado exitosamente', 'success');
             
-            // Recargar panel admin
             loadAdminPanel();
         }
 
@@ -5895,27 +5723,22 @@
             
             if (!propuesta) return;
             
-            // Eliminar chat asociado
             data.chats = data.chats.filter(c => c.propuestaId !== propuestaId);
             
-            // Eliminar notificaciones asociadas
             data.notifications = data.notifications.filter(n => 
                 !n.data.propuestaId || n.data.propuestaId !== propuestaId
             );
             
-            // Eliminar propuesta del aviso
             const aviso = data.avisos.find(a => a.id === propuesta.avisoId);
             if (aviso && aviso.propuestas) {
                 aviso.propuestas = aviso.propuestas.filter(id => id !== propuestaId);
             }
             
-            // Eliminar propuesta
             data.propuestas = data.propuestas.filter(p => p.id !== propuestaId);
             
             saveData(data);
             showToast('Propuesta eliminada exitosamente', 'success');
             
-            // Recargar panel admin
             loadAdminPanel();
         }
 
@@ -5933,7 +5756,6 @@
         function generarReporte() {
             const data = getData();
             
-            // Generar estadísticas para el reporte
             const reporte = {
                 fecha: new Date().toISOString(),
                 totalUsuarios: data.users.length,
@@ -5957,10 +5779,8 @@
                 }
             };
             
-            // Mostrar reporte en consola (en un sistema real, se descargaría como archivo)
             console.log('=== REPORTE DEL SISTEMA ===', reporte);
             
-            // Crear un mensaje amigable
             const mensaje = `
                 📊 Reporte Generado:
                 
@@ -5989,7 +5809,6 @@
                   • Motos: ${reporte.categorias.motos}
             `;
             
-            // Mostrar en alerta (en un sistema real, sería un modal bonito)
             alert(mensaje);
             showToast('Reporte generado exitosamente. Verifica la consola para más detalles.', 'success');
         }
@@ -5998,16 +5817,13 @@
             if (confirm('⚠️ ¿Estás seguro de resetear el sistema? Esto eliminará todos los datos excepto los usuarios administradores y sus configuraciones.')) {
                 const data = getData();
                 
-                // Mantener solo usuarios administradores
                 const adminUsers = data.users.filter(u => u.role === 'admin');
                 adminUsers.forEach(user => {
                     user.totalAvisos = 0;
                     user.totalPropuestas = 0;
-                    // Mantener categorías si es vendedor convertido a admin
                     if (!user.categorias) user.categorias = [];
                 });
                 
-                // Resetear datos pero mantener estructura
                 const newData = {
                     users: adminUsers,
                     avisos: [],
@@ -6025,14 +5841,12 @@
                 
                 saveData(newData);
                 
-                // Si el usuario actual no es admin, cerrar sesión
                 if (currentUser && currentUser.role !== 'admin') {
                     logout();
                 }
                 
                 showToast('✅ Sistema reseteado exitosamente. Todos los datos han sido limpiados.', 'success');
                 
-                // Recargar vista actual
                 if (currentUser && currentUser.role === 'admin') {
                     loadAdminPanel();
                 }
@@ -6065,7 +5879,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             
-            // Configurar evento para mostrar/ocultar categorías en registro
             const roleRadios = document.querySelectorAll('input[name="role"]');
             roleRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -6078,23 +5891,19 @@
                 });
             });
             
-            // Inicializar service worker para PWA
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').catch(error => {
                     console.log('Service Worker registration failed:', error);
                 });
             }
             
-            // Cerrar modales al hacer clic fuera
             document.addEventListener('click', function(event) {
-                // Cerrar modal de notificaciones
                 const notificationsModal = document.getElementById('notifications-modal');
                 if (!notificationsModal.classList.contains('hidden') && 
                     event.target === notificationsModal) {
                     closeModal('notifications-modal');
                 }
                 
-                // Cerrar modal de imagen
                 const imageModal = document.getElementById('image-modal');
                 if (!imageModal.classList.contains('hidden') && 
                     event.target === imageModal) {
