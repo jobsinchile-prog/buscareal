@@ -1496,35 +1496,213 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        /* Notifications Panel */
+        .notifications-panel {
+            position: fixed;
+            top: 72px;
+            right: 24px;
+            width: 350px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-hover);
+            z-index: 1500;
+            display: none;
+            flex-direction: column;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .notifications-panel.active {
+            display: flex;
+        }
+
+        .notifications-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notifications-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .notification-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            gap: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: var(--light-gray);
+        }
+
+        .notification-item.unread {
+            background: rgba(67, 97, 238, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .notification-content h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .notification-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        .mark-all-read {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .mark-all-read:hover {
+            background: var(--light-gray);
+        }
+
+        /* Messages Panel */
+        .messages-panel {
+            position: fixed;
+            top: 72px;
+            right: 24px;
+            width: 400px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-hover);
+            z-index: 1500;
+            display: none;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .messages-panel.active {
+            display: flex;
+        }
+
+        .messages-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .messages-list {
+            padding: 0;
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .message-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            gap: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .message-item:hover {
+            background: var(--light-gray);
+        }
+
+        .message-item.unread {
+            background: rgba(67, 97, 238, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .message-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .message-content h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .message-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
     <div id="app">
         <header>
-            <a href="#" class="logo">
+            <a href="#" class="logo" id="logo-link">
                 <span class="logo-icon">💼</span>
                 <span>Market<span>Connect</span> Pro</span>
             </a>
             
             <nav>
                 <ul>
-                    <li><a href="#" class="active">Inicio</a></li>
-                    <li><a href="#">Avisos</a></li>
-                    <li><a href="#">Propuestas</a></li>
-                    <li><a href="#">Chat</a></li>
+                    <li><a href="#" class="nav-link active" data-view="dashboard-view">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-view="ads-view">Avisos</a></li>
+                    <li><a href="#" class="nav-link" data-view="profile-view">Perfil</a></li>
+                    <li><a href="#" class="nav-link" data-view="admin-view">Admin</a></li>
                 </ul>
             </nav>
             
             <div class="nav-icons">
-                <div class="nav-icon">
+                <div class="nav-icon" id="notification-icon">
                     🔔
                     <span class="notification-badge">3</span>
                 </div>
-                <div class="nav-icon">
+                <div class="nav-icon" id="message-icon">
                     💬
                     <span class="notification-badge">1</span>
                 </div>
-                <div class="user-menu">
+                <div class="user-menu" id="user-menu">
                     <div class="user-avatar">JS</div>
                     <div class="user-name">Juan Soto <span class="badge premium">Premium</span></div>
                     <div class="nav-icon" style="margin-left: 8px; margin-right: 0;">▼</div>
@@ -1533,52 +1711,42 @@
         </header>
         
         <div class="mobile-menu">
-            <a href="#" class="mobile-menu-item active">
+            <a href="#" class="mobile-menu-item nav-link active" data-view="dashboard-view">
                 🏠
                 <span>Inicio</span>
             </a>
-            <a href="#" class="mobile-menu-item">
+            <a href="#" class="mobile-menu-item nav-link" data-view="ads-view">
                 📋
                 <span>Avisos</span>
             </a>
-            <a href="#" class="mobile-menu-item">
-                💼
-                <span>Propuestas</span>
-            </a>
-            <a href="#" class="mobile-menu-item">
-                💬
-                <span>Chat</span>
-            </a>
-            <a href="#" class="mobile-menu-item">
+            <a href="#" class="mobile-menu-item nav-link" data-view="profile-view">
                 👤
                 <span>Perfil</span>
+            </a>
+            <a href="#" class="mobile-menu-item nav-link" data-view="admin-view">
+                🛠️
+                <span>Admin</span>
             </a>
         </div>
         
         <div class="main-container">
             <aside class="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="#" class="active"><i>🏠</i> Dashboard</a></li>
-                    <li><a href="#"><i>📋</i> Mis Avisos</a></li>
-                    <li><a href="#"><i>🔍</i> Explorar Avisos</a></li>
-                    <li><a href="#"><i>💼</i> Propuestas</a></li>
-                    <li><a href="#"><i>💬</i> Chat</a></li>
-                    <li><a href="#"><i>❤️</i> Favoritos</a></li>
-                    <li><a href="#"><i>👤</i> Mi Perfil</a></li>
-                    <li><a href="#"><i>⚙️</i> Configuración</a></li>
-                    <li><a href="#"><i>📊</i> Reportes</a></li>
-                    <li><a href="#"><i>🛠️</i> Admin Panel</a></li>
+                    <li><a href="#" class="nav-link active" data-view="dashboard-view"><i>🏠</i> Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-view="ads-view"><i>🔍</i> Explorar Avisos</a></li>
+                    <li><a href="#" class="nav-link" data-view="profile-view"><i>👤</i> Mi Perfil</a></li>
+                    <li><a href="#" class="nav-link" data-view="admin-view"><i>🛠️</i> Admin Panel</a></li>
                 </ul>
                 
                 <div class="sidebar-footer">
                     <div class="premium-banner">
                         <h3>¡Desbloquea todas las funciones!</h3>
                         <p>Actualiza a Premium para ver información completa de contactos, presupuestos exactos y direcciones.</p>
-                        <button class="btn-upgrade">Actualizar a Premium</button>
+                        <button class="btn-upgrade" id="upgrade-btn">Actualizar a Premium</button>
                     </div>
                     
                     <div style="text-align: center; padding-top: 16px; border-top: 1px solid var(--light-gray); margin-top: 16px;">
-                        <button class="btn" style="background: var(--gradient-accent); color: white; width: 100%;">
+                        <button class="btn" id="create-ad-btn" style="background: var(--gradient-accent); color: white; width: 100%;">
                             <i style="margin-right: 8px;">➕</i>Crear Nuevo Aviso
                         </button>
                     </div>
@@ -1586,92 +1754,6 @@
             </aside>
             
             <main class="main-content">
-                <!-- Landing View -->
-                <section id="landing-view" class="view">
-                    <div class="hero">
-                        <div class="hero-content">
-                            <h1>Conecta Compradores y Vendedores con Inteligencia</h1>
-                            <p>MarketConnect Pro te permite publicar necesidades detalladas y encontrar vendedores calificados según tu suscripción. Segmentación inteligente para negocios más eficientes.</p>
-                            <div class="hero-buttons">
-                                <a href="#" class="btn-hero primary">Crear Cuenta</a>
-                                <a href="#" class="btn-hero secondary">Ver Demo</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon">📋</div>
-                            <h3>Avisos Segmentados</h3>
-                            <p>Publica necesidades detalladas con información específica según tu rol. Los vendedores ven solo lo que su suscripción permite.</p>
-                        </div>
-                        
-                        <div class="feature-card secondary">
-                            <div class="feature-icon">🔍</div>
-                            <h3>Filtros Inteligentes</h3>
-                            <p>Encuentra exactamente lo que necesitas con filtros avanzados por categoría: inmuebles, automóviles y motos.</p>
-                        </div>
-                        
-                        <div class="feature-card success">
-                            <div class="feature-icon">💬</div>
-                            <h3>Chat Integrado</h3>
-                            <p>Comunícate directamente con compradores y vendedores. Envía fotos, documentos y negocia en tiempo real.</p>
-                        </div>
-                        
-                        <div class="feature-card accent">
-                            <div class="feature-icon">📊</div>
-                            <h3>Panel de Control</h3>
-                            <p>Estadísticas personalizadas según tu rol. Monitorea tus avisos, propuestas y actividad en una sola vista.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon primary">👥</div>
-                                <div>
-                                    <div class="label">Usuarios Activos</div>
-                                    <div class="value">12,450</div>
-                                    <div class="change positive">↑ 18.5% este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon secondary">📢</div>
-                                <div>
-                                    <div class="label">Avisos Publicados</div>
-                                    <div class="value">8,732</div>
-                                    <div class="change positive">↑ 24.3% este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon success">🤝</div>
-                                <div>
-                                    <div class="label">Negocios Exitosos</div>
-                                    <div class="value">3,215</div>
-                                    <div class="change positive">↑ 31.7% este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon warning">⭐</div>
-                                <div>
-                                    <div class="label">Satisfacción Usuarios</div>
-                                    <div class="value">98%</div>
-                                    <div class="change positive">↑ 4.2% este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
                 <!-- Dashboard View -->
                 <section id="dashboard-view" class="view active">
                     <h1 class="section-title">📊 Dashboard</h1>
@@ -1736,7 +1818,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">UF 3.500 - 4.200</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="1">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -1753,7 +1835,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">USD 28.000 - 35.000</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="2">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -1770,7 +1852,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">CLP 8.500.000 - 10.000.000</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="3">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -1789,7 +1871,7 @@
                                         <p>Vendedora Premium • Inmuebles</p>
                                     </div>
                                 </div>
-                                <div class="chat-messages">
+                                <div class="chat-messages" id="chat-1">
                                     <div class="message received">
                                         Hola Juan, vi tu aviso de departamento en Providencia. Tengo una propiedad que podría interesarte.
                                         <div class="message-time">10:24 AM</div>
@@ -1804,11 +1886,11 @@
                                     </div>
                                 </div>
                                 <div class="chat-input-container">
-                                    <input type="text" class="chat-input" placeholder="Escribe un mensaje...">
+                                    <input type="text" class="chat-input" placeholder="Escribe un mensaje..." data-chat-id="1">
                                     <div class="chat-actions">
                                         <button class="chat-action camera">📷</button>
                                         <button class="chat-action attach">📎</button>
-                                        <button class="chat-action send">➤</button>
+                                        <button class="chat-action send" data-chat-id="1">➤</button>
                                     </div>
                                 </div>
                             </div>
@@ -1823,7 +1905,7 @@
                                         <p>Vendedor Free • Automóviles</p>
                                     </div>
                                 </div>
-                                <div class="chat-messages">
+                                <div class="chat-messages" id="chat-2">
                                     <div class="message received">
                                         Buenos días, respecto a tu búsqueda de SUV familiar, tengo un modelo 2021 con 25.000 km.
                                         <div class="message-time">Ayer, 15:42</div>
@@ -1838,11 +1920,11 @@
                                     </div>
                                 </div>
                                 <div class="chat-input-container">
-                                    <input type="text" class="chat-input" placeholder="Escribe un mensaje...">
+                                    <input type="text" class="chat-input" placeholder="Escribe un mensaje..." data-chat-id="2">
                                     <div class="chat-actions">
                                         <button class="chat-action camera">📷</button>
                                         <button class="chat-action attach">📎</button>
-                                        <button class="chat-action send">➤</button>
+                                        <button class="chat-action send" data-chat-id="2">➤</button>
                                     </div>
                                 </div>
                             </div>
@@ -1893,7 +1975,7 @@
                         
                         <div id="category-filters">
                             <!-- Inmuebles Filters -->
-                            <div id="inmuebles-filters" class="form-row" style="display: none;">
+                            <div id="inmuebles-filters" class="form-row">
                                 <div class="form-group">
                                     <label for="property-type">Tipo de Propiedad</label>
                                     <select id="property-type" class="form-control">
@@ -2028,7 +2110,7 @@
                             </div>
                         </div>
                         
-                        <button class="btn btn-primary btn-block">Aplicar Filtros</button>
+                        <button class="btn btn-primary btn-block" id="apply-filters">Aplicar Filtros</button>
                     </div>
                     
                     <div class="cards-grid">
@@ -2043,7 +2125,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">UF 4.500 - 5.800</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="4">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -2060,7 +2142,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">UF 8.000 - 10.000</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="5">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -2077,7 +2159,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">USD 35.000 - 42.000</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="6">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -2094,7 +2176,7 @@
                                 <div class="card-footer">
                                     <div class="card-price">CLP 15.000.000 - 18.000.000</div>
                                     <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="7">Ver Detalles</button>
                                     </div>
                                 </div>
                             </div>
@@ -2163,10 +2245,10 @@
                             </div>
                             
                             <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
-                                <button class="btn btn-primary" style="flex: 1; min-width: 150px;">
+                                <button class="btn btn-primary" id="send-proposal-btn" style="flex: 1; min-width: 150px;">
                                     <i style="margin-right: 8px;">💬</i> Enviar Propuesta
                                 </button>
-                                <button class="btn btn-outline" style="flex: 1; min-width: 150px;">
+                                <button class="btn btn-outline" id="add-favorite-btn" style="flex: 1; min-width: 150px;">
                                     <i style="margin-right: 8px;">❤️</i> Agregar a Favoritos
                                 </button>
                             </div>
@@ -2184,7 +2266,7 @@
                                 <h4 style="margin-bottom: 8px;">Juan Soto</h4>
                                 <p style="color: var(--gray); margin-bottom: 16px;">Comprador Premium</p>
                                 <p style="margin-bottom: 24px;">Esta información está disponible solo para vendedores con suscripción Premium.</p>
-                                <button class="btn btn-secondary">
+                                <button class="btn btn-secondary" id="upgrade-from-detail">
                                     <i style="margin-right: 8px;">⭐</i> Actualizar a Premium
                                 </button>
                             </div>
@@ -2278,7 +2360,7 @@
                                         <textarea id="bio" class="form-control" rows="4">Vendedor especializado en propiedades de alto standing en las comunas oriente de Santiago. Más de 10 años de experiencia en el mercado inmobiliario chileno. Miembro de la Cámara Chilena de la Construcción.</textarea>
                                     </div>
                                     
-                                    <button class="btn btn-primary btn-block">Guardar Cambios</button>
+                                    <button class="btn btn-primary btn-block" id="save-profile-btn">Guardar Cambios</button>
                                 </div>
                             </div>
                             
@@ -2632,7 +2714,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Crear Nuevo Aviso</h3>
-                    <button class="modal-close">&times;</button>
+                    <button class="modal-close" id="close-modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -2688,7 +2770,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="property-type">Tipo de Propiedad</label>
-                                    <select id="property-type" class="form-control">
+                                    <select id="property-type-modal" class="form-control">
                                         <option>Departamento</option>
                                         <option>Casa</option>
                                         <option>Oficina</option>
@@ -2699,7 +2781,7 @@
                                 
                                 <div class="form-group">
                                     <label for="bedrooms">Dormitorios</label>
-                                    <select id="bedrooms" class="form-control">
+                                    <select id="bedrooms-modal" class="form-control">
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -2709,7 +2791,7 @@
                                 
                                 <div class="form-group">
                                     <label for="bathrooms">Baños</label>
-                                    <select id="bathrooms" class="form-control">
+                                    <select id="bathrooms-modal" class="form-control">
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3+</option>
@@ -2747,7 +2829,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="car-type">Tipo de Vehículo</label>
-                                    <select id="car-type" class="form-control">
+                                    <select id="car-type-modal" class="form-control">
                                         <option>Sedán</option>
                                         <option>SUV</option>
                                         <option>Hatchback</option>
@@ -2759,7 +2841,7 @@
                                 
                                 <div class="form-group">
                                     <label for="car-brand">Marca</label>
-                                    <select id="car-brand" class="form-control">
+                                    <select id="car-brand-modal" class="form-control">
                                         <option>Toyota</option>
                                         <option>Nissan</option>
                                         <option>Chevrolet</option>
@@ -2773,7 +2855,7 @@
                                 
                                 <div class="form-group">
                                     <label for="car-year">Año</label>
-                                    <select id="car-year" class="form-control">
+                                    <select id="car-year-modal" class="form-control">
                                         <option>2020+</option>
                                         <option>2018-2019</option>
                                         <option>2015-2017</option>
@@ -2785,7 +2867,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="car-mileage">Kilometraje Máximo</label>
-                                    <select id="car-mileage" class="form-control">
+                                    <select id="car-mileage-modal" class="form-control">
                                         <option>Menos de 30.000 km</option>
                                         <option>30.000 - 60.000 km</option>
                                         <option>60.000 - 100.000 km</option>
@@ -2795,7 +2877,7 @@
                                 
                                 <div class="form-group">
                                     <label for="car-transmission">Transmisión</label>
-                                    <select id="car-transmission" class="form-control">
+                                    <select id="car-transmission-modal" class="form-control">
                                         <option>Ambas</option>
                                         <option>Automática</option>
                                         <option>Mecánica</option>
@@ -2804,7 +2886,7 @@
                                 
                                 <div class="form-group">
                                     <label for="car-fuel">Combustible</label>
-                                    <select id="car-fuel" class="form-control">
+                                    <select id="car-fuel-modal" class="form-control">
                                         <option>Todos</option>
                                         <option>Bencina</option>
                                         <option>Diesel</option>
@@ -2822,7 +2904,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="motorcycle-type">Tipo de Moto</label>
-                                    <select id="motorcycle-type" class="form-control">
+                                    <select id="motorcycle-type-modal" class="form-control">
                                         <option>Deportiva</option>
                                         <option>Naked</option>
                                         <option>Touring</option>
@@ -2834,7 +2916,7 @@
                                 
                                 <div class="form-group">
                                     <label for="motorcycle-brand">Marca</label>
-                                    <select id="motorcycle-brand" class="form-control">
+                                    <select id="motorcycle-brand-modal" class="form-control">
                                         <option>Honda</option>
                                         <option>Yamaha</option>
                                         <option>Suzuki</option>
@@ -2847,7 +2929,7 @@
                                 
                                 <div class="form-group">
                                     <label for="motorcycle-year">Año</label>
-                                    <select id="motorcycle-year" class="form-control">
+                                    <select id="motorcycle-year-modal" class="form-control">
                                         <option>2021+</option>
                                         <option>2019-2020</option>
                                         <option>2017-2018</option>
@@ -2859,7 +2941,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="motorcycle-engine">Cilindrada</label>
-                                    <select id="motorcycle-engine" class="form-control">
+                                    <select id="motorcycle-engine-modal" class="form-control">
                                         <option>Menos de 250cc</option>
                                         <option>250cc - 500cc</option>
                                         <option>500cc - 750cc</option>
@@ -2870,7 +2952,7 @@
                                 
                                 <div class="form-group">
                                     <label for="motorcycle-use">Uso Principal</label>
-                                    <select id="motorcycle-use" class="form-control">
+                                    <select id="motorcycle-use-modal" class="form-control">
                                         <option>Ciudad</option>
                                         <option>Touring/Largas distancias</option>
                                         <option>Off-road/Aventura</option>
@@ -2882,43 +2964,107 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-outline modal-close">Cancelar</button>
-                    <button class="btn btn-primary">Publicar Aviso</button>
+                    <button class="btn btn-outline modal-close" id="cancel-modal">Cancelar</button>
+                    <button class="btn btn-primary" id="publish-ad-btn">Publicar Aviso</button>
                 </div>
             </div>
         </div>
         
+        <!-- Notifications Panel -->
+        <div class="notifications-panel" id="notifications-panel">
+            <div class="notifications-header">
+                <h3>Notificaciones</h3>
+                <button class="mark-all-read" id="mark-all-read">Marcar todo como leído</button>
+            </div>
+            <ul class="notifications-list">
+                <li class="notification-item unread">
+                    <div class="notification-icon">NewPropuesta</div>
+                    <div class="notification-content">
+                        <h4>Nueva propuesta recibida</h4>
+                        <p>María Contreras ha enviado una propuesta para tu aviso de departamento en Providencia</p>
+                        <div class="notification-time">Hace 2 horas</div>
+                    </div>
+                </li>
+                <li class="notification-item unread">
+                    <div class="notification-icon">💬</div>
+                    <div class="notification-content">
+                        <h4>Nuevo mensaje</h4>
+                        <p>Roberto Pérez te ha enviado un mensaje sobre tu búsqueda de SUV familiar</p>
+                        <div class="notification-time">Hace 5 horas</div>
+                    </div>
+                </li>
+                <li class="notification-item">
+                    <div class="notification-icon">✅</div>
+                    <div class="notification-content">
+                        <h4>Propuesta aceptada</h4>
+                        <p>Tu propuesta para el departamento en Las Condes ha sido aceptada</p>
+                        <div class="notification-time">Ayer</div>
+                    </div>
+                </li>
+                <li class="notification-item">
+                    <div class="notification-icon">⭐</div>
+                    <div class="notification-content">
+                        <h4>Suscripción renovada</h4>
+                        <p>Tu suscripción Premium ha sido renovada exitosamente</p>
+                        <div class="notification-time">Hace 3 días</div>
+                    </div>
+                </li>
+                <li class="notification-item">
+                    <div class="notification-icon">📢</div>
+                    <div class="notification-content">
+                        <h4>Nuevo aviso publicado</h4>
+                        <p>Se ha publicado tu aviso de búsqueda de moto deportiva</p>
+                        <div class="notification-time">Hace 1 semana</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Messages Panel -->
+        <div class="messages-panel" id="messages-panel">
+            <div class="messages-header">
+                <h3>Mensajes</h3>
+                <button class="mark-all-read" id="mark-all-messages-read">Marcar todo como leído</button>
+            </div>
+            <ul class="messages-list">
+                <li class="message-item unread">
+                    <div class="message-avatar">MC</div>
+                    <div class="message-content">
+                        <h4>María Contreras</h4>
+                        <p>Hola Juan, vi tu aviso de departamento en Providencia. Tengo una propiedad que podría interesarte.</p>
+                        <div class="message-time">Hace 2 horas</div>
+                    </div>
+                </li>
+                <li class="message-item">
+                    <div class="message-avatar">RP</div>
+                    <div class="message-content">
+                        <h4>Roberto Pérez</h4>
+                        <p>Buenos días, respecto a tu búsqueda de SUV familiar, tengo un modelo 2021 con 25.000 km.</p>
+                        <div class="message-time">Ayer</div>
+                    </div>
+                </li>
+                <li class="message-item">
+                    <div class="message-avatar">AL</div>
+                    <div class="message-content">
+                        <h4>Ana López</h4>
+                        <p>Gracias por tu propuesta. Me interesa saber más detalles sobre tus condiciones de pago.</p>
+                        <div class="message-time">Hace 3 días</div>
+                    </div>
+                </li>
+                <li class="message-item">
+                    <div class="message-avatar">CG</div>
+                    <div class="message-content">
+                        <h4>Carlos Gómez</h4>
+                        <p>He revisado tu aviso de moto deportiva y tengo una que cumple con tus especificaciones.</p>
+                        <div class="message-time">Hace 1 semana</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
         <!-- Toast Notifications -->
-        <div class="toast-container">
-            <div class="toast success">
-                <div style="margin-right: 16px;">
-                    <i>✅</i>
-                </div>
-                <div class="toast-content">
-                    <h4>¡Éxito!</h4>
-                    <p>Tu aviso ha sido publicado correctamente.</p>
-                </div>
-            </div>
-            
-            <div class="toast error">
-                <div style="margin-right: 16px;">
-                    <i>❌</i>
-                </div>
-                <div class="toast-content">
-                    <h4>Error</h4>
-                    <p>No se pudo enviar la propuesta. Por favor intenta nuevamente.</p>
-                </div>
-            </div>
-            
-            <div class="toast warning">
-                <div style="margin-right: 16px;">
-                    <i>⚠️</i>
-                </div>
-                <div class="toast-content">
-                    <h4>Advertencia</h4>
-                    <p>Tu suscripción Premium vence en 3 días. Renueva para mantener todos los beneficios.</p>
-                </div>
-            </div>
+        <div class="toast-container" id="toast-container">
+            <!-- Toasts will be dynamically added here -->
         </div>
     </div>
 
@@ -2927,19 +3073,34 @@
         const categorySelect = document.getElementById('category');
         const inmueblesFilters = document.getElementById('inmuebles-filters');
         const automovilesFilters = document.getElementById('automoviles-filters');
-        const motosFilters = document.getElementById('motos-fields');
+        const motosFilters = document.getElementById('motos-filters');
         const adCategorySelect = document.getElementById('ad-category');
         const inmueblesFields = document.getElementById('inmuebles-fields');
         const automovilesFields = document.getElementById('automoviles-fields');
         const motosFields = document.getElementById('motos-fields');
         const createAdModal = document.getElementById('create-ad-modal');
         const modalCloseButtons = document.querySelectorAll('.modal-close');
-        const createAdButton = document.querySelector('.sidebar-footer .btn');
-        const categorySpecificFields = document.getElementById('category-specific-fields');
+        const createAdButton = document.getElementById('create-ad-btn');
+        const notificationIcon = document.getElementById('notification-icon');
+        const messageIcon = document.getElementById('message-icon');
+        const notificationsPanel = document.getElementById('notifications-panel');
+        const messagesPanel = document.getElementById('messages-panel');
+        const markAllReadBtn = document.getElementById('mark-all-read');
+        const markAllMessagesReadBtn = document.getElementById('mark-all-messages-read');
+        const viewDetailButtons = document.querySelectorAll('.view-detail-btn');
+        const sendProposalBtn = document.getElementById('send-proposal-btn');
+        const addFavoriteBtn = document.getElementById('add-favorite-btn');
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        const upgradeFromDetailBtn = document.getElementById('upgrade-from-detail');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const publishAdBtn = document.getElementById('publish-ad-btn');
+        const logoLink = document.getElementById('logo-link');
+        const userMenu = document.getElementById('user-menu');
         
         // View Navigation
         const views = document.querySelectorAll('.view');
-        const navLinks = document.querySelectorAll('nav ul li a, .sidebar-menu a, .mobile-menu-item');
+        const navLinks = document.querySelectorAll('.nav-link');
         
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -2955,17 +3116,20 @@
             // Set up chat functionality
             setupChat();
             
-            // Simulate toast notifications
-            setTimeout(() => {
-                document.querySelector('.toast.success').style.display = 'flex';
-            }, 1000);
+            // Set up notifications and messages panels
+            setupNotifications();
             
-            setTimeout(() => {
-                document.querySelector('.toast.warning').style.display = 'flex';
-            }, 3000);
+            // Set up detail view buttons
+            setupDetailViews();
+            
+            // Set up other button interactions
+            setupButtonInteractions();
             
             // Set up PWA installation
             setupPWA();
+            
+            // Initialize data
+            initializeData();
         });
         
         // Category Filters Functionality
@@ -2974,7 +3138,7 @@
                 // Hide all filters
                 inmueblesFilters.style.display = 'none';
                 automovilesFilters.style.display = 'none';
-                document.getElementById('motos-filters').style.display = 'none';
+                motosFilters.style.display = 'none';
                 
                 // Show relevant filters
                 if (this.value === 'Inmuebles') {
@@ -2982,37 +3146,7 @@
                 } else if (this.value === 'Automóviles') {
                     automovilesFilters.style.display = 'grid';
                 } else if (this.value === 'Motos') {
-                    document.getElementById('motos-filters').style.display = 'grid';
-                }
-            });
-            
-            // Initialize with default category
-            if (categorySelect.value === 'Inmuebles') {
-                inmueblesFilters.style.display = 'grid';
-            }
-        }
-        
-        // Ad Creation Modal
-        function setupAdCreationModal() {
-            // Open modal
-            createAdButton.addEventListener('click', function() {
-                createAdModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-            
-            // Close modal
-            modalCloseButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                });
-            });
-            
-            // Close modal when clicking outside
-            createAdModal.addEventListener('click', function(e) {
-                if (e.target === createAdModal) {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
+                    motosFilters.style.display = 'grid';
                 }
             });
             
@@ -3032,11 +3166,32 @@
                     motosFields.style.display = 'block';
                 }
             });
+        }
+        
+        // Ad Creation Modal
+        function setupAdCreationModal() {
+            // Open modal
+            createAdButton.addEventListener('click', function() {
+                createAdModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                showToast('Crear Aviso', 'Completa el formulario para publicar tu necesidad', 'success');
+            });
             
-            // Initialize with default category
-            if (adCategorySelect.value === 'inmuebles') {
-                inmueblesFields.style.display = 'block';
-            }
+            // Close modal
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            });
+            
+            // Close modal when clicking outside
+            createAdModal.addEventListener('click', function(e) {
+                if (e.target === createAdModal) {
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
         }
         
         // Navigation between views
@@ -3044,6 +3199,9 @@
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
+                    
+                    // Get the target view ID
+                    const targetViewId = this.getAttribute('data-view');
                     
                     // Remove active class from all links and views
                     navLinks.forEach(l => l.classList.remove('active'));
@@ -3053,27 +3211,49 @@
                     this.classList.add('active');
                     
                     // Show corresponding view
-                    let viewId = 'landing-view';
-                    
-                    if (this.textContent.includes('Dashboard') || this.textContent.includes('Inicio')) {
-                        viewId = 'dashboard-view';
-                    } else if (this.textContent.includes('Avisos') || this.textContent.includes('Explorar')) {
-                        viewId = 'ads-view';
-                    } else if (this.textContent.includes('Perfil')) {
-                        viewId = 'profile-view';
-                    } else if (this.textContent.includes('Admin')) {
-                        viewId = 'admin-view';
-                    } else if (this.textContent.includes('Detalles')) {
-                        viewId = 'ad-detail-view';
-                    }
-                    
-                    document.getElementById(viewId).classList.add('active');
+                    document.getElementById(targetViewId).classList.add('active');
                     
                     // Close mobile menu if open
                     if (window.innerWidth <= 768) {
                         document.querySelector('.mobile-menu').classList.remove('active');
                     }
+                    
+                    // Close notifications and messages panels
+                    notificationsPanel.classList.remove('active');
+                    messagesPanel.classList.remove('active');
+                    
+                    // Show toast confirmation
+                    const viewNames = {
+                        'dashboard-view': 'Dashboard',
+                        'ads-view': 'Explorar Avisos',
+                        'ad-detail-view': 'Detalle del Aviso',
+                        'profile-view': 'Mi Perfil',
+                        'admin-view': 'Panel de Administración'
+                    };
+                    
+                    showToast('Navegación', `Has navegado a ${viewNames[targetViewId] || targetViewId}`, 'success');
                 });
+            });
+            
+            // Logo link to dashboard
+            logoLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and views
+                navLinks.forEach(l => l.classList.remove('active'));
+                views.forEach(view => view.classList.remove('active'));
+                
+                // Add active class to dashboard link
+                document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
+                
+                // Show dashboard view
+                document.getElementById('dashboard-view').classList.add('active');
+                
+                // Close notifications and messages panels
+                notificationsPanel.classList.remove('active');
+                messagesPanel.classList.remove('active');
+                
+                showToast('Navegación', 'Has regresado al Dashboard', 'success');
             });
         }
         
@@ -3088,8 +3268,11 @@
                         sendMessage(this, index);
                     }
                 });
-                
-                sendButtons[index].addEventListener('click', () => {
+            });
+            
+            sendButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    const input = document.querySelector(`.chat-input[data-chat-id="${button.getAttribute('data-chat-id')}"]`);
                     if (input.value.trim() !== '') {
                         sendMessage(input, index);
                     }
@@ -3127,13 +3310,253 @@
                     `;
                     chatMessages.appendChild(responseDiv);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Show notification for new message
+                    if (chatIndex === 0) {
+                        showToast('Nuevo Mensaje', 'María Contreras ha respondido a tu mensaje', 'success');
+                    } else {
+                        showToast('Nuevo Mensaje', 'Roberto Pérez ha respondido a tu mensaje', 'success');
+                    }
                 }, 1000);
+                
+                showToast('Mensaje Enviado', 'Tu mensaje ha sido enviado exitosamente', 'success');
             }
             
             function getCurrentTime() {
                 const now = new Date();
                 return now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
             }
+        }
+        
+        // Notifications and Messages Panels
+        function setupNotifications() {
+            // Toggle notifications panel
+            notificationIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationsPanel.classList.toggle('active');
+                messagesPanel.classList.remove('active');
+                
+                // Mark notifications as read when opened
+                if (notificationsPanel.classList.contains('active')) {
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    document.querySelector('.notification-badge').textContent = '0';
+                }
+            });
+            
+            // Toggle messages panel
+            messageIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                messagesPanel.classList.toggle('active');
+                notificationsPanel.classList.remove('active');
+                
+                // Mark messages as read when opened
+                if (messagesPanel.classList.contains('active')) {
+                    document.querySelectorAll('.message-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    document.querySelectorAll('.notification-badge')[1].textContent = '0';
+                }
+            });
+            
+            // Close panels when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationIcon.contains(e.target) && !notificationsPanel.contains(e.target)) {
+                    notificationsPanel.classList.remove('active');
+                }
+                
+                if (!messageIcon.contains(e.target) && !messagesPanel.contains(e.target)) {
+                    messagesPanel.classList.remove('active');
+                }
+            });
+            
+            // Mark all notifications as read
+            markAllReadBtn.addEventListener('click', function() {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.querySelector('.notification-badge').textContent = '0';
+                showToast('Notificaciones', 'Todas las notificaciones han sido marcadas como leídas', 'success');
+            });
+            
+            // Mark all messages as read
+            markAllMessagesReadBtn.addEventListener('click', function() {
+                document.querySelectorAll('.message-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.querySelectorAll('.notification-badge')[1].textContent = '0';
+                showToast('Mensajes', 'Todos los mensajes han sido marcados como leídos', 'success');
+            });
+            
+            // Notification item click
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Navigate to relevant section based on notification
+                    if (this.querySelector('h4').textContent.includes('propuesta')) {
+                        // Go to proposals section (dashboard for now)
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
+                        views.forEach(view => view.classList.remove('active'));
+                        document.getElementById('dashboard-view').classList.add('active');
+                        showToast('Navegación', 'Has navegado a tus propuestas', 'success');
+                    } else if (this.querySelector('h4').textContent.includes('mensaje')) {
+                        // Go to chat section (dashboard for now)
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
+                        views.forEach(view => view.classList.remove('active'));
+                        document.getElementById('dashboard-view').classList.add('active');
+                        showToast('Navegación', 'Has navegado a tus mensajes', 'success');
+                    }
+                    
+                    // Close panel
+                    notificationsPanel.classList.remove('active');
+                });
+            });
+            
+            // Message item click
+            document.querySelectorAll('.message-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Go to chat section (dashboard for now)
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
+                    views.forEach(view => view.classList.remove('active'));
+                    document.getElementById('dashboard-view').classList.add('active');
+                    
+                    // Close panel
+                    messagesPanel.classList.remove('active');
+                    
+                    showToast('Navegación', `Has abierto la conversación con ${this.querySelector('h4').textContent}`, 'success');
+                });
+            });
+        }
+        
+        // Detail views functionality
+        function setupDetailViews() {
+            viewDetailButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Switch to ad-detail-view
+                    views.forEach(view => view.classList.remove('active'));
+                    document.getElementById('ad-detail-view').classList.add('active');
+                    
+                    // Update active navigation link
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const adLink = Array.from(navLinks).find(link => 
+                        link.getAttribute('data-view') === 'ads-view'
+                    );
+                    if (adLink) adLink.classList.add('active');
+                    
+                    // Close notifications and messages panels
+                    notificationsPanel.classList.remove('active');
+                    messagesPanel.classList.remove('active');
+                    
+                    // Show toast confirmation
+                    showToast('Aviso Seleccionado', 'Se ha cargado el detalle del aviso seleccionado', 'success');
+                });
+            });
+        }
+        
+        // Button interactions
+        function setupButtonInteractions() {
+            // Send proposal button
+            if (sendProposalBtn) {
+                sendProposalBtn.addEventListener('click', function() {
+                    showToast('Propuesta Enviada', 'Tu propuesta ha sido enviada exitosamente al comprador', 'success');
+                });
+            }
+            
+            // Add to favorites button
+            if (addFavoriteBtn) {
+                addFavoriteBtn.addEventListener('click', function() {
+                    showToast('Aviso Guardado', 'El aviso ha sido agregado a tus favoritos', 'success');
+                });
+            }
+            
+            // Upgrade buttons
+            if (upgradeBtn) {
+                upgradeBtn.addEventListener('click', function() {
+                    showToast('Suscripción', 'Has iniciado el proceso de actualización a Premium', 'success');
+                });
+            }
+            
+            if (upgradeFromDetailBtn) {
+                upgradeFromDetailBtn.addEventListener('click', function() {
+                    showToast('Suscripción', 'Has iniciado el proceso de actualización a Premium', 'success');
+                });
+            }
+            
+            // Save profile button
+            if (saveProfileBtn) {
+                saveProfileBtn.addEventListener('click', function() {
+                    showToast('Perfil Actualizado', 'Tu información personal ha sido guardada exitosamente', 'success');
+                });
+            }
+            
+            // Apply filters button
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function() {
+                    showToast('Filtros Aplicados', 'Los filtros han sido aplicados a la búsqueda de avisos', 'success');
+                });
+            }
+            
+            // Publish ad button
+            if (publishAdBtn) {
+                publishAdBtn.addEventListener('click', function() {
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    
+                    // Switch to ads view
+                    views.forEach(view => view.classList.remove('active'));
+                    document.getElementById('ads-view').classList.add('active');
+                    
+                    // Update active navigation link
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const adLink = Array.from(navLinks).find(link => 
+                        link.getAttribute('data-view') === 'ads-view'
+                    );
+                    if (adLink) adLink.classList.add('active');
+                    
+                    showToast('Aviso Publicado', 'Tu aviso ha sido publicado exitosamente y está visible para los vendedores', 'success');
+                });
+            }
+            
+            // User menu dropdown
+            userMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('Menú de Usuario', 'Opciones de perfil y configuración', 'info');
+            });
+        }
+        
+        // Toast functionality
+        function showToast(title, message, type = 'success') {
+            const toastContainer = document.getElementById('toast-container');
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div style="margin-right: 16px;">
+                    <i>${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</i>
+                </div>
+                <div class="toast-content">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            // Add to container
+            toastContainer.appendChild(toast);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
         }
         
         // PWA Installation
@@ -3146,57 +3569,55 @@
                 // Stash the event so it can be triggered later
                 deferredPrompt = e;
                 
-                // Show installation button
-                const installButton = document.createElement('button');
-                installButton.textContent = 'Instalar App';
-                installButton.className = 'btn btn-primary';
-                installButton.style.position = 'fixed';
-                installButton.style.bottom = '80px';
-                installButton.style.right = '24px';
-                installButton.style.zIndex = '1000';
-                installButton.style.boxShadow = 'var(--box-shadow-hover)';
-                
-                installButton.addEventListener('click', async () => {
-                    // Hide the button
-                    installButton.remove();
-                    
-                    // Show the install prompt
-                    deferredPrompt.prompt();
-                    
-                    // Wait for the user to respond to the prompt
-                    const { outcome } = await deferredPrompt.userChoice;
-                    
-                    // Reset the deferred prompt variable
-                    deferredPrompt = null;
-                });
-                
-                document.body.appendChild(installButton);
-            });
-        }
-        
-        // Simulate data loading
-        function simulateDataLoading() {
-            const loadingElements = document.querySelectorAll('.stat-card .value, .profile-stat .value');
-            
-            loadingElements.forEach(element => {
-                const originalValue = element.textContent;
-                element.textContent = '';
-                
-                // Add loading animation
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'loading';
-                element.appendChild(loadingDiv);
-                
-                // Simulate loading delay
+                // Show installation button after a delay
                 setTimeout(() => {
-                    element.removeChild(loadingDiv);
-                    element.textContent = originalValue;
-                }, 800);
+                    const installButton = document.createElement('button');
+                    installButton.textContent = 'Instalar App';
+                    installButton.className = 'btn btn-primary';
+                    installButton.style.position = 'fixed';
+                    installButton.style.bottom = '80px';
+                    installButton.style.right = '24px';
+                    installButton.style.zIndex = '1000';
+                    installButton.style.boxShadow = 'var(--box-shadow-hover)';
+                    installButton.style.borderRadius = '50px';
+                    installButton.style.padding = '12px 24px';
+                    
+                    installButton.addEventListener('click', async () => {
+                        // Hide the button
+                        installButton.remove();
+                        
+                        // Show the install prompt
+                        deferredPrompt.prompt();
+                        
+                        // Wait for the user to respond to the prompt
+                        const { outcome } = await deferredPrompt.userChoice;
+                        
+                        // Reset the deferred prompt variable
+                        deferredPrompt = null;
+                        
+                        if (outcome === 'accepted') {
+                            showToast('Instalación', 'MarketConnect Pro ha sido instalado en tu dispositivo', 'success');
+                        } else {
+                            showToast('Instalación', 'La instalación fue cancelada', 'warning');
+                        }
+                    });
+                    
+                    document.body.appendChild(installButton);
+                }, 5000); // Show after 5 seconds
             });
         }
         
-        // Initialize data loading simulation
-        setTimeout(simulateDataLoading, 300);
+        // Initialize data
+        function initializeData() {
+            // Simulate some initial toasts
+            setTimeout(() => {
+                showToast('Bienvenido', '¡Hola Juan! Bienvenido a MarketConnect Pro', 'success');
+            }, 1000);
+            
+            setTimeout(() => {
+                showToast('Actualización', 'Tu suscripción Premium vence en 3 días. Renueva para mantener todos los beneficios.', 'warning');
+            }, 3000);
+        }
     </script>
 </body>
 </html>
