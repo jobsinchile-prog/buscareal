@@ -432,315 +432,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards and UI Elements */
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 24px;
-            color: var(--darker);
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title i {
-            margin-right: 12px;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-size: 1.6rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 24px;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-hover);
-        }
-
-        .stat-card .icon {
-            font-size: 2.2rem;
-            margin-bottom: 16px;
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 16px;
-        }
-
-        .stat-card .primary {
-            background: rgba(67, 97, 238, 0.15);
-            color: var(--primary);
-        }
-
-        .stat-card .secondary {
-            background: rgba(114, 9, 183, 0.15);
-            color: var(--secondary);
-        }
-
-        .stat-card .success {
-            background: rgba(46, 204, 113, 0.15);
-            color: var(--success);
-        }
-
-        .stat-card .warning {
-            background: rgba(243, 156, 18, 0.15);
-            color: var(--warning);
-        }
-
-        .stat-card .label {
-            font-size: 0.95rem;
-            color: var(--gray);
-            margin-bottom: 8px;
-        }
-
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .stat-card .change {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .stat-card .change.positive {
-            color: var(--success);
-        }
-
-        .stat-card .change.negative {
-            color: var(--danger);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-hover);
-        }
-
-        .card-img {
-            height: 180px;
-            background: var(--light-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-content {
-            padding: 20px;
-        }
-
-        .card-category {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        .category-inmuebles {
-            background: rgba(67, 97, 238, 0.15);
-            color: var(--primary);
-        }
-
-        .category-automoviles {
-            background: rgba(114, 9, 183, 0.15);
-            color: var(--secondary);
-        }
-
-        .category-motos {
-            background: rgba(76, 201, 240, 0.15);
-            color: var(--accent);
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .card-desc {
-            color: var(--gray);
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            font-size: 0.95rem;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 16px;
-            border-top: 1px solid var(--light-gray);
-        }
-
-        .card-price {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--primary);
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: var(--gradient-secondary);
-            color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: rgba(67, 97, 238, 0.1);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .btn-block {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            font-size: 1.05rem;
-            margin-top: 16px;
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--light-gray);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* Filters */
-        .filters-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-
-        .filters-title {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .filters-title i {
-            margin-right: 10px;
-            color: var(--primary);
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-        }
-
         /* Modals */
         .modal {
             display: none;
@@ -764,7 +455,7 @@
             background: white;
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 600px;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -822,240 +513,168 @@
             gap: 12px;
         }
 
-        /* Chat Interface */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        /* Plan Cards */
+        .plan-card {
             background: white;
+            border: 2px solid var(--light-gray);
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-        }
-
-        .chat-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            align-items: center;
-        }
-
-        .chat-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--gradient-accent);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 16px;
-            font-size: 1.2rem;
-        }
-
-        .chat-info h3 {
-            font-size: 1.25rem;
-            margin-bottom: 4px;
-        }
-
-        .chat-info p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .chat-messages {
-            flex: 1;
             padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .message {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            position: relative;
-            line-height: 1.5;
-        }
-
-        .message.sent {
-            align-self: flex-end;
-            background: var(--gradient-primary);
-            color: white;
-            border-bottom-right-radius: 6px;
-        }
-
-        .message.received {
-            align-self: flex-start;
-            background: var(--light-gray);
-            color: var(--dark);
-            border-bottom-left-radius: 6px;
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            opacity: 0.8;
-            margin-top: 6px;
-            text-align: right;
-        }
-
-        .message.received .message-time {
-            text-align: left;
-        }
-
-        .chat-input-container {
-            padding: 16px 24px;
-            border-top: 1px solid var(--light-gray);
-            display: flex;
-            gap: 12px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 14px 20px;
-            border: 1px solid var(--light-gray);
-            border-radius: 50px;
-            font-size: 1rem;
-            outline: none;
+            margin-bottom: 16px;
             transition: var(--transition);
+            cursor: pointer;
+            position: relative;
         }
 
-        .chat-input:focus {
+        .plan-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-hover);
         }
 
-        .chat-actions {
+        .plan-card.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .plan-card.premium {
+            border-color: var(--secondary);
+        }
+
+        .plan-card.premium.selected {
+            background: rgba(114, 9, 183, 0.05);
+        }
+
+        .plan-header {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
-        .chat-action {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+        .plan-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .plan-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .plan-card.premium .plan-price {
+            color: var(--secondary);
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .plan-features li {
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: var(--light-gray);
-            color: var(--primary);
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 1.2rem;
         }
 
-        .chat-action:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .chat-action.camera {
-            background: var(--success);
-            color: white;
-        }
-
-        .chat-action.attach {
-            background: var(--warning);
-            color: white;
-        }
-
-        .chat-action.send {
-            background: var(--gradient-primary);
-            color: white;
-            width: 50px;
-        }
-
-        /* Tables */
-        .table-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th {
-            background: var(--light-gray);
-            padding: 16px 20px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        table td {
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        table tr:last-child td {
-            border-bottom: none;
-        }
-
-        table tr:hover {
-            background: var(--light-gray);
-        }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .status-pending {
-            background: rgba(243, 156, 18, 0.15);
-            color: var(--warning);
-        }
-
-        .status-accepted {
-            background: rgba(46, 204, 113, 0.15);
+        .plan-features i {
+            margin-right: 8px;
             color: var(--success);
         }
 
-        .status-rejected {
-            background: rgba(231, 76, 60, 0.15);
-            color: var(--danger);
-        }
-
-        .status-negotiating {
-            background: rgba(76, 201, 240, 0.15);
-            color: var(--accent);
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
+        .selected-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-left: 8px;
         }
 
-        .badge.premium {
-            background: var(--gradient-secondary);
-            color: white;
+        .plan-card.premium .selected-badge {
+            background: var(--secondary);
         }
 
-        .badge.free {
-            background: var(--light-gray);
+        /* Logout Modal */
+        .logout-modal-content {
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .logout-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--danger);
+        }
+
+        .logout-message {
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .login-screen.active {
+            display: flex;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .login-subtitle {
             color: var(--gray);
+            margin-bottom: 32px;
+        }
+
+        .login-form {
+            margin-bottom: 24px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            margin-top: 16px;
         }
 
         /* Toast Notifications */
@@ -1128,6 +747,26 @@
             font-size: 0.95rem;
         }
 
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge.premium {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        .badge.free {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+
         /* Notifications Panel */
         .notifications-panel {
             position: fixed;
@@ -1148,164 +787,6 @@
             display: flex;
         }
 
-        .notifications-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .notifications-list {
-            padding: 0;
-            list-style: none;
-        }
-
-        .notification-item {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            gap: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .notification-item:hover {
-            background: var(--light-gray);
-        }
-
-        .notification-item.unread {
-            background: rgba(67, 97, 238, 0.05);
-            border-left: 4px solid var(--primary);
-        }
-
-        .notification-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .notification-content h4 {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .notification-content p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .notification-time {
-            font-size: 0.8rem;
-            color: var(--gray);
-            margin-top: 4px;
-        }
-
-        .mark-all-read {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-weight: 500;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: var(--transition);
-        }
-
-        .mark-all-read:hover {
-            background: var(--light-gray);
-        }
-
-        /* Messages Panel */
-        .messages-panel {
-            position: fixed;
-            top: 72px;
-            right: 24px;
-            width: 400px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-hover);
-            z-index: 1500;
-            display: none;
-            flex-direction: column;
-            max-height: 80vh;
-        }
-
-        .messages-panel.active {
-            display: flex;
-        }
-
-        .messages-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .messages-list {
-            padding: 0;
-            list-style: none;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .message-item {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            gap: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .message-item:hover {
-            background: var(--light-gray);
-        }
-
-        .message-item.unread {
-            background: rgba(67, 97, 238, 0.05);
-            border-left: 4px solid var(--primary);
-        }
-
-        .message-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--gradient-accent);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .message-content h4 {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .message-content p {
-            color: var(--gray);
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 250px;
-        }
-
-        .message-time {
-            font-size: 0.8rem;
-            color: var(--gray);
-            margin-top: 4px;
-        }
-
         /* Mobile Menu */
         .mobile-menu {
             display: none;
@@ -1320,30 +801,6 @@
             padding: 0 20px;
             justify-content: space-around;
             align-items: center;
-        }
-
-        .mobile-menu-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
-            text-decoration: none;
-            font-size: 0.8rem;
-            transition: var(--transition);
-            padding: 8px;
-            border-radius: 12px;
-        }
-
-        .mobile-menu-item.active, 
-        .mobile-menu-item:hover {
-            color: var(--primary);
-            background: rgba(67, 97, 238, 0.1);
-        }
-
-        .mobile-menu-item i {
-            font-size: 1.6rem;
-            margin-bottom: 4px;
         }
 
         @media (max-width: 768px) {
@@ -1363,6 +820,36 @@
     </style>
 </head>
 <body>
+    <!-- Login Screen (hidden by default) -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-container">
+            <div class="login-logo">💼</div>
+            <h1 class="login-title">MarketConnect Pro</h1>
+            <p class="login-subtitle">Inicia sesión para continuar</p>
+            
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="tu@email.com" value="juan.soto@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="password123" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary login-btn">
+                    Iniciar Sesión
+                </button>
+            </form>
+            
+            <p style="color: var(--gray); font-size: 0.9rem;">
+                ¿No tienes cuenta? <a href="#" style="color: var(--primary); text-decoration: none;">Regístrate aquí</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App (hidden when logged out) -->
     <div id="app">
         <header>
             <a href="#" class="logo" id="logo-link">
@@ -1418,7 +905,6 @@
             </div>
         </header>
         
-        <!-- El resto del código HTML permanece igual -->
         <div class="mobile-menu">
             <a href="#" class="mobile-menu-item nav-link active" data-view="dashboard-view">
                 🏠
@@ -1449,7 +935,7 @@
                 
                 <div class="sidebar-footer">
                     <div class="premium-banner">
-                        <h3>¡Desbloquea todas las funciones!</</h3>
+                        <h3>¡Desbloquea todas las funciones!</h3>
                         <p>Actualiza a Premium para ver información completa de contactos, presupuestos exactos y direcciones.</p>
                         <button class="btn-upgrade" id="upgrade-btn">Actualizar a Premium</button>
                     </div>
@@ -1549,348 +1035,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="card">
-                            <div class="card-img">
-                                <img src="https://placehold.co/600x400?text=Moto+Deportiva" alt="Moto">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-category category-motos">Motos</span>
-                                <h3 class="card-title">Moto Deportiva 600cc</h3>
-                                <p class="card-desc">Busco moto deportiva de 600cc, modelo 2021 o 2022, en excelente estado, con máximo 5.000 km recorridos.</p>
-                                <div class="card-footer">
-                                    <div class="card-price">CLP 8.500.000 - 10.000.000</div>
-                                    <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="3">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <h2 class="section-title">💬 Chats Recientes</h2>
-                    
-                    <div class="cards-grid">
-                        <div class="card">
-                            <div class="chat-container">
-                                <div class="chat-header">
-                                    <div class="chat-avatar">MC</div>
-                                    <div class="chat-info">
-                                        <h3>María Contreras</h3>
-                                        <p>Vendedora Premium • Inmuebles</p>
-                                    </div>
-                                </div>
-                                <div class="chat-messages" id="chat-1">
-                                    <div class="message received">
-                                        Hola Juan, vi tu aviso de departamento en Providencia. Tengo una propiedad que podría interesarte.
-                                        <div class="message-time">10:24 AM</div>
-                                    </div>
-                                    <div class="message sent">
-                                        ¡Hola María! Me interesa saber más detalles. ¿Tiene estacionamiento y bodega?
-                                        <div class="message-time">10:26 AM</div>
-                                    </div>
-                                    <div class="message received">
-                                        Sí, tiene ambos. Es un piso 10 con vista despejada. ¿Te puedo enviar fotos y más información?
-                                        <div class="message-time">10:28 AM</div>
-                                    </div>
-                                </div>
-                                <div class="chat-input-container">
-                                    <input type="text" class="chat-input" placeholder="Escribe un mensaje..." data-chat-id="1">
-                                    <div class="chat-actions">
-                                        <button class="chat-action camera">📷</button>
-                                        <button class="chat-action attach">📎</button>
-                                        <button class="chat-action send" data-chat-id="1">➤</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="chat-container">
-                                <div class="chat-header">
-                                    <div class="chat-avatar">RP</div>
-                                    <div class="chat-info">
-                                        <h3>Roberto Pérez</h3>
-                                        <p>Vendedor Free • Automóviles</p>
-                                    </div>
-                                </div>
-                                <div class="chat-messages" id="chat-2">
-                                    <div class="message received">
-                                        Buenos días, respecto a tu búsqueda de SUV familiar, tengo un modelo 2021 con 25.000 km.
-                                        <div class="message-time">Ayer, 15:42</div>
-                                    </div>
-                                    <div class="message sent">
-                                        ¡Hola Roberto! ¿Podrías enviarme más detalles y fotos del vehículo?
-                                        <div class="message-time">Ayer, 16:05</div>
-                                    </div>
-                                    <div class="message received">
-                                        Claro, te enviaré la información completa. ¿Te interesa agendar una visita?
-                                        <div class="message-time">Ayer, 16:10</div>
-                                    </div>
-                                </div>
-                                <div class="chat-input-container">
-                                    <input type="text" class="chat-input" placeholder="Escribe un mensaje..." data-chat-id="2">
-                                    <div class="chat-actions">
-                                        <button class="chat-action camera">📷</button>
-                                        <button class="chat-action attach">📎</button>
-                                        <button class="chat-action send" data-chat-id="2">➤</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Ads List View -->
-                <section id="ads-view" class="view">
-                    <h1 class="section-title">🔍 Explorar Avisos</h1>
-                    
-                    <div class="filters-container">
-                        <h2 class="filters-title">🔎 Filtros de Búsqueda</h2>
-                        <div class="filters-grid">
-                            <div class="form-group">
-                                <label for="category">Categoría</label>
-                                <select id="category" class="form-control">
-                                    <option value="all">Todas las categorías</option>
-                                    <option value="inmuebles">Inmuebles</option>
-                                    <option value="automoviles">Automóviles</option>
-                                    <option value="motos">Motos</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="currency">Moneda</label>
-                                <select id="currency" class="form-control">
-                                    <option>CLP (Pesos Chilenos)</option>
-                                    <option>USD (Dólares)</option>
-                                    <option>UF (Unidades de Fomento)</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="location">Ubicación</label>
-                                <input type="text" id="location" class="form-control" placeholder="Región, ciudad...">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="subscription">Tipo de Suscripción</label>
-                                <select id="subscription" class="form-control">
-                                    <option>Todos los vendedores</option>
-                                    <option>Solo Premium</option>
-                                    <option>Gratis y Premium</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div id="category-filters">
-                            <!-- Inmuebles Filters -->
-                            <div id="inmuebles-filters" class="form-row" style="display: none;">
-                                <div class="form-group">
-                                    <label for="property-type">Tipo de Propiedad</label>
-                                    <select id="property-type" class="form-control">
-                                        <option>Todos</option>
-                                        <option>Departamento</option>
-                                        <option>Casa</option>
-                                        <option>Oficina</option>
-                                        <option>Local Comercial</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="bedrooms">Dormitorios</label>
-                                    <select id="bedrooms" class="form-control">
-                                        <option>Cualquiera</option>
-                                        <option>1+</option>
-                                        <option>2+</option>
-                                        <option>3+</option>
-                                        <option>4+</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="bathrooms">Baños</label>
-                                    <select id="bathrooms" class="form-control">
-                                        <option>Cualquiera</option>
-                                        <option>1+</option>
-                                        <option>2+</option>
-                                        <option>3+</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Automóviles Filters -->
-                            <div id="automoviles-filters" class="form-row" style="display: none;">
-                                <div class="form-group">
-                                    <label for="car-type">Tipo de Vehículo</label>
-                                    <select id="car-type" class="form-control">
-                                        <option>Todos</option>
-                                        <option>Sedán</option>
-                                        <option>SUV</option>
-                                        <option>Hatchback</option>
-                                        <option>Pick-up</option>
-                                        <option>Deportivo</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="brand">Marca</label>
-                                    <select id="brand" class="form-control">
-                                        <option>Todas</option>
-                                        <option>Toyota</option>
-                                        <option>Nissan</option>
-                                        <option>Chevrolet</option>
-                                        <option>Hyundai</option>
-                                        <option>Kia</option>
-                                        <option>Ford</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="year">Año</label>
-                                    <select id="year" class="form-control">
-                                        <option>Cualquiera</option>
-                                        <option>2020+</option>
-                                        <option>2018+</option>
-                                        <option>2015+</option>
-                                        <option>Antes de 2015</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="mileage">Kilometraje</label>
-                                    <select id="mileage" class="form-control">
-                                        <option>Cualquiera</option>
-                                        <option>Menos de 30.000 km</option>
-                                        <option>30.000 - 60.000 km</option>
-                                        <option>60.000 - 100.000 km</option>
-                                        <option>Más de 100.000 km</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Motos Filters -->
-                            <div id="motos-filters" class="form-row" style="display: none;">
-                                <div class="form-group">
-                                    <label for="motorcycle-type">Tipo de Moto</label>
-                                    <select id="motorcycle-type" class="form-control">
-                                        <option>Todas</option>
-                                        <option>Deportiva</option>
-                                        <option>Naked</option>
-                                        <option>Touring</option>
-                                        <option>Trail</option>
-                                        <option>Scooter</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="motorcycle-brand">Marca</label>
-                                    <select id="motorcycle-brand" class="form-control">
-                                        <option>Todas</option>
-                                        <option>Honda</option>
-                                        <option>Yamaha</option>
-                                        <option>Suzuki</option>
-                                        <option>Kawasaki</option>
-                                        <option>Ducati</option>
-                                        <option>BMW</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="engine">Cilindrada</label>
-                                    <select id="engine" class="form-control">
-                                        <option>Cualquiera</option>
-                                        <option>Menos de 250cc</option>
-                                        <option>250cc - 500cc</option>
-                                        <option>500cc - 750cc</option>
-                                        <option>Más de 750cc</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="motorcycle-year">Año</label>
-                                    <select id="motorcycle-year" class="form-control">
-                                        <option>Cualquiera</option>
-                                        <option>2021+</option>
-                                        <option>2019+</option>
-                                        <option>2017+</option>
-                                        <option>Antes de 2017</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-primary btn-block" id="apply-filters">Aplicar Filtros</button>
-                    </div>
-                    
-                    <div class="cards-grid">
-                        <!-- Los anuncios se mantienen igual -->
-                        <div class="card">
-                            <div class="card-img">
-                                <img src="https://placehold.co/600x400?text=Oficina+Las+Condes" alt="Oficina">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-category category-inmuebles">Inmuebles</span>
-                                <h3 class="card-title">Oficina Ejecutiva en Las Condes</h3>
-                                <p class="card-desc">Busco oficina de mínimo 80m², con 2 baños, cocina pequeña y estacionamiento para 2 vehículos en sector oriente de Santiago.</p>
-                                <div class="card-footer">
-                                    <div class="card-price">UF 4.500 - 5.800</div>
-                                    <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="4">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-img">
-                                <img src="https://placehold.co/600x400?text=Casa+Ñuñoa" alt="Casa">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-category category-inmuebles">Inmuebles</span>
-                                <h3 class="card-title">Casa Familiar en Ñuñoa</h3>
-                                <p class="card-desc">Necesito casa con 4 dormitorios, 3 baños, piscina, jardín y estacionamiento para 3 autos en comuna de Ñuñoa o Providencia.</p>
-                                <div class="card-footer">
-                                    <div class="card-price">UF 8.000 - 10.000</div>
-                                    <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="5">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-img">
-                                <img src="https://placehold.co/600x400?text=Pickup+2022" alt="Pickup">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-category category-automoviles">Automóviles</span>
-                                <h3 class="card-title">Pick-up Doble Cabina 4x4</h3>
-                                <p class="card-desc">Busco pickup doble cabina, 4x4, diesel, año 2021 o 2022, con menos de 20.000 km y en perfecto estado mecánico.</p>
-                                <div class="card-footer">
-                                    <div class="card-price">USD 35.000 - 42.000</div>
-                                    <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="6">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-img">
-                                <img src="https://placehold.co/600x400?text=Moto+Touring" alt="Moto Touring">
-                            </div>
-                            <div class="card-content">
-                                <span class="card-category category-motos">Motos</span>
-                                <h3 class="card-title">Moto Touring para Larga Distancia</h3>
-                                <p class="card-desc">Busco moto touring tipo BMW R1250GS o similar, modelo 2020+, con maletas, parabrisas alto y máximo 15.000 km.</p>
-                                <div class="card-footer">
-                                    <div class="card-price">CLP 15.000.000 - 18.000.000</div>
-                                    <div class="card-actions">
-                                        <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="7">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
                 
@@ -1919,436 +1063,93 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 350px; gap: 24px; margin-bottom: 32px;">
-                        <div>
-                            <div class="card" style="margin-bottom: 24px;">
-                                <div class="card-content">
-                                    <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                        <span style="margin-right: 10px;">⚙️</span> Información Personal
-                                    </h3>
-                                    
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="full-name">Nombre Completo</label>
-                                            <input type="text" id="full-name" class="form-control" value="Juan Carlos Soto Méndez">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" id="email" class="form-control" value="juan.soto@email.com">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="phone">Teléfono</label>
-                                            <input type="tel" id="phone" class="form-control" value="+56 9 1234 5678">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="profile-location">Ubicación</label>
-                                            <input type="text" id="profile-location" class="form-control" value="Santiago, Chile">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="bio">Biografía Profesional</label>
-                                        <textarea id="bio" class="form-control" rows="4">Vendedor especializado en propiedades de alto standing en las comunas oriente de Santiago. Más de 10 años de experiencia en el mercado inmobiliario chileno. Miembro de la Cámara Chilena de la Construcción.</textarea>
-                                    </div>
-                                    
-                                    <button class="btn btn-primary btn-block" id="save-profile-btn">Guardar Cambios</button>
-                                </div>
-                            </div>
-                            
-                            <div class="card">
-                                <div class="card-content">
-                                    <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                        <span style="margin-right: 10px;">📊</span> Historial de Actividad
-                                    </h3>
-                                    
-                                    <div class="table-container">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Fecha</th>
-                                                    <th>Actividad</th>
-                                                    <th>Estado</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>05/02/2026</td>
-                                                    <td>Propuesta enviada para departamento en Vitacura</td>
-                                                    <td><span class="status-badge status-negotiating">Negociando</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>04/02/2026</td>
-                                                    <td>Nuevo aviso publicado: Casa en Ñuñoa</td>
-                                                    <td><span class="status-badge status-accepted">Activo</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>03/02/2026</td>
-                                                    <td>Propuesta aceptada para oficina en Las Condes</td>
-                                                    <td><span class="status-badge status-accepted">Aceptada</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>01/02/2026</td>
-                                                    <td>Nueva propuesta recibida para departamento en Providencia</td>
-                                                    <td><span class="status-badge status-pending">Pendiente</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>30/01/2026</td>
-                                                    <td>Chat iniciado con María Contreras</td>
-                                                    <td><span class="status-badge status-accepted">Activo</span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="card" style="margin-bottom: 24px;">
-                                <div class="card-content">
-                                    <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                        <span style="margin-right: 10px;">⭐</span> Mi Suscripción
-                                    </h3>
-                                    
-                                    <div style="text-align: center; padding: 20px; background: rgba(114, 9, 183, 0.08); border-radius: 12px; margin-bottom: 20px;">
-                                        <div style="font-size: 3rem; margin-bottom: 12px;">⭐</div>
-                                        <h4 style="margin-bottom: 8px;">Plan Premium</h4>
-                                        <p style="color: var(--gray); margin-bottom: 16px;">Vencimiento: 5 de agosto de 2026</p>
-                                        <div style="font-size: 1.8rem; font-weight: 700; color: var(--secondary); margin-bottom: 20px;">USD $19.90/mes</div>
-                                        <button class="btn btn-outline" id="manage-subscription-btn" style="width: 100%;">Administrar Suscripción</button>
-                                    </div>
-                                    
-                                    <h4 style="margin-bottom: 16px; display: flex; align-items: center;">
-                                        <span style="margin-right: 8px;">✅</span> Beneficios Premium
-                                    </h4>
-                                    <ul style="padding-left: 20px; margin-bottom: 20px;">
-                                        <li style="margin-bottom: 8px;">Acceso a información completa de contactos</li>
-                                        <li style="margin-bottom: 8px;">Ver presupuestos exactos y direcciones</li>
-                                        <li style="margin-bottom: 8px;">Enviar propuestas ilimitadas</li>
-                                        <li style="margin-bottom: 8px;">Destacar tus propuestas</li>
-                                        <li>Soporte prioritario 24/7</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="card">
-                                <div class="card-content">
-                                    <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                        <span style="margin-right: 10px;">🎯</span> Preferencias de Categorías
-                                    </h3>
-                                    
-                                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                                        <label style="display: flex; align-items: center; cursor: pointer;">
-                                            <input type="checkbox" checked style="width: 18px; height: 18px; margin-right: 10px;">
-                                            <span>Inmuebles</span>
-                                        </label>
-                                        <label style="display: flex; align-items: center; cursor: pointer;">
-                                            <input type="checkbox" style="width: 18px; height: 18px; margin-right: 10px;">
-                                            <span>Automóviles</span>
-                                        </label>
-                                        <label style="display: flex; align-items: center; cursor: pointer;">
-                                            <input type="checkbox" style="width: 18px; height: 18px; margin-right: 10px;">
-                                            <span>Motos</span>
-                                        </label>
-                                    </div>
-                                    
-                                    <button class="btn btn-primary btn-block" id="save-preferences-btn" style="margin-top: 24px;">Guardar Preferencias</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Admin Panel View -->
-                <section id="admin-view" class="view">
-                    <h1 class="section-title">🛠️ Panel de Administración</h1>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon primary">👥</div>
-                                <div>
-                                    <div class="label">Total Usuarios</div>
-                                    <div class="value">1,248</div>
-                                    <div class="change positive">↑ 42 nuevos este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon secondary">📢</div>
-                                <div>
-                                    <div class="label">Avisos Activos</div>
-                                    <div class="value">842</div>
-                                    <div class="change positive">↑ 68 nuevos este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon success">⭐</div>
-                                <div>
-                                    <div class="label">Usuarios Premium</div>
-                                    <div class="value">312</div>
-                                    <div class="change positive">↑ 24 nuevos este mes</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div style="display: flex; align-items: center;">
-                                <div class="icon warning">📊</div>
-                                <div>
-                                    <div class="label">Propuestas este Mes</div>
-                                    <div class="value">1,856</div>
-                                    <div class="change positive">↑ 32.4% vs mes anterior</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 32px;">
-                        <div class="card">
-                            <div class="card-content">
-                                <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                    <span style="margin-right: 10px;">👥</span> Gestión de Usuarios
-                                </h3>
-                                
-                                <div class="table-container">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Usuario</th>
-                                                <th>Rol</th>
-                                                <th>Suscripción</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Juan Soto</td>
-                                                <td>Vendedor</td>
-                                                <td><span class="status-badge status-accepted">Premium</span></td>
-                                                <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
-                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>María Contreras</td>
-                                                <td>Vendedora</td>
-                                                <td><span class="status-badge status-pending">Free</span></td>
-                                                <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
-                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Roberto Pérez</td>
-                                                <td>Comprador</td>
-                                                <td><span class="status-badge status-accepted">Premium</span></td>
-                                                <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
-                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ana López</td>
-                                                <td>Administrador</td>
-                                                <td><span class="status-badge status-accepted">Premium</span></td>
-                                                <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
-                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <button class="btn btn-primary btn-block" id="view-all-users-btn" style="margin-top: 16px;">Ver Todos los Usuarios</button>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-content">
-                                <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                    <span style="margin-right: 10px;">📢</span> Gestión de Avisos
-                                </h3>
-                                
-                                <div class="table-container">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Título</th>
-                                                <th>Categoría</th>
-                                                <th>Usuario</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Departamento en Providencia</td>
-                                                <td>Inmuebles</td>
-                                                <td>Juan Soto</td>
-                                                <td><span class="status-badge status-accepted">Activo</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>SUV Familiar 7 pasajeros</td>
-                                                <td>Automóviles</td>
-                                                <td>María Contreras</td>
-                                                <td><span class="status-badge status-accepted">Activo</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Moto Deportiva 600cc</td>
-                                                <td>Motos</td>
-                                                <td>Roberto Pérez</td>
-                                                <td><span class="status-badge status-rejected">Rechazado</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Oficina Ejecutiva Las Condes</td>
-                                                <td>Inmuebles</td>
-                                                <td>Ana López</td>
-                                                <td><span class="status-badge status-pending">Pendiente</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <button class="btn btn-primary btn-block" id="view-all-ads-btn" style="margin-top: 16px;">Ver Todos los Avisos</button>
-                            </div>
-                        </div>
-                    </div>
                 </section>
             </main>
         </div>
         
-        <!-- Modal para crear anuncio -->
-        <div id="create-ad-modal" class="modal">
+        <!-- Modal para Mejorar Plan -->
+        <div id="upgrade-plan-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Crear Nuevo Aviso</h3>
-                    <button class="modal-close" id="close-modal">&times;</button>
+                    <h3 class="modal-title">Mejorar Plan</h3>
+                    <button class="modal-close" id="close-upgrade-modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="ad-category">Categoría</label>
-                        <select id="ad-category" class="form-control">
-                            <option value="inmuebles">Inmuebles</option>
-                            <option value="automoviles">Automóviles</option>
-                            <option value="motos">Motos</option>
-                        </select>
-                    </div>
+                    <h4 style="margin-bottom: 20px; text-align: center;">Selecciona el plan que mejor se adapte a tus necesidades</h4>
                     
-                    <div class="form-group">
-                        <label for="ad-title">Título del Aviso</label>
-                        <input type="text" id="ad-title" class="form-control" placeholder="Ej: Departamento en Providencia con 2 dormitorios">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="ad-description">Descripción Detallada</label>
-                        <textarea id="ad-description" class="form-control" rows="4" placeholder="Describe tus necesidades específicas, características importantes, etc."></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="ad-currency">Moneda</label>
-                            <select id="ad-currency" class="form-control">
-                                <option value="clp">CLP (Pesos Chilenos)</option>
-                                <option value="usd" selected>USD (Dólares)</option>
-                                <option value="uf">UF (Unidades de Fomento)</option>
-                            </select>
+                    <div class="plan-card free" id="free-plan">
+                        <div class="plan-header">
+                            <div class="plan-name">Plan Gratuito</div>
+                            <div class="plan-price">$0/mes</div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="ad-budget-min">Presupuesto Mínimo</label>
-                            <input type="number" id="ad-budget-min" class="form-control" placeholder="Mínimo">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="ad-budget-max">Presupuesto Máximo</label>
-                            <input type="number" id="ad-budget-max" class="form-control" placeholder="Máximo">
-                        </div>
+                        <ul class="plan-features">
+                            <li><i>✓</i> Hasta 5 avisos activos</li>
+                            <li><i>✓</i> 10 propuestas mensuales</li>
+                            <li><i>✓</i> Chat básico con vendedores</li>
+                            <li><i>✓</i> Información de contacto limitada</li>
+                        </ul>
+                        <button class="btn btn-outline" style="width: 100%;" id="select-free-btn">
+                            Seleccionar Gratuito
+                        </button>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="ad-location">Ubicación Preferida</label>
-                        <input type="text" id="ad-location" class="form-control" placeholder="Región, ciudad, comuna específica">
+                    <div class="plan-card premium selected" id="premium-plan">
+                        <div class="selected-badge">Tu Plan Actual</div>
+                        <div class="plan-header">
+                            <div class="plan-name">Plan Premium</div>
+                            <div class="plan-price">$19.90/mes</div>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i>✓</i> Avisos ilimitados</li>
+                            <li><i>✓</i> Propuestas ilimitadas</li>
+                            <li><i>✓</i> Chat avanzado con todos los vendedores</li>
+                            <li><i>✓</i> Información de contacto completa</li>
+                            <li><i>✓</i> Ver presupuestos exactos</li>
+                            <li><i>✓</i> Soporte prioritario 24/7</li>
+                        </ul>
+                        <button class="btn btn-primary" style="width: 100%;" id="select-premium-btn">
+                            Mantener Premium
+                        </button>
                     </div>
                     
-                    <button class="btn btn-primary btn-block" id="publish-ad-btn">Publicar Aviso</button>
+                    <div class="plan-card" id="business-plan">
+                        <div class="plan-header">
+                            <div class="plan-name">Plan Business</div>
+                            <div class="plan-price">$49.90/mes</div>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i>✓</i> Todo lo del Plan Premium</li>
+                            <li><i>✓</i> Hasta 5 usuarios</li>
+                            <li><i>✓</i> API de integración</li>
+                            <li><i>✓</i> Dashboard avanzado</li>
+                            <li><i>✓</i> Estadísticas detalladas</li>
+                            <li><i>✓</i> Asesor personalizado</li>
+                        </ul>
+                        <button class="btn btn-outline" style="width: 100%;" id="select-business-btn">
+                            Seleccionar Business
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-outline" id="cancel-modal">Cancelar</button>
+                    <button class="btn btn-outline" id="cancel-upgrade">Cancelar</button>
+                    <button class="btn btn-primary" id="confirm-upgrade">Confirmar Cambio</button>
                 </div>
             </div>
         </div>
         
-        <!-- Panel de notificaciones -->
-        <div class="notifications-panel" id="notifications-panel">
-            <div class="notifications-header">
-                <h3>Notificaciones</h3>
-                <button class="mark-all-read" id="mark-all-read">Marcar todo como leído</button>
+        <!-- Modal para Confirmar Cerrar Sesión -->
+        <div id="logout-modal" class="modal">
+            <div class="modal-content">
+                <div class="logout-modal-content">
+                    <div class="logout-icon">🚪</div>
+                    <h3 class="modal-title">¿Cerrar Sesión?</h3>
+                    <p class="logout-message">¿Estás seguro de que quieres cerrar tu sesión en MarketConnect Pro?</p>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button class="btn btn-outline" id="cancel-logout">Cancelar</button>
+                        <button class="btn btn-primary" id="confirm-logout">Sí, Cerrar Sesión</button>
+                    </div>
+                </div>
             </div>
-            <ul class="notifications-list">
-                <li class="notification-item unread">
-                    <div class="notification-icon">📨</div>
-                    <div class="notification-content">
-                        <h4>Nueva propuesta recibida</h4>
-                        <p>María Contreras ha enviado una propuesta para tu aviso de departamento en Providencia</p>
-                        <div class="notification-time">Hace 2 horas</div>
-                    </div>
-                </li>
-                <li class="notification-item unread">
-                    <div class="notification-icon">💬</div>
-                    <div class="notification-content">
-                        <h4>Nuevo mensaje</h4>
-                        <p>Roberto Pérez te ha enviado un mensaje sobre tu búsqueda de SUV familiar</p>
-                        <div class="notification-time">Hace 5 horas</div>
-                    </div>
-                </li>
-                <li class="notification-item">
-                    <div class="notification-icon">✅</div>
-                    <div class="notification-content">
-                        <h4>Propuesta aceptada</h4>
-                        <p>Tu propuesta para el departamento en Las Condes ha sido aceptada</p>
-                        <div class="notification-time">Ayer</div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        
-        <!-- Panel de mensajes -->
-        <div class="messages-panel" id="messages-panel">
-            <div class="messages-header">
-                <h3>Mensajes</h3>
-                <button class="mark-all-read" id="mark-all-messages-read">Marcar todo como leído</button>
-            </div>
-            <ul class="messages-list">
-                <li class="message-item unread">
-                    <div class="message-avatar">MC</div>
-                    <div class="message-content">
-                        <h4>María Contreras</h4>
-                        <p>Hola Juan, vi tu aviso de departamento en Providencia. Tengo una propiedad que podría interesarte.</p>
-                        <div class="message-time">Hace 2 horas</div>
-                    </div>
-                </li>
-                <li class="message-item">
-                    <div class="message-avatar">RP</div>
-                    <div class="message-content">
-                        <h4>Roberto Pérez</h4>
-                        <p>Buenos días, respecto a tu búsqueda de SUV familiar, tengo un modelo 2021 con 25.000 km.</p>
-                        <div class="message-time">Ayer</div>
-                    </div>
-                </li>
-            </ul>
         </div>
         
         <!-- Toast Notifications -->
@@ -2356,63 +1157,54 @@
     </div>
 
     <script>
+        // Estado de la aplicación
+        let isLoggedIn = true;
+        let currentPlan = 'premium';
+        let selectedPlan = 'premium';
+        
         // DOM Elements
+        const app = document.getElementById('app');
+        const loginScreen = document.getElementById('login-screen');
         const userMenu = document.getElementById('user-menu');
         const userDropdown = document.getElementById('user-dropdown');
-        const notificationIcon = document.getElementById('notification-icon');
-        const messageIcon = document.getElementById('message-icon');
-        const notificationsPanel = document.getElementById('notifications-panel');
-        const messagesPanel = document.getElementById('messages-panel');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const views = document.querySelectorAll('.view');
-        const createAdModal = document.getElementById('create-ad-modal');
-        const createAdButton = document.getElementById('create-ad-btn');
-        const closeModalBtn = document.getElementById('close-modal');
-        const cancelModalBtn = document.getElementById('cancel-modal');
-        const publishAdBtn = document.getElementById('publish-ad-btn');
-        const upgradeBtn = document.getElementById('upgrade-btn');
-        const upgradePlanBtn = document.getElementById('upgrade-plan-btn');
-        const helpBtn = document.getElementById('help-btn');
         const logoutBtn = document.getElementById('logout-btn');
-        const saveProfileBtn = document.getElementById('save-profile-btn');
-        const savePreferencesBtn = document.getElementById('save-preferences-btn');
-        const manageSubscriptionBtn = document.getElementById('manage-subscription-btn');
-        const applyFiltersBtn = document.getElementById('apply-filters');
-        const viewDetailButtons = document.querySelectorAll('.view-detail-btn');
-        const sendButtons = document.querySelectorAll('.chat-action.send');
-        const chatInputs = document.querySelectorAll('.chat-input');
-        const markAllReadBtn = document.getElementById('mark-all-read');
-        const markAllMessagesReadBtn = document.getElementById('mark-all-messages-read');
-        
-        // Variables de estado
-        let isUserDropdownOpen = false;
-        let isNotificationsOpen = false;
-        let isMessagesOpen = false;
+        const upgradePlanBtn = document.getElementById('upgrade-plan-btn');
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        const upgradePlanModal = document.getElementById('upgrade-plan-modal');
+        const logoutModal = document.getElementById('logout-modal');
+        const closeUpgradeModal = document.getElementById('close-upgrade-modal');
+        const cancelUpgrade = document.getElementById('cancel-upgrade');
+        const cancelLogout = document.getElementById('cancel-logout');
+        const confirmLogout = document.getElementById('confirm-logout');
+        const confirmUpgrade = document.getElementById('confirm-upgrade');
+        const freePlan = document.getElementById('free-plan');
+        const premiumPlan = document.getElementById('premium-plan');
+        const businessPlan = document.getElementById('business-plan');
+        const selectFreeBtn = document.getElementById('select-free-btn');
+        const selectPremiumBtn = document.getElementById('select-premium-btn');
+        const selectBusinessBtn = document.getElementById('select-business-btn');
+        const loginForm = document.getElementById('login-form');
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationsPanel = document.getElementById('notifications-panel');
         
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
             console.log('MarketConnect Pro iniciado');
             
-            // Configurar navegación
-            setupNavigation();
+            // Verificar estado de inicio de sesión
+            checkLoginStatus();
             
             // Configurar menú de usuario
             setupUserMenu();
             
-            // Configurar paneles de notificaciones y mensajes
-            setupNotifications();
+            // Configurar eventos de modales
+            setupModals();
             
-            // Configurar modal de creación de anuncio
-            setupAdModal();
+            // Configurar selección de planes
+            setupPlanSelection();
             
-            // Configurar funcionalidad de chat
-            setupChat();
-            
-            // Configurar botones
-            setupButtons();
-            
-            // Configurar filtros
-            setupFilters();
+            // Configurar formulario de login
+            setupLoginForm();
             
             // Mostrar toast de bienvenida
             setTimeout(() => {
@@ -2420,46 +1212,25 @@
             }, 1000);
         });
         
-        // Configurar navegación
-        function setupNavigation() {
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetViewId = this.getAttribute('data-view');
-                    console.log('Navegando a:', targetViewId);
-                    
-                    if (targetViewId) {
-                        // Ocultar todas las vistas
-                        views.forEach(view => {
-                            view.classList.remove('active');
-                        });
-                        
-                        // Mostrar vista objetivo
-                        const targetView = document.getElementById(targetViewId);
-                        if (targetView) {
-                            targetView.classList.add('active');
-                        }
-                        
-                        // Actualizar enlaces activos
-                        navLinks.forEach(l => l.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        // Cerrar menús desplegables
-                        closeAllDropdowns();
-                        
-                        // Mostrar toast de confirmación
-                        const viewNames = {
-                            'dashboard-view': 'Dashboard',
-                            'ads-view': 'Explorar Avisos',
-                            'profile-view': 'Mi Perfil',
-                            'admin-view': 'Panel de Administración'
-                        };
-                        
-                        showToast('Navegación', `Has navegado a ${viewNames[targetViewId] || targetViewId}`, 'success');
-                    }
-                });
-            });
+        // Verificar estado de inicio de sesión
+        function checkLoginStatus() {
+            if (!isLoggedIn) {
+                showLoginScreen();
+            } else {
+                hideLoginScreen();
+            }
+        }
+        
+        // Mostrar pantalla de login
+        function showLoginScreen() {
+            if (loginScreen) loginScreen.classList.add('active');
+            if (app) app.style.display = 'none';
+        }
+        
+        // Ocultar pantalla de login
+        function hideLoginScreen() {
+            if (loginScreen) loginScreen.classList.remove('active');
+            if (app) app.style.display = 'flex';
         }
         
         // Configurar menú de usuario
@@ -2467,374 +1238,278 @@
             if (userMenu) {
                 userMenu.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    
-                    // Alternar menú de usuario
-                    isUserDropdownOpen = !isUserDropdownOpen;
-                    userDropdown.classList.toggle('active', isUserDropdownOpen);
-                    
-                    // Cerrar otros paneles
-                    closeOtherPanels('user');
+                    userDropdown.classList.toggle('active');
                 });
             }
             
-            // Cerrar menú de usuario al hacer clic fuera
+            // Cerrar menú al hacer clic fuera
             document.addEventListener('click', function(e) {
-                if (isUserDropdownOpen && 
+                if (userDropdown.classList.contains('active') && 
                     !userMenu.contains(e.target) && 
                     !userDropdown.contains(e.target)) {
-                    closeUserDropdown();
-                }
-            });
-        }
-        
-        // Configurar paneles de notificaciones y mensajes
-        function setupNotifications() {
-            // Panel de notificaciones
-            if (notificationIcon) {
-                notificationIcon.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Alternar panel de notificaciones
-                    isNotificationsOpen = !isNotificationsOpen;
-                    notificationsPanel.classList.toggle('active', isNotificationsOpen);
-                    
-                    // Cerrar otros paneles
-                    closeOtherPanels('notifications');
-                    
-                    // Marcar notificaciones como leídas
-                    if (isNotificationsOpen) {
-                        markNotificationsAsRead();
-                    }
-                });
-            }
-            
-            // Panel de mensajes
-            if (messageIcon) {
-                messageIcon.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Alternar panel de mensajes
-                    isMessagesOpen = !isMessagesOpen;
-                    messagesPanel.classList.toggle('active', isMessagesOpen);
-                    
-                    // Cerrar otros paneles
-                    closeOtherPanels('messages');
-                    
-                    // Marcar mensajes como leídos
-                    if (isMessagesOpen) {
-                        markMessagesAsRead();
-                    }
-                });
-            }
-            
-            // Cerrar paneles al hacer clic fuera
-            document.addEventListener('click', function(e) {
-                if (isNotificationsOpen && 
-                    !notificationIcon.contains(e.target) && 
-                    !notificationsPanel.contains(e.target)) {
-                    closeNotifications();
-                }
-                
-                if (isMessagesOpen && 
-                    !messageIcon.contains(e.target) && 
-                    !messagesPanel.contains(e.target)) {
-                    closeMessages();
+                    userDropdown.classList.remove('active');
                 }
             });
             
-            // Botón "Marcar todo como leído" en notificaciones
-            if (markAllReadBtn) {
-                markAllReadBtn.addEventListener('click', function() {
-                    markNotificationsAsRead();
-                    showToast('Notificaciones', 'Todas las notificaciones han sido marcadas como leídas', 'success');
-                });
-            }
-            
-            // Botón "Marcar todo como leído" en mensajes
-            if (markAllMessagesReadBtn) {
-                markAllMessagesReadBtn.addEventListener('click', function() {
-                    markMessagesAsRead();
-                    showToast('Mensajes', 'Todos los mensajes han sido marcadas como leídos', 'success');
-                });
-            }
-        }
-        
-        // Configurar modal de creación de anuncio
-        function setupAdModal() {
-            // Abrir modal
-            if (createAdButton) {
-                createAdButton.addEventListener('click', function() {
-                    createAdModal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-            }
-            
-            // Cerrar modal
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', function() {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                });
-            }
-            
-            if (cancelModalBtn) {
-                cancelModalBtn.addEventListener('click', function() {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                    showToast('Cancelado', 'La creación del aviso ha sido cancelada', 'warning');
-                });
-            }
-            
-            // Cerrar modal al hacer clic fuera
-            createAdModal.addEventListener('click', function(e) {
-                if (e.target === createAdModal) {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-            
-            // Publicar anuncio
-            if (publishAdBtn) {
-                publishAdBtn.addEventListener('click', function() {
-                    const adTitle = document.getElementById('ad-title');
-                    const adDescription = document.getElementById('ad-description');
-                    
-                    if (!adTitle.value.trim() || !adDescription.value.trim()) {
-                        showToast('Error', 'Por favor completa todos los campos obligatorios', 'error');
-                        return;
-                    }
-                    
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                    
-                    // Limpiar formulario
-                    adTitle.value = '';
-                    adDescription.value = '';
-                    document.getElementById('ad-budget-min').value = '';
-                    document.getElementById('ad-budget-max').value = '';
-                    document.getElementById('ad-location').value = '';
-                    
-                    showToast('Aviso Publicado', 'Tu aviso ha sido publicado exitosamente', 'success');
-                });
-            }
-        }
-        
-        // Configurar funcionalidad de chat
-        function setupChat() {
-            // Enviar mensaje
-            function sendMessage(input) {
-                const messageText = input.value.trim();
-                const chatId = input.getAttribute('data-chat-id');
-                const chatMessages = document.getElementById(`chat-${chatId}`);
-                
-                if (!messageText || !chatMessages) return;
-                
-                // Crear elemento de mensaje
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message sent';
-                messageDiv.innerHTML = `
-                    ${messageText}
-                    <div class="message-time">${getCurrentTime()}</div>
-                `;
-                
-                // Agregar al chat
-                chatMessages.appendChild(messageDiv);
-                
-                // Limpiar input
-                input.value = '';
-                
-                // Auto-scroll al final
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                // Simular respuesta después de un retraso
-                setTimeout(() => {
-                    const responseDiv = document.createElement('div');
-                    responseDiv.className = 'message received';
-                    responseDiv.innerHTML = `
-                        ¡Gracias por tu mensaje! Revisaré tu propuesta y te contactaré pronto.
-                        <div class="message-time">${getCurrentTime()}</div>
-                    `;
-                    chatMessages.appendChild(responseDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    
-                    // Mostrar notificación
-                    showToast('Nuevo Mensaje', 'Has recibido una respuesta en el chat', 'success');
-                }, 1000);
-                
-                showToast('Mensaje Enviado', 'Tu mensaje ha sido enviado exitosamente', 'success');
-            }
-            
-            // Event listeners para inputs de chat
-            chatInputs.forEach(input => {
-                input.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && this.value.trim() !== '') {
-                        sendMessage(this);
-                    }
-                });
-            });
-            
-            // Event listeners para botones de enviar
-            sendButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const chatId = button.getAttribute('data-chat-id');
-                    const input = document.querySelector(`.chat-input[data-chat-id="${chatId}"]`);
-                    if (input && input.value.trim() !== '') {
-                        sendMessage(input);
-                    }
-                });
-            });
-            
-            // Función para obtener hora actual
-            function getCurrentTime() {
-                const now = new Date();
-                return now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
-            }
-        }
-        
-        // Configurar botones
-        function setupButtons() {
-            // Botón de actualizar a premium
-            if (upgradeBtn) {
-                upgradeBtn.addEventListener('click', function() {
-                    showToast('Suscripción', 'Redirigiendo a la actualización de plan Premium', 'success');
-                });
-            }
-            
-            if (upgradePlanBtn) {
-                upgradePlanBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    closeUserDropdown();
-                    showToast('Suscripción', 'Redirigiendo a la actualización de plan Premium', 'success');
-                });
-            }
-            
-            // Botón de ayuda
-            if (helpBtn) {
-                helpBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    closeUserDropdown();
-                    showToast('Ayuda', 'Redirigiendo al centro de ayuda', 'info');
-                });
-            }
-            
-            // Botón de cerrar sesión
+            // Cerrar sesión
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    closeUserDropdown();
-                    showToast('Cerrar Sesión', 'Has cerrado sesión exitosamente', 'success');
-                    // Aquí iría la lógica real de cierre de sesión
+                    userDropdown.classList.remove('active');
+                    showLogoutModal();
                 });
             }
             
-            // Botón de guardar perfil
-            if (saveProfileBtn) {
-                saveProfileBtn.addEventListener('click', function() {
-                    showToast('Perfil Actualizado', 'Tu información personal ha sido guardada exitosamente', 'success');
+            // Mejorar plan
+            if (upgradePlanBtn) {
+                upgradePlanBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    userDropdown.classList.remove('active');
+                    showUpgradeModal();
                 });
             }
             
-            // Botón de guardar preferencias
-            if (savePreferencesBtn) {
-                savePreferencesBtn.addEventListener('click', function() {
-                    showToast('Preferencias Guardadas', 'Tus preferencias de categorías han sido guardadas', 'success');
+            // Mejorar plan desde sidebar
+            if (upgradeBtn) {
+                upgradeBtn.addEventListener('click', function() {
+                    showUpgradeModal();
+                });
+            }
+        }
+        
+        // Configurar modales
+        function setupModals() {
+            // Cerrar modal de upgrade
+            if (closeUpgradeModal) {
+                closeUpgradeModal.addEventListener('click', function() {
+                    upgradePlanModal.classList.remove('active');
                 });
             }
             
-            // Botón de administrar suscripción
-            if (manageSubscriptionBtn) {
-                manageSubscriptionBtn.addEventListener('click', function() {
-                    showToast('Suscripción', 'Redirigiendo a la gestión de suscripción', 'info');
+            if (cancelUpgrade) {
+                cancelUpgrade.addEventListener('click', function() {
+                    upgradePlanModal.classList.remove('active');
+                    showToast('Cancelado', 'El cambio de plan ha sido cancelado', 'warning');
                 });
             }
             
-            // Botón de aplicar filtros
-            if (applyFiltersBtn) {
-                applyFiltersBtn.addEventListener('click', function() {
-                    showToast('Filtros Aplicados', 'Los filtros han sido aplicados a la búsqueda', 'success');
+            // Cerrar modal de logout
+            if (cancelLogout) {
+                cancelLogout.addEventListener('click', function() {
+                    logoutModal.classList.remove('active');
                 });
             }
             
-            // Botones de ver detalles
-            viewDetailButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    showToast('Aviso Seleccionado', 'Redirigiendo al detalle del aviso', 'info');
-                    // Aquí iría la lógica para mostrar el detalle del aviso
+            // Confirmar logout
+            if (confirmLogout) {
+                confirmLogout.addEventListener('click', function() {
+                    performLogout();
                 });
+            }
+            
+            // Confirmar upgrade
+            if (confirmUpgrade) {
+                confirmUpgrade.addEventListener('click', function() {
+                    performPlanUpgrade();
+                });
+            }
+            
+            // Cerrar modales al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.classList.remove('active');
+                }
             });
         }
         
-        // Configurar filtros
-        function setupFilters() {
-            const categorySelect = document.getElementById('category');
-            const inmueblesFilters = document.getElementById('inmuebles-filters');
-            const automovilesFilters = document.getElementById('automoviles-filters');
-            const motosFilters = document.getElementById('motos-filters');
+        // Configurar selección de planes
+        function setupPlanSelection() {
+            // Seleccionar plan gratis
+            if (selectFreeBtn) {
+                selectFreeBtn.addEventListener('click', function() {
+                    selectPlan('free');
+                });
+            }
             
-            if (categorySelect) {
-                categorySelect.addEventListener('change', function() {
-                    // Ocultar todos los filtros
-                    if (inmueblesFilters) inmueblesFilters.style.display = 'none';
-                    if (automovilesFilters) automovilesFilters.style.display = 'none';
-                    if (motosFilters) motosFilters.style.display = 'none';
+            // Seleccionar plan premium
+            if (selectPremiumBtn) {
+                selectPremiumBtn.addEventListener('click', function() {
+                    selectPlan('premium');
+                });
+            }
+            
+            // Seleccionar plan business
+            if (selectBusinessBtn) {
+                selectBusinessBtn.addEventListener('click', function() {
+                    selectPlan('business');
+                });
+            }
+        }
+        
+        // Configurar formulario de login
+        function setupLoginForm() {
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
                     
-                    // Mostrar filtros relevantes
-                    if (this.value === 'inmuebles' && inmueblesFilters) {
-                        inmueblesFilters.style.display = 'grid';
-                    } else if (this.value === 'automoviles' && automovilesFilters) {
-                        automovilesFilters.style.display = 'grid';
-                    } else if (this.value === 'motos' && motosFilters) {
-                        motosFilters.style.display = 'grid';
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    
+                    // Validación simple
+                    if (email && password) {
+                        performLogin(email);
+                    } else {
+                        showToast('Error', 'Por favor completa todos los campos', 'error');
+                    }
+                });
+            }
+        }
+        
+        // Mostrar modal de upgrade
+        function showUpgradeModal() {
+            if (upgradePlanModal) {
+                // Restablecer selección al plan actual
+                selectPlan(currentPlan);
+                upgradePlanModal.classList.add('active');
+            }
+        }
+        
+        // Mostrar modal de logout
+        function showLogoutModal() {
+            if (logoutModal) {
+                logoutModal.classList.add('active');
+            }
+        }
+        
+        // Seleccionar plan
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            
+            // Remover clase selected de todos los planes
+            const planCards = document.querySelectorAll('.plan-card');
+            planCards.forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Actualizar texto del botón según el plan seleccionado
+            let buttonText = 'Seleccionar';
+            if (plan === currentPlan) {
+                buttonText = 'Mantener Actual';
+            }
+            
+            // Agregar clase selected al plan seleccionado
+            if (plan === 'free') {
+                freePlan.classList.add('selected');
+                selectFreeBtn.textContent = buttonText + ' Gratuito';
+            } else if (plan === 'premium') {
+                premiumPlan.classList.add('selected');
+                selectPremiumBtn.textContent = buttonText + ' Premium';
+            } else if (plan === 'business') {
+                businessPlan.classList.add('selected');
+                selectBusinessBtn.textContent = buttonText + ' Business';
+            }
+        }
+        
+        // Realizar upgrade de plan
+        function performPlanUpgrade() {
+            if (selectedPlan === currentPlan) {
+                showToast('Información', 'Ya tienes este plan activo', 'info');
+            } else {
+                // Simular procesamiento de pago
+                showToast('Procesando', 'Procesando cambio de plan...', 'info');
+                
+                setTimeout(() => {
+                    // Actualizar estado
+                    currentPlan = selectedPlan;
+                    
+                    // Actualizar UI
+                    updateUserPlanUI();
+                    
+                    // Cerrar modal
+                    upgradePlanModal.classList.remove('active');
+                    
+                    // Mostrar mensaje de éxito
+                    const planNames = {
+                        'free': 'Gratuito',
+                        'premium': 'Premium',
+                        'business': 'Business'
+                    };
+                    
+                    showToast('¡Éxito!', `Plan actualizado a ${planNames[currentPlan]} exitosamente`, 'success');
+                }, 1500);
+            }
+        }
+        
+        // Actualizar UI del plan del usuario
+        function updateUserPlanUI() {
+            const userBadge = document.querySelector('.user-name .badge');
+            const premiumBadge = document.querySelector('.user-dropdown-info .badge');
+            const planNameElement = document.querySelector('.plan-card.selected .plan-name');
+            
+            if (currentPlan === 'premium' || currentPlan === 'business') {
+                if (userBadge) {
+                    userBadge.className = 'badge premium';
+                    userBadge.textContent = currentPlan === 'business' ? 'Business' : 'Premium';
+                }
+                if (premiumBadge) {
+                    premiumBadge.className = 'badge premium';
+                    premiumBadge.textContent = currentPlan === 'business' ? 'Business' : 'Premium';
+                }
+                if (planNameElement) {
+                    planNameElement.textContent = currentPlan === 'business' ? 'Plan Business' : 'Plan Premium';
+                }
+            } else {
+                if (userBadge) userBadge.remove();
+                if (premiumBadge) premiumBadge.remove();
+            }
+        }
+        
+        // Realizar logout
+        function performLogout() {
+            // Cerrar modal
+            logoutModal.classList.remove('active');
+            
+            // Mostrar mensaje
+            showToast('Cerrando Sesión', 'Tu sesión se está cerrando...', 'info');
+            
+            // Simular proceso de logout
+            setTimeout(() => {
+                // Actualizar estado
+                isLoggedIn = false;
+                
+                // Mostrar pantalla de login
+                showLoginScreen();
+                
+                // Mostrar mensaje de despedida
+                setTimeout(() => {
+                    showToast('Sesión Cerrada', 'Has cerrado sesión exitosamente', 'success');
+                }, 500);
+            }, 1000);
+        }
+        
+        // Realizar login
+        function performLogin(email) {
+            // Simular proceso de login
+            showToast('Iniciando Sesión', 'Verificando credenciales...', 'info');
+            
+            setTimeout(() => {
+                // Actualizar estado
+                isLoggedIn = true;
+                
+                // Actualizar email en la UI
+                const userEmailElements = document.querySelectorAll('.user-dropdown-info p');
+                userEmailElements.forEach(el => {
+                    if (el.textContent.includes('@')) {
+                        el.textContent = email;
                     }
                 });
                 
-                // Disparar evento change para establecer estado inicial
-                categorySelect.dispatchEvent(new Event('change'));
-            }
-        }
-        
-        // Funciones de utilidad
-        function closeUserDropdown() {
-            isUserDropdownOpen = false;
-            userDropdown.classList.remove('active');
-        }
-        
-        function closeNotifications() {
-            isNotificationsOpen = false;
-            notificationsPanel.classList.remove('active');
-        }
-        
-        function closeMessages() {
-            isMessagesOpen = false;
-            messagesPanel.classList.remove('active');
-        }
-        
-        function closeAllDropdowns() {
-            closeUserDropdown();
-            closeNotifications();
-            closeMessages();
-        }
-        
-        function closeOtherPanels(except) {
-            if (except !== 'user') closeUserDropdown();
-            if (except !== 'notifications') closeNotifications();
-            if (except !== 'messages') closeMessages();
-        }
-        
-        function markNotificationsAsRead() {
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                item.classList.remove('unread');
-            });
-            const badge = notificationIcon.querySelector('.notification-badge');
-            if (badge) badge.textContent = '0';
-        }
-        
-        function markMessagesAsRead() {
-            document.querySelectorAll('.message-item.unread').forEach(item => {
-                item.classList.remove('unread');
-            });
-            const badges = document.querySelectorAll('.notification-badge');
-            if (badges.length > 1) badges[1].textContent = '0';
+                // Ocultar pantalla de login
+                hideLoginScreen();
+                
+                // Mostrar mensaje de bienvenida
+                showToast('¡Bienvenido!', 'Sesión iniciada exitosamente', 'success');
+            }, 1500);
         }
         
         // Función para mostrar toasts
