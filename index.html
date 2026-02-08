@@ -1942,10 +1942,10 @@
                             <div class="form-group">
                                 <label for="category">Categoría</label>
                                 <select id="category" class="form-control">
-                                    <option>Todas las categorías</option>
-                                    <option>Inmuebles</option>
-                                    <option>Automóviles</option>
-                                    <option>Motos</option>
+                                    <option value="all">Todas las categorías</option>
+                                    <option value="inmuebles">Inmuebles</option>
+                                    <option value="automoviles">Automóviles</option>
+                                    <option value="motos">Motos</option>
                                 </select>
                             </div>
                             
@@ -1975,7 +1975,7 @@
                         
                         <div id="category-filters">
                             <!-- Inmuebles Filters -->
-                            <div id="inmuebles-filters" class="form-row">
+                            <div id="inmuebles-filters" class="form-row" style="display: none;">
                                 <div class="form-group">
                                     <label for="property-type">Tipo de Propiedad</label>
                                     <select id="property-type" class="form-control">
@@ -2350,8 +2350,8 @@
                                         </div>
                                         
                                         <div class="form-group">
-                                            <label for="location">Ubicación</label>
-                                            <input type="text" id="location" class="form-control" value="Santiago, Chile">
+                                            <label for="profile-location">Ubicación</label>
+                                            <input type="text" id="profile-location" class="form-control" value="Santiago, Chile">
                                         </div>
                                     </div>
                                     
@@ -2424,7 +2424,7 @@
                                         <h4 style="margin-bottom: 8px;">Plan Premium</h4>
                                         <p style="color: var(--gray); margin-bottom: 16px;">Vencimiento: 5 de agosto de 2026</p>
                                         <div style="font-size: 1.8rem; font-weight: 700; color: var(--secondary); margin-bottom: 20px;">USD $19.90/mes</div>
-                                        <button class="btn btn-outline" style="width: 100%;">Administrar Suscripción</button>
+                                        <button class="btn btn-outline" id="manage-subscription-btn" style="width: 100%;">Administrar Suscripción</button>
                                     </div>
                                     
                                     <h4 style="margin-bottom: 16px; display: flex; align-items: center;">
@@ -2461,7 +2461,7 @@
                                         </label>
                                     </div>
                                     
-                                    <button class="btn btn-primary btn-block" style="margin-top: 24px;">Guardar Preferencias</button>
+                                    <button class="btn btn-primary btn-block" id="save-preferences-btn" style="margin-top: 24px;">Guardar Preferencias</button>
                                 </div>
                             </div>
                         </div>
@@ -2541,8 +2541,8 @@
                                                 <td>Vendedor</td>
                                                 <td><span class="status-badge status-accepted">Premium</span></td>
                                                 <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline">✏️</button>
-                                                    <button class="btn btn-sm btn-outline">🗑️</button>
+                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
+                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2550,8 +2550,8 @@
                                                 <td>Vendedora</td>
                                                 <td><span class="status-badge status-pending">Free</span></td>
                                                 <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline">✏️</button>
-                                                    <button class="btn btn-sm btn-outline">🗑️</button>
+                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
+                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2559,8 +2559,8 @@
                                                 <td>Comprador</td>
                                                 <td><span class="status-badge status-accepted">Premium</span></td>
                                                 <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline">✏️</button>
-                                                    <button class="btn btn-sm btn-outline">🗑️</button>
+                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
+                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2568,15 +2568,15 @@
                                                 <td>Administrador</td>
                                                 <td><span class="status-badge status-accepted">Premium</span></td>
                                                 <td class="table-actions">
-                                                    <button class="btn btn-sm btn-outline">✏️</button>
-                                                    <button class="btn btn-sm btn-outline">🗑️</button>
+                                                    <button class="btn btn-sm btn-outline edit-user-btn">✏️</button>
+                                                    <button class="btn btn-sm btn-outline delete-user-btn">🗑️</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 
-                                <button class="btn btn-primary btn-block" style="margin-top: 16px;">Ver Todos los Usuarios</button>
+                                <button class="btn btn-primary btn-block" id="view-all-users-btn" style="margin-top: 16px;">Ver Todos los Usuarios</button>
                             </div>
                         </div>
                         
@@ -2625,7 +2625,7 @@
                                     </table>
                                 </div>
                                 
-                                <button class="btn btn-primary btn-block" style="margin-top: 16px;">Ver Todos los Avisos</button>
+                                <button class="btn btn-primary btn-block" id="view-all-ads-btn" style="margin-top: 16px;">Ver Todos los Avisos</button>
                             </div>
                         </div>
                     </div>
@@ -2764,12 +2764,12 @@
                     
                     <div id="category-specific-fields">
                         <!-- Inmuebles Fields -->
-                        <div id="inmuebles-fields">
+                        <div id="inmuebles-fields-modal">
                             <h4 style="margin: 20px 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--light-gray);">Características de la Propiedad</h4>
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="property-type">Tipo de Propiedad</label>
+                                    <label for="property-type-modal">Tipo de Propiedad</label>
                                     <select id="property-type-modal" class="form-control">
                                         <option>Departamento</option>
                                         <option>Casa</option>
@@ -2780,7 +2780,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="bedrooms">Dormitorios</label>
+                                    <label for="bedrooms-modal">Dormitorios</label>
                                     <select id="bedrooms-modal" class="form-control">
                                         <option>1</option>
                                         <option>2</option>
@@ -2790,7 +2790,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="bathrooms">Baños</label>
+                                    <label for="bathrooms-modal">Baños</label>
                                     <select id="bathrooms-modal" class="form-control">
                                         <option>1</option>
                                         <option>2</option>
@@ -2823,12 +2823,12 @@
                         </div>
                         
                         <!-- Automóviles Fields (hidden by default) -->
-                        <div id="automoviles-fields" style="display: none;">
+                        <div id="automoviles-fields-modal" style="display: none;">
                             <h4 style="margin: 20px 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--light-gray);">Características del Vehículo</h4>
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="car-type">Tipo de Vehículo</label>
+                                    <label for="car-type-modal">Tipo de Vehículo</label>
                                     <select id="car-type-modal" class="form-control">
                                         <option>Sedán</option>
                                         <option>SUV</option>
@@ -2840,7 +2840,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="car-brand">Marca</label>
+                                    <label for="car-brand-modal">Marca</label>
                                     <select id="car-brand-modal" class="form-control">
                                         <option>Toyota</option>
                                         <option>Nissan</option>
@@ -2854,7 +2854,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="car-year">Año</label>
+                                    <label for="car-year-modal">Año</label>
                                     <select id="car-year-modal" class="form-control">
                                         <option>2020+</option>
                                         <option>2018-2019</option>
@@ -2866,7 +2866,7 @@
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="car-mileage">Kilometraje Máximo</label>
+                                    <label for="car-mileage-modal">Kilometraje Máximo</label>
                                     <select id="car-mileage-modal" class="form-control">
                                         <option>Menos de 30.000 km</option>
                                         <option>30.000 - 60.000 km</option>
@@ -2876,7 +2876,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="car-transmission">Transmisión</label>
+                                    <label for="car-transmission-modal">Transmisión</label>
                                     <select id="car-transmission-modal" class="form-control">
                                         <option>Ambas</option>
                                         <option>Automática</option>
@@ -2885,7 +2885,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="car-fuel">Combustible</label>
+                                    <label for="car-fuel-modal">Combustible</label>
                                     <select id="car-fuel-modal" class="form-control">
                                         <option>Todos</option>
                                         <option>Bencina</option>
@@ -2898,12 +2898,12 @@
                         </div>
                         
                         <!-- Motos Fields (hidden by default) -->
-                        <div id="motos-fields" style="display: none;">
+                        <div id="motos-fields-modal" style="display: none;">
                             <h4 style="margin: 20px 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--light-gray);">Características de la Moto</h4>
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="motorcycle-type">Tipo de Moto</label>
+                                    <label for="motorcycle-type-modal">Tipo de Moto</label>
                                     <select id="motorcycle-type-modal" class="form-control">
                                         <option>Deportiva</option>
                                         <option>Naked</option>
@@ -2915,7 +2915,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="motorcycle-brand">Marca</label>
+                                    <label for="motorcycle-brand-modal">Marca</label>
                                     <select id="motorcycle-brand-modal" class="form-control">
                                         <option>Honda</option>
                                         <option>Yamaha</option>
@@ -2928,7 +2928,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="motorcycle-year">Año</label>
+                                    <label for="motorcycle-year-modal">Año</label>
                                     <select id="motorcycle-year-modal" class="form-control">
                                         <option>2021+</option>
                                         <option>2019-2020</option>
@@ -2940,7 +2940,7 @@
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="motorcycle-engine">Cilindrada</label>
+                                    <label for="motorcycle-engine-modal">Cilindrada</label>
                                     <select id="motorcycle-engine-modal" class="form-control">
                                         <option>Menos de 250cc</option>
                                         <option>250cc - 500cc</option>
@@ -2951,7 +2951,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="motorcycle-use">Uso Principal</label>
+                                    <label for="motorcycle-use-modal">Uso Principal</label>
                                     <select id="motorcycle-use-modal" class="form-control">
                                         <option>Ciudad</option>
                                         <option>Touring/Largas distancias</option>
@@ -2964,7 +2964,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-outline modal-close" id="cancel-modal">Cancelar</button>
+                    <button class="btn btn-outline" id="cancel-modal">Cancelar</button>
                     <button class="btn btn-primary" id="publish-ad-btn">Publicar Aviso</button>
                 </div>
             </div>
@@ -2978,7 +2978,7 @@
             </div>
             <ul class="notifications-list">
                 <li class="notification-item unread">
-                    <div class="notification-icon">NewPropuesta</div>
+                    <div class="notification-icon">📨</div>
                     <div class="notification-content">
                         <h4>Nueva propuesta recibida</h4>
                         <p>María Contreras ha enviado una propuesta para tu aviso de departamento en Providencia</p>
@@ -3070,14 +3070,16 @@
 
     <script>
         // DOM Elements
+        const views = document.querySelectorAll('.view');
+        const navLinks = document.querySelectorAll('.nav-link');
         const categorySelect = document.getElementById('category');
         const inmueblesFilters = document.getElementById('inmuebles-filters');
         const automovilesFilters = document.getElementById('automoviles-filters');
         const motosFilters = document.getElementById('motos-filters');
         const adCategorySelect = document.getElementById('ad-category');
-        const inmueblesFields = document.getElementById('inmuebles-fields');
-        const automovilesFields = document.getElementById('automoviles-fields');
-        const motosFields = document.getElementById('motos-fields');
+        const inmueblesFieldsModal = document.getElementById('inmuebles-fields-modal');
+        const automovilesFieldsModal = document.getElementById('automoviles-fields-modal');
+        const motosFieldsModal = document.getElementById('motos-fields-modal');
         const createAdModal = document.getElementById('create-ad-modal');
         const modalCloseButtons = document.querySelectorAll('.modal-close');
         const createAdButton = document.getElementById('create-ad-btn');
@@ -3095,15 +3097,21 @@
         const saveProfileBtn = document.getElementById('save-profile-btn');
         const applyFiltersBtn = document.getElementById('apply-filters');
         const publishAdBtn = document.getElementById('publish-ad-btn');
+        const cancelModalBtn = document.getElementById('cancel-modal');
         const logoLink = document.getElementById('logo-link');
         const userMenu = document.getElementById('user-menu');
-        
-        // View Navigation
-        const views = document.querySelectorAll('.view');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const closeModalBtn = document.getElementById('close-modal');
+        const savePreferencesBtn = document.getElementById('save-preferences-btn');
+        const manageSubscriptionBtn = document.getElementById('manage-subscription-btn');
+        const viewAllUsersBtn = document.getElementById('view-all-users-btn');
+        const viewAllAdsBtn = document.getElementById('view-all-ads-btn');
+        const editUserBtns = document.querySelectorAll('.edit-user-btn');
+        const deleteUserBtns = document.querySelectorAll('.delete-user-btn');
         
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('MarketConnect Pro iniciado');
+            
             // Set up category filters
             setupCategoryFilters();
             
@@ -3134,127 +3142,199 @@
         
         // Category Filters Functionality
         function setupCategoryFilters() {
-            categorySelect.addEventListener('change', function() {
-                // Hide all filters
-                inmueblesFilters.style.display = 'none';
-                automovilesFilters.style.display = 'none';
-                motosFilters.style.display = 'none';
+            if (categorySelect) {
+                categorySelect.addEventListener('change', function() {
+                    console.log('Categoría seleccionada:', this.value);
+                    
+                    // Hide all filters
+                    if (inmueblesFilters) inmueblesFilters.style.display = 'none';
+                    if (automovilesFilters) automovilesFilters.style.display = 'none';
+                    if (motosFilters) motosFilters.style.display = 'none';
+                    
+                    // Show relevant filters
+                    if (this.value === 'inmuebles' && inmueblesFilters) {
+                        inmueblesFilters.style.display = 'grid';
+                    } else if (this.value === 'automoviles' && automovilesFilters) {
+                        automovilesFilters.style.display = 'grid';
+                    } else if (this.value === 'motos' && motosFilters) {
+                        motosFilters.style.display = 'grid';
+                    }
+                });
                 
-                // Show relevant filters
-                if (this.value === 'Inmuebles') {
-                    inmueblesFilters.style.display = 'grid';
-                } else if (this.value === 'Automóviles') {
-                    automovilesFilters.style.display = 'grid';
-                } else if (this.value === 'Motos') {
-                    motosFilters.style.display = 'grid';
-                }
-            });
+                // Trigger change event to set initial state
+                categorySelect.dispatchEvent(new Event('change'));
+            }
             
             // Category change in ad form
-            adCategorySelect.addEventListener('change', function() {
-                // Hide all fields
-                inmueblesFields.style.display = 'none';
-                automovilesFields.style.display = 'none';
-                motosFields.style.display = 'none';
+            if (adCategorySelect) {
+                adCategorySelect.addEventListener('change', function() {
+                    console.log('Categoría de anuncio seleccionada:', this.value);
+                    
+                    // Hide all fields
+                    if (inmueblesFieldsModal) inmueblesFieldsModal.style.display = 'none';
+                    if (automovilesFieldsModal) automovilesFieldsModal.style.display = 'none';
+                    if (motosFieldsModal) motosFieldsModal.style.display = 'none';
+                    
+                    // Show relevant fields
+                    if (this.value === 'inmuebles' && inmueblesFieldsModal) {
+                        inmueblesFieldsModal.style.display = 'block';
+                    } else if (this.value === 'automoviles' && automovilesFieldsModal) {
+                        automovilesFieldsModal.style.display = 'block';
+                    } else if (this.value === 'motos' && motosFieldsModal) {
+                        motosFieldsModal.style.display = 'block';
+                    }
+                });
                 
-                // Show relevant fields
-                if (this.value === 'inmuebles') {
-                    inmueblesFields.style.display = 'block';
-                } else if (this.value === 'automoviles') {
-                    automovilesFields.style.display = 'block';
-                } else if (this.value === 'motos') {
-                    motosFields.style.display = 'block';
-                }
-            });
+                // Trigger change event to set initial state
+                adCategorySelect.dispatchEvent(new Event('change'));
+            }
         }
         
         // Ad Creation Modal
         function setupAdCreationModal() {
             // Open modal
-            createAdButton.addEventListener('click', function() {
-                createAdModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                showToast('Crear Aviso', 'Completa el formulario para publicar tu necesidad', 'success');
-            });
-            
-            // Close modal
-            modalCloseButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
+            if (createAdButton) {
+                createAdButton.addEventListener('click', function() {
+                    if (createAdModal) {
+                        createAdModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                        showToast('Crear Aviso', 'Completa el formulario para publicar tu necesidad', 'success');
+                    }
                 });
-            });
+            }
+            
+            // Close modal with close button
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', function() {
+                    if (createAdModal) {
+                        createAdModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+            
+            // Close modal with cancel button
+            if (cancelModalBtn) {
+                cancelModalBtn.addEventListener('click', function() {
+                    if (createAdModal) {
+                        createAdModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        showToast('Cancelado', 'La creación del aviso ha sido cancelada', 'warning');
+                    }
+                });
+            }
             
             // Close modal when clicking outside
-            createAdModal.addEventListener('click', function(e) {
-                if (e.target === createAdModal) {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
+            if (createAdModal) {
+                createAdModal.addEventListener('click', function(e) {
+                    if (e.target === createAdModal) {
+                        createAdModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+            
+            // Publish ad button
+            if (publishAdBtn) {
+                publishAdBtn.addEventListener('click', function() {
+                    const adTitle = document.getElementById('ad-title');
+                    const adDescription = document.getElementById('ad-description');
+                    
+                    // Basic validation
+                    if (!adTitle.value.trim() || !adDescription.value.trim()) {
+                        showToast('Error', 'Por favor completa todos los campos obligatorios', 'error');
+                        return;
+                    }
+                    
+                    // Close modal
+                    if (createAdModal) {
+                        createAdModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        
+                        // Clear form
+                        adTitle.value = '';
+                        adDescription.value = '';
+                        document.getElementById('ad-budget-min').value = '';
+                        document.getElementById('ad-budget-max').value = '';
+                        document.getElementById('ad-location').value = '';
+                        
+                        // Switch to ads view
+                        switchView('ads-view');
+                        
+                        showToast('Aviso Publicado', 'Tu aviso ha sido publicado exitosamente y está visible para los vendedores', 'success');
+                    }
+                });
+            }
         }
         
         // Navigation between views
         function setupNavigation() {
+            // Function to switch views
+            function switchView(viewId) {
+                // Hide all views
+                views.forEach(view => {
+                    view.classList.remove('active');
+                });
+                
+                // Show target view
+                const targetView = document.getElementById(viewId);
+                if (targetView) {
+                    targetView.classList.add('active');
+                }
+                
+                // Update active class on all navigation links
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-view') === viewId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add click events to all navigation links
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     
-                    // Get the target view ID
                     const targetViewId = this.getAttribute('data-view');
+                    console.log('Navegando a:', targetViewId);
                     
-                    // Remove active class from all links and views
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    views.forEach(view => view.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                    
-                    // Show corresponding view
-                    document.getElementById(targetViewId).classList.add('active');
-                    
-                    // Close mobile menu if open
-                    if (window.innerWidth <= 768) {
-                        document.querySelector('.mobile-menu').classList.remove('active');
+                    if (targetViewId) {
+                        switchView(targetViewId);
+                        
+                        // Close notifications and messages panels
+                        if (notificationsPanel) notificationsPanel.classList.remove('active');
+                        if (messagesPanel) messagesPanel.classList.remove('active');
+                        
+                        // Show toast confirmation
+                        const viewNames = {
+                            'dashboard-view': 'Dashboard',
+                            'ads-view': 'Explorar Avisos',
+                            'ad-detail-view': 'Detalle del Aviso',
+                            'profile-view': 'Mi Perfil',
+                            'admin-view': 'Panel de Administración'
+                        };
+                        
+                        showToast('Navegación', `Has navegado a ${viewNames[targetViewId] || targetViewId}`, 'success');
                     }
-                    
-                    // Close notifications and messages panels
-                    notificationsPanel.classList.remove('active');
-                    messagesPanel.classList.remove('active');
-                    
-                    // Show toast confirmation
-                    const viewNames = {
-                        'dashboard-view': 'Dashboard',
-                        'ads-view': 'Explorar Avisos',
-                        'ad-detail-view': 'Detalle del Aviso',
-                        'profile-view': 'Mi Perfil',
-                        'admin-view': 'Panel de Administración'
-                    };
-                    
-                    showToast('Navegación', `Has navegado a ${viewNames[targetViewId] || targetViewId}`, 'success');
                 });
             });
             
             // Logo link to dashboard
-            logoLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Remove active class from all links and views
-                navLinks.forEach(l => l.classList.remove('active'));
-                views.forEach(view => view.classList.remove('active'));
-                
-                // Add active class to dashboard link
-                document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
-                
-                // Show dashboard view
-                document.getElementById('dashboard-view').classList.add('active');
-                
-                // Close notifications and messages panels
-                notificationsPanel.classList.remove('active');
-                messagesPanel.classList.remove('active');
-                
-                showToast('Navegación', 'Has regresado al Dashboard', 'success');
-            });
+            if (logoLink) {
+                logoLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    switchView('dashboard-view');
+                    showToast('Navegación', 'Has regresado al Dashboard', 'success');
+                });
+            }
+            
+            // Apply filters button
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function() {
+                    showToast('Filtros Aplicados', 'Los filtros han sido aplicados a la búsqueda de avisos', 'success');
+                });
+            }
         }
         
         // Chat functionality
@@ -3262,26 +3342,13 @@
             const chatInputs = document.querySelectorAll('.chat-input');
             const sendButtons = document.querySelectorAll('.chat-action.send');
             
-            chatInputs.forEach((input, index) => {
-                input.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && this.value.trim() !== '') {
-                        sendMessage(this, index);
-                    }
-                });
-            });
-            
-            sendButtons.forEach((button, index) => {
-                button.addEventListener('click', () => {
-                    const input = document.querySelector(`.chat-input[data-chat-id="${button.getAttribute('data-chat-id')}"]`);
-                    if (input.value.trim() !== '') {
-                        sendMessage(input, index);
-                    }
-                });
-            });
-            
-            function sendMessage(input, chatIndex) {
+            // Send message function
+            function sendMessage(input) {
                 const messageText = input.value.trim();
-                const chatMessages = document.querySelectorAll('.chat-messages')[chatIndex];
+                const chatId = input.getAttribute('data-chat-id');
+                const chatMessages = document.getElementById(`chat-${chatId}`);
+                
+                if (!messageText || !chatMessages) return;
                 
                 // Create message element
                 const messageDiv = document.createElement('div');
@@ -3312,7 +3379,7 @@
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     
                     // Show notification for new message
-                    if (chatIndex === 0) {
+                    if (chatId === '1') {
                         showToast('Nuevo Mensaje', 'María Contreras ha respondido a tu mensaje', 'success');
                     } else {
                         showToast('Nuevo Mensaje', 'Roberto Pérez ha respondido a tu mensaje', 'success');
@@ -3321,6 +3388,42 @@
                 
                 showToast('Mensaje Enviado', 'Tu mensaje ha sido enviado exitosamente', 'success');
             }
+            
+            // Add event listeners to chat inputs
+            chatInputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && this.value.trim() !== '') {
+                        sendMessage(this);
+                    }
+                });
+            });
+            
+            // Add event listeners to send buttons
+            sendButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const chatId = button.getAttribute('data-chat-id');
+                    const input = document.querySelector(`.chat-input[data-chat-id="${chatId}"]`);
+                    if (input && input.value.trim() !== '') {
+                        sendMessage(input);
+                    }
+                });
+            });
+            
+            // Add event listeners to chat action buttons
+            const cameraButtons = document.querySelectorAll('.chat-action.camera');
+            const attachButtons = document.querySelectorAll('.chat-action.attach');
+            
+            cameraButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showToast('Cámara', 'Función de cámara activada', 'info');
+                });
+            });
+            
+            attachButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showToast('Adjuntar', 'Selecciona un archivo para adjuntar', 'info');
+                });
+            });
             
             function getCurrentTime() {
                 const now = new Date();
@@ -3331,128 +3434,137 @@
         // Notifications and Messages Panels
         function setupNotifications() {
             // Toggle notifications panel
-            notificationIcon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                notificationsPanel.classList.toggle('active');
-                messagesPanel.classList.remove('active');
-                
-                // Mark notifications as read when opened
-                if (notificationsPanel.classList.contains('active')) {
-                    document.querySelectorAll('.notification-item.unread').forEach(item => {
-                        item.classList.remove('unread');
-                    });
-                    document.querySelector('.notification-badge').textContent = '0';
-                }
-            });
+            if (notificationIcon) {
+                notificationIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (notificationsPanel) {
+                        notificationsPanel.classList.toggle('active');
+                        if (messagesPanel) messagesPanel.classList.remove('active');
+                        
+                        // Mark notifications as read when opened
+                        if (notificationsPanel.classList.contains('active')) {
+                            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                                item.classList.remove('unread');
+                            });
+                            const badge = notificationIcon.querySelector('.notification-badge');
+                            if (badge) badge.textContent = '0';
+                        }
+                    }
+                });
+            }
             
             // Toggle messages panel
-            messageIcon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                messagesPanel.classList.toggle('active');
-                notificationsPanel.classList.remove('active');
-                
-                // Mark messages as read when opened
-                if (messagesPanel.classList.contains('active')) {
-                    document.querySelectorAll('.message-item.unread').forEach(item => {
-                        item.classList.remove('unread');
-                    });
-                    document.querySelectorAll('.notification-badge')[1].textContent = '0';
-                }
-            });
+            if (messageIcon) {
+                messageIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (messagesPanel) {
+                        messagesPanel.classList.toggle('active');
+                        if (notificationsPanel) notificationsPanel.classList.remove('active');
+                        
+                        // Mark messages as read when opened
+                        if (messagesPanel.classList.contains('active')) {
+                            document.querySelectorAll('.message-item.unread').forEach(item => {
+                                item.classList.remove('unread');
+                            });
+                            const badges = document.querySelectorAll('.notification-badge');
+                            if (badges.length > 1) badges[1].textContent = '0';
+                        }
+                    }
+                });
+            }
             
             // Close panels when clicking outside
             document.addEventListener('click', function(e) {
-                if (!notificationIcon.contains(e.target) && !notificationsPanel.contains(e.target)) {
+                if (notificationsPanel && !notificationIcon.contains(e.target) && !notificationsPanel.contains(e.target)) {
                     notificationsPanel.classList.remove('active');
                 }
                 
-                if (!messageIcon.contains(e.target) && !messagesPanel.contains(e.target)) {
+                if (messagesPanel && !messageIcon.contains(e.target) && !messagesPanel.contains(e.target)) {
                     messagesPanel.classList.remove('active');
                 }
             });
             
             // Mark all notifications as read
-            markAllReadBtn.addEventListener('click', function() {
-                document.querySelectorAll('.notification-item.unread').forEach(item => {
-                    item.classList.remove('unread');
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', function() {
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    const badge = notificationIcon.querySelector('.notification-badge');
+                    if (badge) badge.textContent = '0';
+                    showToast('Notificaciones', 'Todas las notificaciones han sido marcadas como leídas', 'success');
                 });
-                document.querySelector('.notification-badge').textContent = '0';
-                showToast('Notificaciones', 'Todas las notificaciones han sido marcadas como leídas', 'success');
-            });
+            }
             
             // Mark all messages as read
-            markAllMessagesReadBtn.addEventListener('click', function() {
-                document.querySelectorAll('.message-item.unread').forEach(item => {
-                    item.classList.remove('unread');
+            if (markAllMessagesReadBtn) {
+                markAllMessagesReadBtn.addEventListener('click', function() {
+                    document.querySelectorAll('.message-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    const badges = document.querySelectorAll('.notification-badge');
+                    if (badges.length > 1) badges[1].textContent = '0';
+                    showToast('Mensajes', 'Todos los mensajes han sido marcados como leídos', 'success');
                 });
-                document.querySelectorAll('.notification-badge')[1].textContent = '0';
-                showToast('Mensajes', 'Todos los mensajes han sido marcados como leídos', 'success');
-            });
+            }
             
             // Notification item click
             document.querySelectorAll('.notification-item').forEach(item => {
                 item.addEventListener('click', function() {
-                    // Navigate to relevant section based on notification
-                    if (this.querySelector('h4').textContent.includes('propuesta')) {
-                        // Go to proposals section (dashboard for now)
-                        navLinks.forEach(l => l.classList.remove('active'));
-                        document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
-                        views.forEach(view => view.classList.remove('active'));
-                        document.getElementById('dashboard-view').classList.add('active');
-                        showToast('Navegación', 'Has navegado a tus propuestas', 'success');
-                    } else if (this.querySelector('h4').textContent.includes('mensaje')) {
-                        // Go to chat section (dashboard for now)
-                        navLinks.forEach(l => l.classList.remove('active'));
-                        document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
-                        views.forEach(view => view.classList.remove('active'));
-                        document.getElementById('dashboard-view').classList.add('active');
-                        showToast('Navegación', 'Has navegado a tus mensajes', 'success');
-                    }
+                    // Navigate to dashboard
+                    switchView('dashboard-view');
                     
                     // Close panel
-                    notificationsPanel.classList.remove('active');
+                    if (notificationsPanel) notificationsPanel.classList.remove('active');
+                    
+                    showToast('Notificación', 'Has navegado a la sección correspondiente', 'success');
                 });
             });
             
             // Message item click
             document.querySelectorAll('.message-item').forEach(item => {
                 item.addEventListener('click', function() {
-                    // Go to chat section (dashboard for now)
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    document.querySelector('.nav-link[data-view="dashboard-view"]').classList.add('active');
-                    views.forEach(view => view.classList.remove('active'));
-                    document.getElementById('dashboard-view').classList.add('active');
+                    // Go to dashboard
+                    switchView('dashboard-view');
                     
                     // Close panel
-                    messagesPanel.classList.remove('active');
+                    if (messagesPanel) messagesPanel.classList.remove('active');
                     
-                    showToast('Navegación', `Has abierto la conversación con ${this.querySelector('h4').textContent}`, 'success');
+                    const userName = this.querySelector('h4').textContent;
+                    showToast('Mensaje', `Has abierto la conversación con ${userName}`, 'success');
                 });
             });
         }
         
         // Detail views functionality
         function setupDetailViews() {
+            // Function to switch to detail view
+            function showAdDetail() {
+                // Hide all views
+                views.forEach(view => {
+                    view.classList.remove('active');
+                });
+                
+                // Show ad detail view
+                const adDetailView = document.getElementById('ad-detail-view');
+                if (adDetailView) {
+                    adDetailView.classList.add('active');
+                }
+                
+                // Update active class on navigation links (set to ads-view since detail is not in main nav)
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-view') === 'ads-view') {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add event listeners to all view detail buttons
             viewDetailButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Switch to ad-detail-view
-                    views.forEach(view => view.classList.remove('active'));
-                    document.getElementById('ad-detail-view').classList.add('active');
-                    
-                    // Update active navigation link
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    const adLink = Array.from(navLinks).find(link => 
-                        link.getAttribute('data-view') === 'ads-view'
-                    );
-                    if (adLink) adLink.classList.add('active');
-                    
-                    // Close notifications and messages panels
-                    notificationsPanel.classList.remove('active');
-                    messagesPanel.classList.remove('active');
-                    
-                    // Show toast confirmation
+                    showAdDetail();
                     showToast('Aviso Seleccionado', 'Se ha cargado el detalle del aviso seleccionado', 'success');
                 });
             });
@@ -3494,51 +3606,74 @@
                 });
             }
             
-            // Apply filters button
-            if (applyFiltersBtn) {
-                applyFiltersBtn.addEventListener('click', function() {
-                    showToast('Filtros Aplicados', 'Los filtros han sido aplicados a la búsqueda de avisos', 'success');
+            // Save preferences button
+            if (savePreferencesBtn) {
+                savePreferencesBtn.addEventListener('click', function() {
+                    showToast('Preferencias Guardadas', 'Tus preferencias de categorías han sido guardadas', 'success');
                 });
             }
             
-            // Publish ad button
-            if (publishAdBtn) {
-                publishAdBtn.addEventListener('click', function() {
-                    createAdModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                    
-                    // Switch to ads view
-                    views.forEach(view => view.classList.remove('active'));
-                    document.getElementById('ads-view').classList.add('active');
-                    
-                    // Update active navigation link
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    const adLink = Array.from(navLinks).find(link => 
-                        link.getAttribute('data-view') === 'ads-view'
-                    );
-                    if (adLink) adLink.classList.add('active');
-                    
-                    showToast('Aviso Publicado', 'Tu aviso ha sido publicado exitosamente y está visible para los vendedores', 'success');
+            // Manage subscription button
+            if (manageSubscriptionBtn) {
+                manageSubscriptionBtn.addEventListener('click', function() {
+                    showToast('Suscripción', 'Redirigiendo a la gestión de suscripción', 'info');
                 });
             }
             
-            // User menu dropdown
-            userMenu.addEventListener('click', function(e) {
-                e.stopPropagation();
-                showToast('Menú de Usuario', 'Opciones de perfil y configuración', 'info');
+            // User menu
+            if (userMenu) {
+                userMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showToast('Menú de Usuario', 'Opciones de perfil y configuración', 'info');
+                });
+            }
+            
+            // Admin buttons
+            if (viewAllUsersBtn) {
+                viewAllUsersBtn.addEventListener('click', function() {
+                    showToast('Usuarios', 'Mostrando todos los usuarios del sistema', 'info');
+                });
+            }
+            
+            if (viewAllAdsBtn) {
+                viewAllAdsBtn.addEventListener('click', function() {
+                    showToast('Avisos', 'Mostrando todos los avisos del sistema', 'info');
+                });
+            }
+            
+            // Edit user buttons
+            editUserBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showToast('Editar Usuario', 'Editando información del usuario', 'info');
+                });
+            });
+            
+            // Delete user buttons
+            deleteUserBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showToast('Eliminar Usuario', '¿Estás seguro de eliminar este usuario?', 'warning');
+                });
             });
         }
         
         // Toast functionality
         function showToast(title, message, type = 'success') {
             const toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) return;
             
             // Create toast element
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
+            
+            // Set icon based on type
+            let icon = '✅';
+            if (type === 'error') icon = '❌';
+            if (type === 'warning') icon = '⚠️';
+            if (type === 'info') icon = 'ℹ️';
+            
             toast.innerHTML = `
                 <div style="margin-right: 16px;">
-                    <i>${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</i>
+                    <i>${icon}</i>
                 </div>
                 <div class="toast-content">
                     <h4>${title}</h4>
@@ -3554,9 +3689,33 @@
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(400px)';
                 setTimeout(() => {
-                    toast.remove();
+                    if (toast.parentNode === toastContainer) {
+                        toastContainer.removeChild(toast);
+                    }
                 }, 300);
             }, 3000);
+        }
+        
+        // Helper function to switch views
+        function switchView(viewId) {
+            // Hide all views
+            views.forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Show target view
+            const targetView = document.getElementById(viewId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+            
+            // Update active class on all navigation links
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-view') === viewId) {
+                    link.classList.add('active');
+                }
+            });
         }
         
         // PWA Installation
@@ -3587,18 +3746,20 @@
                         installButton.remove();
                         
                         // Show the install prompt
-                        deferredPrompt.prompt();
-                        
-                        // Wait for the user to respond to the prompt
-                        const { outcome } = await deferredPrompt.userChoice;
-                        
-                        // Reset the deferred prompt variable
-                        deferredPrompt = null;
-                        
-                        if (outcome === 'accepted') {
-                            showToast('Instalación', 'MarketConnect Pro ha sido instalado en tu dispositivo', 'success');
-                        } else {
-                            showToast('Instalación', 'La instalación fue cancelada', 'warning');
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            
+                            // Wait for the user to respond to the prompt
+                            const { outcome } = await deferredPrompt.userChoice;
+                            
+                            // Reset the deferred prompt variable
+                            deferredPrompt = null;
+                            
+                            if (outcome === 'accepted') {
+                                showToast('Instalación', 'MarketConnect Pro ha sido instalado en tu dispositivo', 'success');
+                            } else {
+                                showToast('Instalación', 'La instalación fue cancelada', 'warning');
+                            }
                         }
                     });
                     
@@ -3621,4 +3782,3 @@
     </script>
 </body>
 </html>
-
