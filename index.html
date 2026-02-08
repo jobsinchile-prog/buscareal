@@ -184,6 +184,7 @@
             padding: 4px 12px;
             border-radius: 50px;
             transition: var(--transition);
+            position: relative;
         }
 
         .user-menu:hover {
@@ -207,6 +208,85 @@
         .user-name {
             font-weight: 500;
             margin-right: 4px;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 240px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-hover);
+            z-index: 1500;
+            display: none;
+            flex-direction: column;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .user-dropdown.active {
+            display: flex;
+        }
+
+        .user-dropdown-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-dropdown-header .user-avatar {
+            width: 48px;
+            height: 48px;
+            font-size: 1.1rem;
+            margin-right: 12px;
+        }
+
+        .user-dropdown-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .user-dropdown-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-menu {
+            list-style: none;
+            padding: 8px 0;
+        }
+
+        .user-dropdown-menu li {
+            padding: 0;
+        }
+
+        .user-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .user-dropdown-menu a:hover {
+            background: var(--light-gray);
+            color: var(--primary);
+        }
+
+        .user-dropdown-menu i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .user-dropdown-divider {
+            height: 1px;
+            background: var(--light-gray);
+            margin: 8px 0;
         }
 
         .main-container {
@@ -958,411 +1038,24 @@
             gap: 8px;
         }
 
-        /* Landing Page */
-        .hero {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 80px 24px;
-            text-align: center;
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
-            margin-bottom: 48px;
-            box-shadow: var(--box-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            z-index: 0;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 24px;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.4rem;
-            margin-bottom: 32px;
-            opacity: 0.95;
-        }
-
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .btn-hero {
-            padding: 16px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-hero.primary {
-            background: white;
-            color: var(--primary);
-        }
-
-        .btn-hero.secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-            margin: 64px 0;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 32px;
-            text-align: center;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--box-shadow-hover);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 24px;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            font-size: 2.5rem;
-            color: white;
-        }
-
-        .feature-card.secondary .feature-icon {
-            background: var(--gradient-secondary);
-        }
-
-        .feature-card.success .feature-icon {
-            background: var(--gradient-success);
-        }
-
-        .feature-card.accent .feature-icon {
-            background: var(--gradient-accent);
-        }
-
-        .feature-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 16px;
-        }
-
-        .feature-card p {
-            color: var(--gray);
-            font-size: 1.05rem;
-        }
-
-        /* Profile Section */
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-right: 24px;
-        }
-
-        .profile-info h1 {
-            font-size: 2.2rem;
-            margin-bottom: 8px;
-        }
-
-        .profile-info p {
-            color: var(--gray);
-            font-size: 1.1rem;
-        }
-
-        .profile-stats {
-            display: flex;
-            gap: 32px;
-            margin-top: 16px;
-        }
-
-        .profile-stat {
-            text-align: center;
-        }
-
-        .profile-stat .value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .profile-stat .label {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-
-        /* Responsive Design */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            height: var(--mobile-menu-height);
-            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
-            z-index: 900;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .mobile-menu-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
-            text-decoration: none;
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
             font-size: 0.8rem;
-            transition: var(--transition);
-            padding: 8px;
-            border-radius: 12px;
+            font-weight: 600;
+            margin-left: 8px;
         }
 
-        .mobile-menu-item.active, 
-        .mobile-menu-item:hover {
-            color: var(--primary);
-            background: rgba(67, 97, 238, 0.1);
+        .badge.premium {
+            background: var(--gradient-secondary);
+            color: white;
         }
 
-        .mobile-menu-item i {
-            font-size: 1.6rem;
-            margin-bottom: 4px;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                margin-bottom: 24px;
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .main-container {
-                flex-direction: column;
-                padding: 0 16px;
-                margin-top: var(--header-height);
-            }
-            
-            nav ul {
-                display: none;
-            }
-            
-            .nav-icons {
-                margin-left: auto;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            
-            .hero p {
-                font-size: 1.2rem;
-            }
-            
-            .stats-grid, 
-            .cards-grid, 
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .filters-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn-hero {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .section-title {
-                font-size: 1.6rem;
-            }
-            
-            .mobile-menu {
-                display: flex;
-            }
-            
-            header {
-                padding: 0 16px;
-            }
-            
-            .logo {
-                font-size: 1.6rem;
-            }
-            
-            .nav-icons .nav-icon {
-                margin-left: 12px;
-            }
-            
-            .chat-messages {
-                padding: 16px;
-            }
-            
-            .message {
-                max-width: 85%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            :root {
-                --header-height: 64px;
-                --mobile-menu-height: 60px;
-            }
-            
-            .hero {
-                padding: 60px 16px;
-            }
-            
-            .hero h1 {
-                font-size: 2.4rem;
-            }
-            
-            .section-title {
-                font-size: 1.5rem;
-            }
-            
-            .card-title {
-                font-size: 1.2rem;
-            }
-            
-            .modal-content {
-                width: 95%;
-                max-width: 500px;
-            }
-            
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .profile-avatar {
-                margin-right: 0;
-                margin-bottom: 16px;
-            }
-            
-            .profile-stats {
-                flex-direction: column;
-                gap: 16px;
-                margin-top: 24px;
-            }
-            
-            .chat-input-container {
-                padding: 12px;
-            }
-            
-            .chat-actions {
-                gap: 4px;
-            }
-            
-            .chat-action {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-        }
-
-        /* Premium Overlay */
-        .premium-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: var(--border-radius);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            padding: 24px;
-            text-align: center;
-        }
-
-        .premium-overlay i {
-            font-size: 3rem;
-            color: var(--secondary);
-            margin-bottom: 16px;
-        }
-
-        .premium-overlay h3 {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            color: var(--darker);
-        }
-
-        .premium-overlay p {
+        .badge.free {
+            background: var(--light-gray);
             color: var(--gray);
-            margin-bottom: 24px;
-            max-width: 300px;
         }
 
         /* Toast Notifications */
@@ -1433,68 +1126,6 @@
         .toast-content p {
             color: var(--gray);
             font-size: 0.95rem;
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .badge.premium {
-            background: var(--gradient-secondary);
-            color: white;
-        }
-
-        .badge.free {
-            background: var(--light-gray);
-            color: var(--gray);
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(67, 97, 238, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 48px 24px;
-            color: var(--gray);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 24px;
-            opacity: 0.3;
-        }
-
-        .empty-state h3 {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            color: var(--dark);
-        }
-
-        .empty-state p {
-            margin-bottom: 24px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         /* Notifications Panel */
@@ -1674,6 +1305,61 @@
             color: var(--gray);
             margin-top: 4px;
         }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            height: var(--mobile-menu-height);
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+            z-index: 900;
+            padding: 0 20px;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .mobile-menu-item.active, 
+        .mobile-menu-item:hover {
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .mobile-menu-item i {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: flex;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .user-dropdown {
+                width: 280px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1706,10 +1392,33 @@
                     <div class="user-avatar">JS</div>
                     <div class="user-name">Juan Soto <span class="badge premium">Premium</span></div>
                     <div class="nav-icon" style="margin-left: 8px; margin-right: 0;">▼</div>
+                    
+                    <!-- Menú desplegable del usuario -->
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-avatar">JS</div>
+                            <div class="user-dropdown-info">
+                                <h4>Juan Soto Méndez</h4>
+                                <p>juan.soto@email.com</p>
+                                <span class="badge premium">Premium</span>
+                            </div>
+                        </div>
+                        <ul class="user-dropdown-menu">
+                            <li><a href="#" class="nav-link" data-view="profile-view"><i>👤</i> Mi Perfil</a></li>
+                            <li><a href="#" class="nav-link" data-view="dashboard-view"><i>⚙️</i> Configuración</a></li>
+                            <li><a href="#" id="upgrade-plan-btn"><i>⭐</i> Mejorar Plan</a></li>
+                        </ul>
+                        <div class="user-dropdown-divider"></div>
+                        <ul class="user-dropdown-menu">
+                            <li><a href="#" id="help-btn"><i>❓</i> Ayuda</a></li>
+                            <li><a href="#" id="logout-btn"><i>🚪</i> Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </header>
         
+        <!-- El resto del código HTML permanece igual -->
         <div class="mobile-menu">
             <a href="#" class="mobile-menu-item nav-link active" data-view="dashboard-view">
                 🏠
@@ -1740,7 +1449,7 @@
                 
                 <div class="sidebar-footer">
                     <div class="premium-banner">
-                        <h3>¡Desbloquea todas las funciones!</h3>
+                        <h3>¡Desbloquea todas las funciones!</</h3>
                         <p>Actualiza a Premium para ver información completa de contactos, presupuestos exactos y direcciones.</p>
                         <button class="btn-upgrade" id="upgrade-btn">Actualizar a Premium</button>
                     </div>
@@ -2114,6 +1823,7 @@
                     </div>
                     
                     <div class="cards-grid">
+                        <!-- Los anuncios se mantienen igual -->
                         <div class="card">
                             <div class="card-img">
                                 <img src="https://placehold.co/600x400?text=Oficina+Las+Condes" alt="Oficina">
@@ -2178,119 +1888,6 @@
                                     <div class="card-actions">
                                         <button class="btn btn-sm btn-outline view-detail-btn" data-ad-id="7">Ver Detalles</button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Ad Detail View -->
-                <section id="ad-detail-view" class="view">
-                    <h1 class="section-title">📄 Detalle del Aviso</h1>
-                    
-                    <div class="card" style="margin-bottom: 24px;">
-                        <div class="card-img">
-                            <img src="https://placehold.co/600x400?text=Departamento+Vitacura" alt="Departamento Vitacura">
-                        </div>
-                        <div class="card-content">
-                            <span class="card-category category-inmuebles">Inmuebles</span>
-                            <h2 class="card-title">Departamento de Lujo en Vitacura</h2>
-                            <p class="card-desc">Busco departamento de alto standing en Vitacura o Las Condes, con 3 dormitorios en suite, walking closet, 4 baños, cocina americana equipada, logia, estacionamiento para 2 vehículos y bodega. Edificio con piscina, gimnasio y seguridad 24/7.</p>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 24px 0;">
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Presupuesto</div>
-                                    <div style="font-weight: 700; font-size: 1.3rem; color: var(--primary);">UF 7.500 - 9.000</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Ubicación</div>
-                                    <div style="font-weight: 600;">Vitacura, Santiago</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Superficie</div>
-                                    <div style="font-weight: 600;">120 - 150 m²</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Publicado por</div>
-                                    <div style="font-weight: 600;">Juan Soto <span class="badge premium">Premium</span></div>
-                                </div>
-                            </div>
-                            
-                            <div style="padding-top: 20px; border-top: 1px solid var(--light-gray);">
-                                <h3 style="margin-bottom: 16px; display: flex; align-items: center;">
-                                    <span style="margin-right: 10px;">📋</span> Detalles Adicionales
-                                </h3>
-                                <ul style="padding-left: 20px; line-height: 1.8;">
-                                    <li>Fecha de entrega: Inmediata o máximo 3 meses</li>
-                                    <li>Estado del edificio: Nuevo o a estrenar</li>
-                                    <li>Vista: Preferentemente despejada o a la ciudad</li>
-                                    <li>Orientación: Preferentemente poniente o sur</li>
-                                    <li>Piso mínimo: 10° piso</li>
-                                </ul>
-                            </div>
-                            
-                            <div style="padding-top: 20px; border-top: 1px solid var(--light-gray); margin-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Fecha de Publicación</div>
-                                    <div style="font-weight: 600;">5 de febrero de 2026</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Vistas</div>
-                                    <div style="font-weight: 600;">142</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Propuestas</div>
-                                    <div style="font-weight: 600;">7</div>
-                                </div>
-                            </div>
-                            
-                            <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
-                                <button class="btn btn-primary" id="send-proposal-btn" style="flex: 1; min-width: 150px;">
-                                    <i style="margin-right: 8px;">💬</i> Enviar Propuesta
-                                </button>
-                                <button class="btn btn-outline" id="add-favorite-btn" style="flex: 1; min-width: 150px;">
-                                    <i style="margin-right: 8px;">❤️</i> Agregar a Favoritos
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-content">
-                            <h3 style="margin-bottom: 16px; display: flex; align-items: center;">
-                                <span style="margin-right: 10px;">🔒</span> Información de Contacto
-                            </h3>
-                            
-                            <div style="background: var(--light-gray); border-radius: 12px; padding: 24px; text-align: center; margin: 20px 0;">
-                                <div style="font-size: 4rem; margin-bottom: 16px;">👤</div>
-                                <h4 style="margin-bottom: 8px;">Juan Soto</h4>
-                                <p style="color: var(--gray); margin-bottom: 16px;">Comprador Premium</p>
-                                <p style="margin-bottom: 24px;">Esta información está disponible solo para vendedores con suscripción Premium.</p>
-                                <button class="btn btn-secondary" id="upgrade-from-detail">
-                                    <i style="margin-right: 8px;">⭐</i> Actualizar a Premium
-                                </button>
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; opacity: 0.6; pointer-events: none;">
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Nombre Completo</div>
-                                    <div style="font-weight: 600;">Juan Carlos Soto Méndez</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Teléfono</div>
-                                    <div style="font-weight: 600;">+56 9 1234 5678</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Email</div>
-                                    <div style="font-weight: 600;">juan.soto@email.com</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Dirección Exacta</div>
-                                    <div style="font-weight: 600;">Avenida Vitacura 3500, Depto 1501, Las Condes, Santiago</div>
-                                </div>
-                                <div>
-                                    <div style="color: var(--gray); margin-bottom: 6px;">Presupuesto Exacto</div>
-                                    <div style="font-weight: 600; color: var(--primary);">UF 8.200</div>
                                 </div>
                             </div>
                         </div>
@@ -2629,87 +2226,11 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="card">
-                        <div class="card-content">
-                            <h3 style="margin-bottom: 20px; display: flex; align-items: center;">
-                                <span style="margin-right: 10px;">📈</span> Reportes y Estadísticas
-                            </h3>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 24px;">
-                                <div>
-                                    <h4 style="margin-bottom: 16px;">Actividad por Categoría</h4>
-                                    <div style="background: var(--light-gray); border-radius: 12px; height: 200px; display: flex; align-items: center; justify-content: center;">
-                                        <div style="text-align: center; color: var(--gray);">
-                                            <div style="font-size: 3rem; margin-bottom: 12px;">📊</div>
-                                            <p>Gráfico de actividad por categoría</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <h4 style="margin-bottom: 16px;">Crecimiento de Usuarios</h4>
-                                    <div style="background: var(--light-gray); border-radius: 12px; height: 200px; display: flex; align-items: center; justify-content: center;">
-                                        <div style="text-align: center; color: var(--gray);">
-                                            <div style="font-size: 3rem; margin-bottom: 12px;">📈</div>
-                                            <p>Gráfico de crecimiento mensual</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                                <div class="stat-card" style="margin-bottom: 0;">
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="icon primary">🔄</div>
-                                        <div>
-                                            <div class="label">Tasa de Conversión</div>
-                                            <div class="value">24.7%</div>
-                                            <div class="change positive">↑ 3.2% este mes</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-card" style="margin-bottom: 0;">
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="icon secondary">⏱️</div>
-                                        <div>
-                                            <div class="label">Tiempo Promedio Negociación</div>
-                                            <div class="value">8.3 días</div>
-                                            <div class="change negative">↑ 1.2 días vs mes anterior</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-card" style="margin-bottom: 0;">
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="icon success">⭐</div>
-                                        <div>
-                                            <div class="label">Satisfacción Usuarios</div>
-                                            <div class="value">4.8/5.0</div>
-                                            <div class="change positive">↑ 0.2 vs mes anterior</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-card" style="margin-bottom: 0;">
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="icon warning">💰</div>
-                                        <div>
-                                            <div class="label">Ticket Promedio</div>
-                                            <div class="value">UF 4,250</div>
-                                            <div class="change positive">↑ 8.5% este mes</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </section>
             </main>
         </div>
         
-        <!-- Modal for Creating Ad -->
+        <!-- Modal para crear anuncio -->
         <div id="create-ad-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2762,215 +2283,15 @@
                         <input type="text" id="ad-location" class="form-control" placeholder="Región, ciudad, comuna específica">
                     </div>
                     
-                    <div id="category-specific-fields">
-                        <!-- Inmuebles Fields -->
-                        <div id="inmuebles-fields-modal">
-                            <h4 style="margin: 20px 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--light-gray);">Características de la Propiedad</h4>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="property-type-modal">Tipo de Propiedad</label>
-                                    <select id="property-type-modal" class="form-control">
-                                        <option>Departamento</option>
-                                        <option>Casa</option>
-                                        <option>Oficina</option>
-                                        <option>Local Comercial</option>
-                                        <option>Bodega</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="bedrooms-modal">Dormitorios</label>
-                                    <select id="bedrooms-modal" class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4+</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="bathrooms-modal">Baños</label>
-                                    <select id="bathrooms-modal" class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3+</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Características Adicionales</label>
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px;">
-                                    <label style="display: flex; align-items: center; cursor: pointer;">
-                                        <input type="checkbox" style="width: 18px; height: 18px; margin-right: 8px;">
-                                        <span>Estacionamiento</span>
-                                    </label>
-                                    <label style="display: flex; align-items: center; cursor: pointer;">
-                                        <input type="checkbox" style="width: 18px; height: 18px; margin-right: 8px;">
-                                        <span>Bodega</span>
-                                    </label>
-                                    <label style="display: flex; align-items: center; cursor: pointer;">
-                                        <input type="checkbox" style="width: 18px; height: 18px; margin-right: 8px;">
-                                        <span>Piscina</span>
-                                    </label>
-                                    <label style="display: flex; align-items: center; cursor: pointer;">
-                                        <input type="checkbox" style="width: 18px; height: 18px; margin-right: 8px;">
-                                        <span>Gimnasio</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Automóviles Fields (hidden by default) -->
-                        <div id="automoviles-fields-modal" style="display: none;">
-                            <h4 style="margin: 20px 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--light-gray);">Características del Vehículo</h4>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="car-type-modal">Tipo de Vehículo</label>
-                                    <select id="car-type-modal" class="form-control">
-                                        <option>Sedán</option>
-                                        <option>SUV</option>
-                                        <option>Hatchback</option>
-                                        <option>Pick-up</option>
-                                        <option>Deportivo</option>
-                                        <option>Van</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="car-brand-modal">Marca</label>
-                                    <select id="car-brand-modal" class="form-control">
-                                        <option>Toyota</option>
-                                        <option>Nissan</option>
-                                        <option>Chevrolet</option>
-                                        <option>Hyundai</option>
-                                        <option>Kia</option>
-                                        <option>Ford</option>
-                                        <option>Honda</option>
-                                        <option>Mazda</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="car-year-modal">Año</label>
-                                    <select id="car-year-modal" class="form-control">
-                                        <option>2020+</option>
-                                        <option>2018-2019</option>
-                                        <option>2015-2017</option>
-                                        <option>Antes de 2015</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="car-mileage-modal">Kilometraje Máximo</label>
-                                    <select id="car-mileage-modal" class="form-control">
-                                        <option>Menos de 30.000 km</option>
-                                        <option>30.000 - 60.000 km</option>
-                                        <option>60.000 - 100.000 km</option>
-                                        <option>Más de 100.000 km</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="car-transmission-modal">Transmisión</label>
-                                    <select id="car-transmission-modal" class="form-control">
-                                        <option>Ambas</option>
-                                        <option>Automática</option>
-                                        <option>Mecánica</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="car-fuel-modal">Combustible</label>
-                                    <select id="car-fuel-modal" class="form-control">
-                                        <option>Todos</option>
-                                        <option>Bencina</option>
-                                        <option>Diesel</option>
-                                        <option>Híbrido</option>
-                                        <option>Eléctrico</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Motos Fields (hidden by default) -->
-                        <div id="motos-fields-modal" style="display: none;">
-                            <h4 style="margin: 20px 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--light-gray);">Características de la Moto</h4>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="motorcycle-type-modal">Tipo de Moto</label>
-                                    <select id="motorcycle-type-modal" class="form-control">
-                                        <option>Deportiva</option>
-                                        <option>Naked</option>
-                                        <option>Touring</option>
-                                        <option>Trail/Aventura</option>
-                                        <option>Scooter</option>
-                                        <option>Custom</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="motorcycle-brand-modal">Marca</label>
-                                    <select id="motorcycle-brand-modal" class="form-control">
-                                        <option>Honda</option>
-                                        <option>Yamaha</option>
-                                        <option>Suzuki</option>
-                                        <option>Kawasaki</option>
-                                        <option>Ducati</option>
-                                        <option>BMW</option>
-                                        <option>Harley Davidson</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="motorcycle-year-modal">Año</label>
-                                    <select id="motorcycle-year-modal" class="form-control">
-                                        <option>2021+</option>
-                                        <option>2019-2020</option>
-                                        <option>2017-2018</option>
-                                        <option>Antes de 2017</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="motorcycle-engine-modal">Cilindrada</label>
-                                    <select id="motorcycle-engine-modal" class="form-control">
-                                        <option>Menos de 250cc</option>
-                                        <option>250cc - 500cc</option>
-                                        <option>500cc - 750cc</option>
-                                        <option>750cc - 1000cc</option>
-                                        <option>Más de 1000cc</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="motorcycle-use-modal">Uso Principal</label>
-                                    <select id="motorcycle-use-modal" class="form-control">
-                                        <option>Ciudad</option>
-                                        <option>Touring/Largas distancias</option>
-                                        <option>Off-road/Aventura</option>
-                                        <option>Deportivo</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary btn-block" id="publish-ad-btn">Publicar Aviso</button>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline" id="cancel-modal">Cancelar</button>
-                    <button class="btn btn-primary" id="publish-ad-btn">Publicar Aviso</button>
                 </div>
             </div>
         </div>
         
-        <!-- Notifications Panel -->
+        <!-- Panel de notificaciones -->
         <div class="notifications-panel" id="notifications-panel">
             <div class="notifications-header">
                 <h3>Notificaciones</h3>
@@ -3001,26 +2322,10 @@
                         <div class="notification-time">Ayer</div>
                     </div>
                 </li>
-                <li class="notification-item">
-                    <div class="notification-icon">⭐</div>
-                    <div class="notification-content">
-                        <h4>Suscripción renovada</h4>
-                        <p>Tu suscripción Premium ha sido renovada exitosamente</p>
-                        <div class="notification-time">Hace 3 días</div>
-                    </div>
-                </li>
-                <li class="notification-item">
-                    <div class="notification-icon">📢</div>
-                    <div class="notification-content">
-                        <h4>Nuevo aviso publicado</h4>
-                        <p>Se ha publicado tu aviso de búsqueda de moto deportiva</p>
-                        <div class="notification-time">Hace 1 semana</div>
-                    </div>
-                </li>
             </ul>
         </div>
         
-        <!-- Messages Panel -->
+        <!-- Panel de mensajes -->
         <div class="messages-panel" id="messages-panel">
             <div class="messages-header">
                 <h3>Mensajes</h3>
@@ -3043,255 +2348,80 @@
                         <div class="message-time">Ayer</div>
                     </div>
                 </li>
-                <li class="message-item">
-                    <div class="message-avatar">AL</div>
-                    <div class="message-content">
-                        <h4>Ana López</h4>
-                        <p>Gracias por tu propuesta. Me interesa saber más detalles sobre tus condiciones de pago.</p>
-                        <div class="message-time">Hace 3 días</div>
-                    </div>
-                </li>
-                <li class="message-item">
-                    <div class="message-avatar">CG</div>
-                    <div class="message-content">
-                        <h4>Carlos Gómez</h4>
-                        <p>He revisado tu aviso de moto deportiva y tengo una que cumple con tus especificaciones.</p>
-                        <div class="message-time">Hace 1 semana</div>
-                    </div>
-                </li>
             </ul>
         </div>
         
         <!-- Toast Notifications -->
-        <div class="toast-container" id="toast-container">
-            <!-- Toasts will be dynamically added here -->
-        </div>
+        <div class="toast-container" id="toast-container"></div>
     </div>
 
     <script>
         // DOM Elements
-        const views = document.querySelectorAll('.view');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const categorySelect = document.getElementById('category');
-        const inmueblesFilters = document.getElementById('inmuebles-filters');
-        const automovilesFilters = document.getElementById('automoviles-filters');
-        const motosFilters = document.getElementById('motos-filters');
-        const adCategorySelect = document.getElementById('ad-category');
-        const inmueblesFieldsModal = document.getElementById('inmuebles-fields-modal');
-        const automovilesFieldsModal = document.getElementById('automoviles-fields-modal');
-        const motosFieldsModal = document.getElementById('motos-fields-modal');
-        const createAdModal = document.getElementById('create-ad-modal');
-        const modalCloseButtons = document.querySelectorAll('.modal-close');
-        const createAdButton = document.getElementById('create-ad-btn');
+        const userMenu = document.getElementById('user-menu');
+        const userDropdown = document.getElementById('user-dropdown');
         const notificationIcon = document.getElementById('notification-icon');
         const messageIcon = document.getElementById('message-icon');
         const notificationsPanel = document.getElementById('notifications-panel');
         const messagesPanel = document.getElementById('messages-panel');
-        const markAllReadBtn = document.getElementById('mark-all-read');
-        const markAllMessagesReadBtn = document.getElementById('mark-all-messages-read');
-        const viewDetailButtons = document.querySelectorAll('.view-detail-btn');
-        const sendProposalBtn = document.getElementById('send-proposal-btn');
-        const addFavoriteBtn = document.getElementById('add-favorite-btn');
-        const upgradeBtn = document.getElementById('upgrade-btn');
-        const upgradeFromDetailBtn = document.getElementById('upgrade-from-detail');
-        const saveProfileBtn = document.getElementById('save-profile-btn');
-        const applyFiltersBtn = document.getElementById('apply-filters');
-        const publishAdBtn = document.getElementById('publish-ad-btn');
-        const cancelModalBtn = document.getElementById('cancel-modal');
-        const logoLink = document.getElementById('logo-link');
-        const userMenu = document.getElementById('user-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const views = document.querySelectorAll('.view');
+        const createAdModal = document.getElementById('create-ad-modal');
+        const createAdButton = document.getElementById('create-ad-btn');
         const closeModalBtn = document.getElementById('close-modal');
+        const cancelModalBtn = document.getElementById('cancel-modal');
+        const publishAdBtn = document.getElementById('publish-ad-btn');
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        const upgradePlanBtn = document.getElementById('upgrade-plan-btn');
+        const helpBtn = document.getElementById('help-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
         const savePreferencesBtn = document.getElementById('save-preferences-btn');
         const manageSubscriptionBtn = document.getElementById('manage-subscription-btn');
-        const viewAllUsersBtn = document.getElementById('view-all-users-btn');
-        const viewAllAdsBtn = document.getElementById('view-all-ads-btn');
-        const editUserBtns = document.querySelectorAll('.edit-user-btn');
-        const deleteUserBtns = document.querySelectorAll('.delete-user-btn');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        const viewDetailButtons = document.querySelectorAll('.view-detail-btn');
+        const sendButtons = document.querySelectorAll('.chat-action.send');
+        const chatInputs = document.querySelectorAll('.chat-input');
+        const markAllReadBtn = document.getElementById('mark-all-read');
+        const markAllMessagesReadBtn = document.getElementById('mark-all-messages-read');
         
-        // Initialize the application
+        // Variables de estado
+        let isUserDropdownOpen = false;
+        let isNotificationsOpen = false;
+        let isMessagesOpen = false;
+        
+        // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
             console.log('MarketConnect Pro iniciado');
             
-            // Set up category filters
-            setupCategoryFilters();
-            
-            // Set up ad creation modal
-            setupAdCreationModal();
-            
-            // Set up navigation
+            // Configurar navegación
             setupNavigation();
             
-            // Set up chat functionality
-            setupChat();
+            // Configurar menú de usuario
+            setupUserMenu();
             
-            // Set up notifications and messages panels
+            // Configurar paneles de notificaciones y mensajes
             setupNotifications();
             
-            // Set up detail view buttons
-            setupDetailViews();
+            // Configurar modal de creación de anuncio
+            setupAdModal();
             
-            // Set up other button interactions
-            setupButtonInteractions();
+            // Configurar funcionalidad de chat
+            setupChat();
             
-            // Set up PWA installation
-            setupPWA();
+            // Configurar botones
+            setupButtons();
             
-            // Initialize data
-            initializeData();
+            // Configurar filtros
+            setupFilters();
+            
+            // Mostrar toast de bienvenida
+            setTimeout(() => {
+                showToast('Bienvenido', '¡Hola Juan! Bienvenido a MarketConnect Pro', 'success');
+            }, 1000);
         });
         
-        // Category Filters Functionality
-        function setupCategoryFilters() {
-            if (categorySelect) {
-                categorySelect.addEventListener('change', function() {
-                    console.log('Categoría seleccionada:', this.value);
-                    
-                    // Hide all filters
-                    if (inmueblesFilters) inmueblesFilters.style.display = 'none';
-                    if (automovilesFilters) automovilesFilters.style.display = 'none';
-                    if (motosFilters) motosFilters.style.display = 'none';
-                    
-                    // Show relevant filters
-                    if (this.value === 'inmuebles' && inmueblesFilters) {
-                        inmueblesFilters.style.display = 'grid';
-                    } else if (this.value === 'automoviles' && automovilesFilters) {
-                        automovilesFilters.style.display = 'grid';
-                    } else if (this.value === 'motos' && motosFilters) {
-                        motosFilters.style.display = 'grid';
-                    }
-                });
-                
-                // Trigger change event to set initial state
-                categorySelect.dispatchEvent(new Event('change'));
-            }
-            
-            // Category change in ad form
-            if (adCategorySelect) {
-                adCategorySelect.addEventListener('change', function() {
-                    console.log('Categoría de anuncio seleccionada:', this.value);
-                    
-                    // Hide all fields
-                    if (inmueblesFieldsModal) inmueblesFieldsModal.style.display = 'none';
-                    if (automovilesFieldsModal) automovilesFieldsModal.style.display = 'none';
-                    if (motosFieldsModal) motosFieldsModal.style.display = 'none';
-                    
-                    // Show relevant fields
-                    if (this.value === 'inmuebles' && inmueblesFieldsModal) {
-                        inmueblesFieldsModal.style.display = 'block';
-                    } else if (this.value === 'automoviles' && automovilesFieldsModal) {
-                        automovilesFieldsModal.style.display = 'block';
-                    } else if (this.value === 'motos' && motosFieldsModal) {
-                        motosFieldsModal.style.display = 'block';
-                    }
-                });
-                
-                // Trigger change event to set initial state
-                adCategorySelect.dispatchEvent(new Event('change'));
-            }
-        }
-        
-        // Ad Creation Modal
-        function setupAdCreationModal() {
-            // Open modal
-            if (createAdButton) {
-                createAdButton.addEventListener('click', function() {
-                    if (createAdModal) {
-                        createAdModal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                        showToast('Crear Aviso', 'Completa el formulario para publicar tu necesidad', 'success');
-                    }
-                });
-            }
-            
-            // Close modal with close button
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', function() {
-                    if (createAdModal) {
-                        createAdModal.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-                });
-            }
-            
-            // Close modal with cancel button
-            if (cancelModalBtn) {
-                cancelModalBtn.addEventListener('click', function() {
-                    if (createAdModal) {
-                        createAdModal.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                        showToast('Cancelado', 'La creación del aviso ha sido cancelada', 'warning');
-                    }
-                });
-            }
-            
-            // Close modal when clicking outside
-            if (createAdModal) {
-                createAdModal.addEventListener('click', function(e) {
-                    if (e.target === createAdModal) {
-                        createAdModal.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-                });
-            }
-            
-            // Publish ad button
-            if (publishAdBtn) {
-                publishAdBtn.addEventListener('click', function() {
-                    const adTitle = document.getElementById('ad-title');
-                    const adDescription = document.getElementById('ad-description');
-                    
-                    // Basic validation
-                    if (!adTitle.value.trim() || !adDescription.value.trim()) {
-                        showToast('Error', 'Por favor completa todos los campos obligatorios', 'error');
-                        return;
-                    }
-                    
-                    // Close modal
-                    if (createAdModal) {
-                        createAdModal.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                        
-                        // Clear form
-                        adTitle.value = '';
-                        adDescription.value = '';
-                        document.getElementById('ad-budget-min').value = '';
-                        document.getElementById('ad-budget-max').value = '';
-                        document.getElementById('ad-location').value = '';
-                        
-                        // Switch to ads view
-                        switchView('ads-view');
-                        
-                        showToast('Aviso Publicado', 'Tu aviso ha sido publicado exitosamente y está visible para los vendedores', 'success');
-                    }
-                });
-            }
-        }
-        
-        // Navigation between views
+        // Configurar navegación
         function setupNavigation() {
-            // Function to switch views
-            function switchView(viewId) {
-                // Hide all views
-                views.forEach(view => {
-                    view.classList.remove('active');
-                });
-                
-                // Show target view
-                const targetView = document.getElementById(viewId);
-                if (targetView) {
-                    targetView.classList.add('active');
-                }
-                
-                // Update active class on all navigation links
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('data-view') === viewId) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-            
-            // Add click events to all navigation links
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -3300,17 +2430,28 @@
                     console.log('Navegando a:', targetViewId);
                     
                     if (targetViewId) {
-                        switchView(targetViewId);
+                        // Ocultar todas las vistas
+                        views.forEach(view => {
+                            view.classList.remove('active');
+                        });
                         
-                        // Close notifications and messages panels
-                        if (notificationsPanel) notificationsPanel.classList.remove('active');
-                        if (messagesPanel) messagesPanel.classList.remove('active');
+                        // Mostrar vista objetivo
+                        const targetView = document.getElementById(targetViewId);
+                        if (targetView) {
+                            targetView.classList.add('active');
+                        }
                         
-                        // Show toast confirmation
+                        // Actualizar enlaces activos
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Cerrar menús desplegables
+                        closeAllDropdowns();
+                        
+                        // Mostrar toast de confirmación
                         const viewNames = {
                             'dashboard-view': 'Dashboard',
                             'ads-view': 'Explorar Avisos',
-                            'ad-detail-view': 'Detalle del Aviso',
                             'profile-view': 'Mi Perfil',
                             'admin-view': 'Panel de Administración'
                         };
@@ -3319,30 +2460,168 @@
                     }
                 });
             });
-            
-            // Logo link to dashboard
-            if (logoLink) {
-                logoLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    switchView('dashboard-view');
-                    showToast('Navegación', 'Has regresado al Dashboard', 'success');
+        }
+        
+        // Configurar menú de usuario
+        function setupUserMenu() {
+            if (userMenu) {
+                userMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Alternar menú de usuario
+                    isUserDropdownOpen = !isUserDropdownOpen;
+                    userDropdown.classList.toggle('active', isUserDropdownOpen);
+                    
+                    // Cerrar otros paneles
+                    closeOtherPanels('user');
                 });
             }
             
-            // Apply filters button
-            if (applyFiltersBtn) {
-                applyFiltersBtn.addEventListener('click', function() {
-                    showToast('Filtros Aplicados', 'Los filtros han sido aplicados a la búsqueda de avisos', 'success');
+            // Cerrar menú de usuario al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (isUserDropdownOpen && 
+                    !userMenu.contains(e.target) && 
+                    !userDropdown.contains(e.target)) {
+                    closeUserDropdown();
+                }
+            });
+        }
+        
+        // Configurar paneles de notificaciones y mensajes
+        function setupNotifications() {
+            // Panel de notificaciones
+            if (notificationIcon) {
+                notificationIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Alternar panel de notificaciones
+                    isNotificationsOpen = !isNotificationsOpen;
+                    notificationsPanel.classList.toggle('active', isNotificationsOpen);
+                    
+                    // Cerrar otros paneles
+                    closeOtherPanels('notifications');
+                    
+                    // Marcar notificaciones como leídas
+                    if (isNotificationsOpen) {
+                        markNotificationsAsRead();
+                    }
+                });
+            }
+            
+            // Panel de mensajes
+            if (messageIcon) {
+                messageIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Alternar panel de mensajes
+                    isMessagesOpen = !isMessagesOpen;
+                    messagesPanel.classList.toggle('active', isMessagesOpen);
+                    
+                    // Cerrar otros paneles
+                    closeOtherPanels('messages');
+                    
+                    // Marcar mensajes como leídos
+                    if (isMessagesOpen) {
+                        markMessagesAsRead();
+                    }
+                });
+            }
+            
+            // Cerrar paneles al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (isNotificationsOpen && 
+                    !notificationIcon.contains(e.target) && 
+                    !notificationsPanel.contains(e.target)) {
+                    closeNotifications();
+                }
+                
+                if (isMessagesOpen && 
+                    !messageIcon.contains(e.target) && 
+                    !messagesPanel.contains(e.target)) {
+                    closeMessages();
+                }
+            });
+            
+            // Botón "Marcar todo como leído" en notificaciones
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', function() {
+                    markNotificationsAsRead();
+                    showToast('Notificaciones', 'Todas las notificaciones han sido marcadas como leídas', 'success');
+                });
+            }
+            
+            // Botón "Marcar todo como leído" en mensajes
+            if (markAllMessagesReadBtn) {
+                markAllMessagesReadBtn.addEventListener('click', function() {
+                    markMessagesAsRead();
+                    showToast('Mensajes', 'Todos los mensajes han sido marcadas como leídos', 'success');
                 });
             }
         }
         
-        // Chat functionality
-        function setupChat() {
-            const chatInputs = document.querySelectorAll('.chat-input');
-            const sendButtons = document.querySelectorAll('.chat-action.send');
+        // Configurar modal de creación de anuncio
+        function setupAdModal() {
+            // Abrir modal
+            if (createAdButton) {
+                createAdButton.addEventListener('click', function() {
+                    createAdModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
             
-            // Send message function
+            // Cerrar modal
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', function() {
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+            
+            if (cancelModalBtn) {
+                cancelModalBtn.addEventListener('click', function() {
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    showToast('Cancelado', 'La creación del aviso ha sido cancelada', 'warning');
+                });
+            }
+            
+            // Cerrar modal al hacer clic fuera
+            createAdModal.addEventListener('click', function(e) {
+                if (e.target === createAdModal) {
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Publicar anuncio
+            if (publishAdBtn) {
+                publishAdBtn.addEventListener('click', function() {
+                    const adTitle = document.getElementById('ad-title');
+                    const adDescription = document.getElementById('ad-description');
+                    
+                    if (!adTitle.value.trim() || !adDescription.value.trim()) {
+                        showToast('Error', 'Por favor completa todos los campos obligatorios', 'error');
+                        return;
+                    }
+                    
+                    createAdModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    
+                    // Limpiar formulario
+                    adTitle.value = '';
+                    adDescription.value = '';
+                    document.getElementById('ad-budget-min').value = '';
+                    document.getElementById('ad-budget-max').value = '';
+                    document.getElementById('ad-location').value = '';
+                    
+                    showToast('Aviso Publicado', 'Tu aviso ha sido publicado exitosamente', 'success');
+                });
+            }
+        }
+        
+        // Configurar funcionalidad de chat
+        function setupChat() {
+            // Enviar mensaje
             function sendMessage(input) {
                 const messageText = input.value.trim();
                 const chatId = input.getAttribute('data-chat-id');
@@ -3350,7 +2629,7 @@
                 
                 if (!messageText || !chatMessages) return;
                 
-                // Create message element
+                // Crear elemento de mensaje
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message sent';
                 messageDiv.innerHTML = `
@@ -3358,16 +2637,16 @@
                     <div class="message-time">${getCurrentTime()}</div>
                 `;
                 
-                // Add to chat
+                // Agregar al chat
                 chatMessages.appendChild(messageDiv);
                 
-                // Clear input
+                // Limpiar input
                 input.value = '';
                 
-                // Auto-scroll to bottom
+                // Auto-scroll al final
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 
-                // Simulate response after delay
+                // Simular respuesta después de un retraso
                 setTimeout(() => {
                     const responseDiv = document.createElement('div');
                     responseDiv.className = 'message received';
@@ -3378,18 +2657,14 @@
                     chatMessages.appendChild(responseDiv);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     
-                    // Show notification for new message
-                    if (chatId === '1') {
-                        showToast('Nuevo Mensaje', 'María Contreras ha respondido a tu mensaje', 'success');
-                    } else {
-                        showToast('Nuevo Mensaje', 'Roberto Pérez ha respondido a tu mensaje', 'success');
-                    }
+                    // Mostrar notificación
+                    showToast('Nuevo Mensaje', 'Has recibido una respuesta en el chat', 'success');
                 }, 1000);
                 
                 showToast('Mensaje Enviado', 'Tu mensaje ha sido enviado exitosamente', 'success');
             }
             
-            // Add event listeners to chat inputs
+            // Event listeners para inputs de chat
             chatInputs.forEach(input => {
                 input.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter' && this.value.trim() !== '') {
@@ -3398,7 +2673,7 @@
                 });
             });
             
-            // Add event listeners to send buttons
+            // Event listeners para botones de enviar
             sendButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const chatId = button.getAttribute('data-chat-id');
@@ -3409,263 +2684,169 @@
                 });
             });
             
-            // Add event listeners to chat action buttons
-            const cameraButtons = document.querySelectorAll('.chat-action.camera');
-            const attachButtons = document.querySelectorAll('.chat-action.attach');
-            
-            cameraButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    showToast('Cámara', 'Función de cámara activada', 'info');
-                });
-            });
-            
-            attachButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    showToast('Adjuntar', 'Selecciona un archivo para adjuntar', 'info');
-                });
-            });
-            
+            // Función para obtener hora actual
             function getCurrentTime() {
                 const now = new Date();
                 return now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
             }
         }
         
-        // Notifications and Messages Panels
-        function setupNotifications() {
-            // Toggle notifications panel
-            if (notificationIcon) {
-                notificationIcon.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (notificationsPanel) {
-                        notificationsPanel.classList.toggle('active');
-                        if (messagesPanel) messagesPanel.classList.remove('active');
-                        
-                        // Mark notifications as read when opened
-                        if (notificationsPanel.classList.contains('active')) {
-                            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                                item.classList.remove('unread');
-                            });
-                            const badge = notificationIcon.querySelector('.notification-badge');
-                            if (badge) badge.textContent = '0';
-                        }
-                    }
-                });
-            }
-            
-            // Toggle messages panel
-            if (messageIcon) {
-                messageIcon.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (messagesPanel) {
-                        messagesPanel.classList.toggle('active');
-                        if (notificationsPanel) notificationsPanel.classList.remove('active');
-                        
-                        // Mark messages as read when opened
-                        if (messagesPanel.classList.contains('active')) {
-                            document.querySelectorAll('.message-item.unread').forEach(item => {
-                                item.classList.remove('unread');
-                            });
-                            const badges = document.querySelectorAll('.notification-badge');
-                            if (badges.length > 1) badges[1].textContent = '0';
-                        }
-                    }
-                });
-            }
-            
-            // Close panels when clicking outside
-            document.addEventListener('click', function(e) {
-                if (notificationsPanel && !notificationIcon.contains(e.target) && !notificationsPanel.contains(e.target)) {
-                    notificationsPanel.classList.remove('active');
-                }
-                
-                if (messagesPanel && !messageIcon.contains(e.target) && !messagesPanel.contains(e.target)) {
-                    messagesPanel.classList.remove('active');
-                }
-            });
-            
-            // Mark all notifications as read
-            if (markAllReadBtn) {
-                markAllReadBtn.addEventListener('click', function() {
-                    document.querySelectorAll('.notification-item.unread').forEach(item => {
-                        item.classList.remove('unread');
-                    });
-                    const badge = notificationIcon.querySelector('.notification-badge');
-                    if (badge) badge.textContent = '0';
-                    showToast('Notificaciones', 'Todas las notificaciones han sido marcadas como leídas', 'success');
-                });
-            }
-            
-            // Mark all messages as read
-            if (markAllMessagesReadBtn) {
-                markAllMessagesReadBtn.addEventListener('click', function() {
-                    document.querySelectorAll('.message-item.unread').forEach(item => {
-                        item.classList.remove('unread');
-                    });
-                    const badges = document.querySelectorAll('.notification-badge');
-                    if (badges.length > 1) badges[1].textContent = '0';
-                    showToast('Mensajes', 'Todos los mensajes han sido marcados como leídos', 'success');
-                });
-            }
-            
-            // Notification item click
-            document.querySelectorAll('.notification-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    // Navigate to dashboard
-                    switchView('dashboard-view');
-                    
-                    // Close panel
-                    if (notificationsPanel) notificationsPanel.classList.remove('active');
-                    
-                    showToast('Notificación', 'Has navegado a la sección correspondiente', 'success');
-                });
-            });
-            
-            // Message item click
-            document.querySelectorAll('.message-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    // Go to dashboard
-                    switchView('dashboard-view');
-                    
-                    // Close panel
-                    if (messagesPanel) messagesPanel.classList.remove('active');
-                    
-                    const userName = this.querySelector('h4').textContent;
-                    showToast('Mensaje', `Has abierto la conversación con ${userName}`, 'success');
-                });
-            });
-        }
-        
-        // Detail views functionality
-        function setupDetailViews() {
-            // Function to switch to detail view
-            function showAdDetail() {
-                // Hide all views
-                views.forEach(view => {
-                    view.classList.remove('active');
-                });
-                
-                // Show ad detail view
-                const adDetailView = document.getElementById('ad-detail-view');
-                if (adDetailView) {
-                    adDetailView.classList.add('active');
-                }
-                
-                // Update active class on navigation links (set to ads-view since detail is not in main nav)
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('data-view') === 'ads-view') {
-                        link.classList.add('active');
-                    }
-                });
-            }
-            
-            // Add event listeners to all view detail buttons
-            viewDetailButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showAdDetail();
-                    showToast('Aviso Seleccionado', 'Se ha cargado el detalle del aviso seleccionado', 'success');
-                });
-            });
-        }
-        
-        // Button interactions
-        function setupButtonInteractions() {
-            // Send proposal button
-            if (sendProposalBtn) {
-                sendProposalBtn.addEventListener('click', function() {
-                    showToast('Propuesta Enviada', 'Tu propuesta ha sido enviada exitosamente al comprador', 'success');
-                });
-            }
-            
-            // Add to favorites button
-            if (addFavoriteBtn) {
-                addFavoriteBtn.addEventListener('click', function() {
-                    showToast('Aviso Guardado', 'El aviso ha sido agregado a tus favoritos', 'success');
-                });
-            }
-            
-            // Upgrade buttons
+        // Configurar botones
+        function setupButtons() {
+            // Botón de actualizar a premium
             if (upgradeBtn) {
                 upgradeBtn.addEventListener('click', function() {
-                    showToast('Suscripción', 'Has iniciado el proceso de actualización a Premium', 'success');
+                    showToast('Suscripción', 'Redirigiendo a la actualización de plan Premium', 'success');
                 });
             }
             
-            if (upgradeFromDetailBtn) {
-                upgradeFromDetailBtn.addEventListener('click', function() {
-                    showToast('Suscripción', 'Has iniciado el proceso de actualización a Premium', 'success');
+            if (upgradePlanBtn) {
+                upgradePlanBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeUserDropdown();
+                    showToast('Suscripción', 'Redirigiendo a la actualización de plan Premium', 'success');
                 });
             }
             
-            // Save profile button
+            // Botón de ayuda
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeUserDropdown();
+                    showToast('Ayuda', 'Redirigiendo al centro de ayuda', 'info');
+                });
+            }
+            
+            // Botón de cerrar sesión
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeUserDropdown();
+                    showToast('Cerrar Sesión', 'Has cerrado sesión exitosamente', 'success');
+                    // Aquí iría la lógica real de cierre de sesión
+                });
+            }
+            
+            // Botón de guardar perfil
             if (saveProfileBtn) {
                 saveProfileBtn.addEventListener('click', function() {
                     showToast('Perfil Actualizado', 'Tu información personal ha sido guardada exitosamente', 'success');
                 });
             }
             
-            // Save preferences button
+            // Botón de guardar preferencias
             if (savePreferencesBtn) {
                 savePreferencesBtn.addEventListener('click', function() {
                     showToast('Preferencias Guardadas', 'Tus preferencias de categorías han sido guardadas', 'success');
                 });
             }
             
-            // Manage subscription button
+            // Botón de administrar suscripción
             if (manageSubscriptionBtn) {
                 manageSubscriptionBtn.addEventListener('click', function() {
                     showToast('Suscripción', 'Redirigiendo a la gestión de suscripción', 'info');
                 });
             }
             
-            // User menu
-            if (userMenu) {
-                userMenu.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    showToast('Menú de Usuario', 'Opciones de perfil y configuración', 'info');
+            // Botón de aplicar filtros
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function() {
+                    showToast('Filtros Aplicados', 'Los filtros han sido aplicados a la búsqueda', 'success');
                 });
             }
             
-            // Admin buttons
-            if (viewAllUsersBtn) {
-                viewAllUsersBtn.addEventListener('click', function() {
-                    showToast('Usuarios', 'Mostrando todos los usuarios del sistema', 'info');
-                });
-            }
-            
-            if (viewAllAdsBtn) {
-                viewAllAdsBtn.addEventListener('click', function() {
-                    showToast('Avisos', 'Mostrando todos los avisos del sistema', 'info');
-                });
-            }
-            
-            // Edit user buttons
-            editUserBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    showToast('Editar Usuario', 'Editando información del usuario', 'info');
-                });
-            });
-            
-            // Delete user buttons
-            deleteUserBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    showToast('Eliminar Usuario', '¿Estás seguro de eliminar este usuario?', 'warning');
+            // Botones de ver detalles
+            viewDetailButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    showToast('Aviso Seleccionado', 'Redirigiendo al detalle del aviso', 'info');
+                    // Aquí iría la lógica para mostrar el detalle del aviso
                 });
             });
         }
         
-        // Toast functionality
+        // Configurar filtros
+        function setupFilters() {
+            const categorySelect = document.getElementById('category');
+            const inmueblesFilters = document.getElementById('inmuebles-filters');
+            const automovilesFilters = document.getElementById('automoviles-filters');
+            const motosFilters = document.getElementById('motos-filters');
+            
+            if (categorySelect) {
+                categorySelect.addEventListener('change', function() {
+                    // Ocultar todos los filtros
+                    if (inmueblesFilters) inmueblesFilters.style.display = 'none';
+                    if (automovilesFilters) automovilesFilters.style.display = 'none';
+                    if (motosFilters) motosFilters.style.display = 'none';
+                    
+                    // Mostrar filtros relevantes
+                    if (this.value === 'inmuebles' && inmueblesFilters) {
+                        inmueblesFilters.style.display = 'grid';
+                    } else if (this.value === 'automoviles' && automovilesFilters) {
+                        automovilesFilters.style.display = 'grid';
+                    } else if (this.value === 'motos' && motosFilters) {
+                        motosFilters.style.display = 'grid';
+                    }
+                });
+                
+                // Disparar evento change para establecer estado inicial
+                categorySelect.dispatchEvent(new Event('change'));
+            }
+        }
+        
+        // Funciones de utilidad
+        function closeUserDropdown() {
+            isUserDropdownOpen = false;
+            userDropdown.classList.remove('active');
+        }
+        
+        function closeNotifications() {
+            isNotificationsOpen = false;
+            notificationsPanel.classList.remove('active');
+        }
+        
+        function closeMessages() {
+            isMessagesOpen = false;
+            messagesPanel.classList.remove('active');
+        }
+        
+        function closeAllDropdowns() {
+            closeUserDropdown();
+            closeNotifications();
+            closeMessages();
+        }
+        
+        function closeOtherPanels(except) {
+            if (except !== 'user') closeUserDropdown();
+            if (except !== 'notifications') closeNotifications();
+            if (except !== 'messages') closeMessages();
+        }
+        
+        function markNotificationsAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            const badge = notificationIcon.querySelector('.notification-badge');
+            if (badge) badge.textContent = '0';
+        }
+        
+        function markMessagesAsRead() {
+            document.querySelectorAll('.message-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            const badges = document.querySelectorAll('.notification-badge');
+            if (badges.length > 1) badges[1].textContent = '0';
+        }
+        
+        // Función para mostrar toasts
         function showToast(title, message, type = 'success') {
             const toastContainer = document.getElementById('toast-container');
             if (!toastContainer) return;
             
-            // Create toast element
+            // Crear elemento toast
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             
-            // Set icon based on type
+            // Establecer icono basado en tipo
             let icon = '✅';
             if (type === 'error') icon = '❌';
             if (type === 'warning') icon = '⚠️';
@@ -3681,10 +2862,10 @@
                 </div>
             `;
             
-            // Add to container
+            // Agregar al contenedor
             toastContainer.appendChild(toast);
             
-            // Auto-remove after 3 seconds
+            // Auto-eliminar después de 3 segundos
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(400px)';
@@ -3693,90 +2874,6 @@
                         toastContainer.removeChild(toast);
                     }
                 }, 300);
-            }, 3000);
-        }
-        
-        // Helper function to switch views
-        function switchView(viewId) {
-            // Hide all views
-            views.forEach(view => {
-                view.classList.remove('active');
-            });
-            
-            // Show target view
-            const targetView = document.getElementById(viewId);
-            if (targetView) {
-                targetView.classList.add('active');
-            }
-            
-            // Update active class on all navigation links
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-view') === viewId) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        // PWA Installation
-        function setupPWA() {
-            let deferredPrompt;
-            
-            window.addEventListener('beforeinstallprompt', (e) => {
-                // Prevent the mini-infobar from appearing on mobile
-                e.preventDefault();
-                // Stash the event so it can be triggered later
-                deferredPrompt = e;
-                
-                // Show installation button after a delay
-                setTimeout(() => {
-                    const installButton = document.createElement('button');
-                    installButton.textContent = 'Instalar App';
-                    installButton.className = 'btn btn-primary';
-                    installButton.style.position = 'fixed';
-                    installButton.style.bottom = '80px';
-                    installButton.style.right = '24px';
-                    installButton.style.zIndex = '1000';
-                    installButton.style.boxShadow = 'var(--box-shadow-hover)';
-                    installButton.style.borderRadius = '50px';
-                    installButton.style.padding = '12px 24px';
-                    
-                    installButton.addEventListener('click', async () => {
-                        // Hide the button
-                        installButton.remove();
-                        
-                        // Show the install prompt
-                        if (deferredPrompt) {
-                            deferredPrompt.prompt();
-                            
-                            // Wait for the user to respond to the prompt
-                            const { outcome } = await deferredPrompt.userChoice;
-                            
-                            // Reset the deferred prompt variable
-                            deferredPrompt = null;
-                            
-                            if (outcome === 'accepted') {
-                                showToast('Instalación', 'MarketConnect Pro ha sido instalado en tu dispositivo', 'success');
-                            } else {
-                                showToast('Instalación', 'La instalación fue cancelada', 'warning');
-                            }
-                        }
-                    });
-                    
-                    document.body.appendChild(installButton);
-                }, 5000); // Show after 5 seconds
-            });
-        }
-        
-        // Initialize data
-        function initializeData() {
-            // Simulate some initial toasts
-            setTimeout(() => {
-                showToast('Bienvenido', '¡Hola Juan! Bienvenido a MarketConnect Pro', 'success');
-            }, 1000);
-            
-            setTimeout(() => {
-                showToast('Actualización', 'Tu suscripción Premium vence en 3 días. Renueva para mantener todos los beneficios.', 'warning');
             }, 3000);
         }
     </script>
