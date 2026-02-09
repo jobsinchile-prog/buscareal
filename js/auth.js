@@ -35,6 +35,11 @@ class AuthService {
     localStorage.removeItem(this.CURRENT_USER_KEY);
   }
 
+  // Verificar si bcrypt está disponible
+  static isBcryptAvailable() {
+    return typeof bcrypt !== 'undefined' && typeof bcrypt.hash === 'function';
+  }
+
   // Registrar nuevo usuario
   static async register(userData) {
     const users = this.getUsers();
@@ -42,6 +47,11 @@ class AuthService {
     // Verificar email único
     if (users.some(u => u.email.toLowerCase() === userData.email.toLowerCase())) {
       throw new Error('El correo electrónico ya está registrado');
+    }
+
+    // Verificar que bcrypt esté disponible
+    if (!this.isBcryptAvailable()) {
+      throw new Error('Error: bcrypt no está disponible. Recarga la página.');
     }
 
     // Encriptar contraseña
@@ -75,6 +85,11 @@ class AuthService {
       throw new Error('Credenciales incorrectas');
     }
 
+    // Verificar que bcrypt esté disponible
+    if (!this.isBcryptAvailable()) {
+      throw new Error('Error: bcrypt no está disponible. Recarga la página.');
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
     
     if (!passwordMatch) {
@@ -103,11 +118,17 @@ class AuthService {
     return localStorage.getItem(this.DEMO_USERS_INITIALIZED) === 'true';
   }
 
-  // Inicializar usuarios de prueba con HASH REAL
+  // Inicializar usuarios de prueba
   static async initializeDemoUsers() {
     // Solo inicializar una vez
     if (this.areDemoUsersInitialized()) {
-      console.log('ℹ️ Usuarios de prueba ya inicializados');
+      return;
+    }
+
+    // Verificar que bcrypt esté disponible
+    if (!this.isBcryptAvailable()) {
+      console.warn('⚠️ bcrypt no disponible aún, reintentando...');
+      setTimeout(() => this.initializeDemoUsers(), 100);
       return;
     }
 
@@ -147,22 +168,24 @@ class AuthService {
       // Marcar como inicializado
       localStorage.setItem(this.DEMO_USERS_INITIALIZED, 'true');
       
-      console.log('✅✅✅ USUARIOS DE PRUEBA INICIALIZADOS ✅✅✅');
-      console.log('   - Comprador: comprador@test.com / comprador123');
-      console.log('   - Vendedor: vendedor@test.com / comprador123');
+      console.log('%c✅✅✅ USUARIOS DE PRUEBA INICIALIZADOS ✅✅✅', 'color: green; font-weight: bold;');
+      console.log('%c   - Comprador: comprador@test.com / comprador123', 'color: blue;');
+      console.log('%c   - Vendedor: vendedor@test.com / comprador123', 'color: blue;');
     } catch (error) {
       console.error('❌ Error al inicializar usuarios de prueba:', error);
     }
   }
 }
 
-// Inicializar usuarios de prueba al cargar
-document.addEventListener('DOMContentLoaded', async () => {
-  // Verificar si bcrypt está disponible
-  if (typeof bcrypt !== 'undefined') {
-    console.log('✅ bcrypt.js cargado correctamente');
-    await AuthService.initializeDemoUsers();
-  } else {
-    console.error('❌ bcrypt.js NO está cargado. Verifica que el script esté incluido en el HTML.');
-  }
+// Inicializar usuarios de prueba cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  // Esperar un momento para asegurar que bcrypt esté cargado
+  setTimeout(() => {
+    if (AuthService.isBcryptAvailable()) {
+      console.log('%c✅ bcrypt.js disponible - Inicializando usuarios de prueba...', 'color: green;');
+      AuthService.initializeDemoUsers();
+    } else {
+      console.error('%c❌ bcrypt.js NO está disponible. Verifica el orden de los scripts.', 'color: red;');
+    }
+  }, 100);
 });
