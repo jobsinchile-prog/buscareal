@@ -72,15 +72,12 @@ class AuthService {
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
     
     if (!user) {
-      console.log('❌ Usuario no encontrado:', email);
-      console.log('Usuarios en localStorage:', users);
       throw new Error('Credenciales incorrectas');
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     
     if (!passwordMatch) {
-      console.log('❌ Contraseña incorrecta para:', email);
       throw new Error('Credenciales incorrectas');
     }
 
@@ -88,7 +85,6 @@ class AuthService {
     const { password: _, ...userWithoutPassword } = user;
     this.setCurrentUser(userWithoutPassword);
     
-    console.log('✅ Login exitoso:', userWithoutPassword.email);
     return userWithoutPassword;
   }
 
@@ -107,62 +103,65 @@ class AuthService {
     return localStorage.getItem(this.DEMO_USERS_INITIALIZED) === 'true';
   }
 
-  // Inicializar usuarios de prueba (CORREGIDO - Síncrono con hash pre-calculado)
-  static initializeDemoUsers() {
+  // Inicializar usuarios de prueba con HASH REAL
+  static async initializeDemoUsers() {
     // Solo inicializar una vez
     if (this.areDemoUsersInitialized()) {
       console.log('ℹ️ Usuarios de prueba ya inicializados');
       return;
     }
 
-    // Hasheos pre-calculados de "comprador123" para evitar problemas asíncronos
-    const hashedPassword = '$2a$10$XcTfXQZ7yY8qJ2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8a9b0c1d2e3f'; // Hash placeholder
-    
-    // Crear usuarios de prueba
-    const demoUsers = [
-      {
-        id: '1',
-        name: 'Juan Pérez',
-        email: 'comprador@test.com',
-        password: '$2a$10$C5uT9Kz8qJ2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8a9b0c1d2e3f', // bcrypt hash de "comprador123"
-        phone: '555-1234',
-        userType: 'buyer',
-        businessName: '',
-        taxId: '',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: '2',
-        name: 'María García',
-        email: 'vendedor@test.com',
-        password: '$2a$10$C5uT9Kz8qJ2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8a9b0c1d2e3f', // bcrypt hash de "comprador123"
-        phone: '555-5678',
-        userType: 'seller',
-        businessName: 'Tienda María',
-        taxId: '123456789',
-        createdAt: new Date().toISOString()
-      }
-    ];
+    try {
+      // Generar hash REAL de "comprador123"
+      const hashedPassword = await bcrypt.hash('comprador123', 10);
+      
+      // Crear usuarios de prueba
+      const demoUsers = [
+        {
+          id: '1',
+          name: 'Juan Pérez',
+          email: 'comprador@test.com',
+          password: hashedPassword,
+          phone: '555-1234',
+          userType: 'buyer',
+          businessName: '',
+          taxId: '',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: '2',
+          name: 'María García',
+          email: 'vendedor@test.com',
+          password: hashedPassword,
+          phone: '555-5678',
+          userType: 'seller',
+          businessName: 'Tienda María',
+          taxId: '123456789',
+          createdAt: new Date().toISOString()
+        }
+      ];
 
-    // Guardar usuarios
-    this.saveUsers(demoUsers);
-    
-    // Marcar como inicializado
-    localStorage.setItem(this.DEMO_USERS_INITIALIZED, 'true');
-    
-    console.log('✅✅✅ USUARIOS DE PRUEBA INICIALIZADOS ✅✅✅');
-    console.log('   - Comprador: comprador@test.com / comprador123');
-    console.log('   - Vendedor: vendedor@test.com / comprador123');
-    console.log('Usuarios guardados:', this.getUsers());
+      // Guardar usuarios
+      this.saveUsers(demoUsers);
+      
+      // Marcar como inicializado
+      localStorage.setItem(this.DEMO_USERS_INITIALIZED, 'true');
+      
+      console.log('✅✅✅ USUARIOS DE PRUEBA INICIALIZADOS ✅✅✅');
+      console.log('   - Comprador: comprador@test.com / comprador123');
+      console.log('   - Vendedor: vendedor@test.com / comprador123');
+    } catch (error) {
+      console.error('❌ Error al inicializar usuarios de prueba:', error);
+    }
   }
 }
 
 // Inicializar usuarios de prueba al cargar
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Verificar si bcrypt está disponible
   if (typeof bcrypt !== 'undefined') {
     console.log('✅ bcrypt.js cargado correctamente');
-    AuthService.initializeDemoUsers();
+    await AuthService.initializeDemoUsers();
   } else {
     console.error('❌ bcrypt.js NO está cargado. Verifica que el script esté incluido en el HTML.');
   }
