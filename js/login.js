@@ -12,6 +12,11 @@ document.getElementById('login-form').addEventListener('submit', async function(
   const password = document.getElementById('login-password').value;
   
   try {
+    // Verificar que bcrypt esté disponible
+    if (!AuthService.isBcryptAvailable()) {
+      throw new Error('bcrypt no está disponible. Por favor recarga la página.');
+    }
+    
     // Intentar login
     const user = await AuthService.login(email, password);
     
