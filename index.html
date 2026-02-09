@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <div class="logo">
+                <h1>Marketplace</h1>
+                <p class="tagline">Conectando compradores y vendedores</p>
+            </div>
+            
+            <form id="loginForm" class="auth-form">
+                <h2>Iniciar Sesión</h2>
+                
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+                
+                <div id="errorMessage" class="error-message"></div>
+                
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+                
+                <div class="form-footer">
+                    <p>¿No tienes cuenta? <a href="pages/register.html">Regístrate aquí</a></p>
+                </div>
+            </form>
+            
+            <div class="demo-users">
+                <h3>Usuarios de Prueba</h3>
+                <div class="demo-grid">
+                    <div class="demo-section">
+                        <h4>Compradores</h4>
+                        <p><strong>Email:</strong> comprador1@test.com</p>
+                        <p><strong>Email:</strong> comprador2@test.com</p>
+                        <p><strong>Email:</strong> comprador3@test.com</p>
+                    </div>
+                    <div class="demo-section">
+                        <h4>Vendedores</h4>
+                        <p><strong>Email:</strong> vendedor1@test.com</p>
+                        <p><strong>Email:</strong> vendedor2@test.com</p>
+                        <p><strong>Email:</strong> vendedor3@test.com</p>
+                    </div>
+                </div>
+                <p class="demo-note"><strong>Contraseña para todos:</strong> Test123!</p>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="js/login.js"></script>
+</body>
+</html>
