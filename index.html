@@ -3,96 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Inicio</title>
+    <title>Sistema de Login y Registro</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
         }
-
+        
         .container {
             background: white;
+            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 600px;
-            padding: 40px;
+            max-width: 400px;
+        }
+        
+        h2 {
             text-align: center;
+            color: #1a73e8;
+            margin-bottom: 30px;
         }
-
-        h1 {
-            color: #333;
+        
+        .tab {
+            display: flex;
             margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
         }
-
-        .user-info {
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
+        
+        .tab button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
         }
-
-        .btn {
-            padding: 12px 30px;
-            background: #667eea;
+        
+        .tab button.active {
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+        
+        .radio-group input[type="radio"] {
+            width: auto;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #1a73e8;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            margin-top: 10px;
         }
-
-        .btn:hover {
-            background: #5a67d8;
+        
+        button[type="submit"]:hover {
+            background: #1557b0;
+        }
+        
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+        
+        .message.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .test-users {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .test-users h4 {
+            margin: 0 0 10px 0;
+            color: #28a745;
+        }
+        
+        .test-users p {
+            margin: 5px 0;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>¡Bienvenido a la Página de Inicio!</h1>
-        <div class="user-info" id="userInfo">
-            Cargando información...
+        <h2>Sistema de Registro y Login</h2>
+        
+        <!-- Pestañas -->
+        <div class="tab">
+            <button id="loginTab" class="active" onclick="showTab('login')">Iniciar Sesión</button>
+            <button id="registerTab" onclick="showTab('register')">Registrarse</button>
         </div>
-        <button class="btn" onclick="logout()">Cerrar Sesión</button>
+        
+        <!-- Formulario de Login -->
+        <div id="loginForm" class="form active">
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label for="loginEmail">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+        </div>
+        
+        <!-- Formulario de Registro -->
+        <div id="registerForm" class="form">
+            <form id="registerFormElement">
+                <div class="form-group">
+                    <label for="regName">Nombre Completo</label>
+                    <input type="text" id="regName" required placeholder="Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Correo Electrónico</label>
+                    <input type="email" id="regEmail" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Contraseña</label>
+                    <input type="password" id="regPassword" required placeholder="mínimo 6 caracteres">
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirmar Contraseña</label>
+                    <input type="password" id="regConfirmPassword" required placeholder="confirmar contraseña">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Usuario</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="userType" value="comprador" required> Comprador
+                        </label>
+                        <label>
+                            <input type="radio" name="userType" value="vendedor" required> Vendedor
+                        </label>
+                    </div>
+                </div>
+                <button type="submit">Registrarse</button>
+            </form>
+        </div>
+        
+        <!-- Mensaje de notificación -->
+        <div id="message" class="message"></div>
+        
+        <!-- Usuarios de prueba -->
+        <div class="test-users">
+            <h4>👥 Usuarios de prueba disponibles:</h4>
+            <p><strong>Comprador:</strong> comprador@test.com / 123456</p>
+            <p><strong>Vendedor:</strong> vendedor@test.com / 123456</p>
+        </div>
     </div>
-
+    
     <script>
-        // Mostrar información del usuario
-        function displayUserInfo() {
-            const currentUser = sessionStorage.getItem('currentUser');
-            if (!currentUser) {
-                window.location.href = 'index.html';
+        // Mostrar pestañas
+        function showTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+            } else {
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+            }
+            
+            // Ocultar mensaje
+            document.getElementById('message').style.display = 'none';
+        }
+        
+        // Mostrar mensaje
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = 'message ' + type;
+            message.style.display = 'block';
+            
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Crear usuarios de prueba al inicio
+        function initTestUsers() {
+            const users = [
+                {
+                    id: 1,
+                    name: 'Usuario Comprador',
+                    email: 'comprador@test.com',
+                    password: '123456',
+                    userType: 'comprador'
+                },
+                {
+                    id: 2,
+                    name: 'Usuario Vendedor',
+                    email: 'vendedor@test.com',
+                    password: '123456',
+                    userType: 'vendedor'
+                }
+            ];
+            
+            // Guardar usuarios de prueba
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        // Registrar nuevo usuario
+        document.getElementById('registerFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener valores
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const userType = document.querySelector('input[name="userType"]:checked');
+            
+            // Validaciones básicas
+            if (!name || !email || !password || !confirmPassword || !userType) {
+                showMessage('Todos los campos son obligatorios', 'error');
                 return;
             }
-
-            const user = JSON.parse(currentUser);
-            document.getElementById('userInfo').innerHTML = `
-                <p><strong>Nombre:</strong> ${user.userName}</p>
-                <p><strong>Email:</strong> ${user.userEmail}</p>
-                <p><strong>Tipo:</strong> ${user.userType === 'comprador' ? 'Comprador' : 'Vendedor'}</p>
-            `;
-        }
-
-        // Cerrar sesión
-        function logout() {
-            sessionStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        }
-
-        // Verificar sesión al cargar
-        window.onload = displayUserInfo;
+            
+            if (password.length < 6) {
+                showMessage('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Las contraseñas no coinciden', 'error');
+                return;
+            }
+            
+            // Obtener usuarios existentes
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Verificar si el email ya existe
+            if (users.some(u => u.email === email)) {
+                showMessage('Este correo ya está registrado', 'error');
+                return;
+            }
+            
+            // Crear nuevo usuario
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                userType: userType.value
+            };
+            
+            // Guardar usuario
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Mostrar mensaje de éxito
+            showMessage('Registro exitoso. Ya puedes iniciar sesión', 'success');
+            
+            // Limpiar formulario
+            this.reset();
+            
+            // Cambiar a pestaña de login después de 2 segundos
+            setTimeout(() => {
+                showTab('login');
+            }, 2000);
+        });
+        
+        // Iniciar sesión
+        document.getElementById('loginFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener valores
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Validar campos
+            if (!email || !password) {
+                showMessage('Todos los campos son obligatorios', 'error');
+                return;
+            }
+            
+            // Obtener usuarios
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Buscar usuario
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Guardar sesión
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    userType: user.userType
+                }));
+                
+                showMessage('Inicio de sesión exitoso. Redirigiendo...', 'success');
+                
+                // Redirigir a inicio
+                setTimeout(() => {
+                    window.location.href = 'inicio.html';
+                }, 1500);
+            } else {
+                showMessage('Correo o contraseña incorrectos', 'error');
+            }
+        });
+        
+        // Inicializar usuarios de prueba y verificar sesión al cargar
+        window.onload = function() {
+            initTestUsers();
+            
+            // Si ya hay sesión, redirigir
+            if (sessionStorage.getItem('currentUser')) {
+                window.location.href = 'inicio.html';
+            }
+        };
     </script>
 </body>
 </html>
