@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Autenticación - Demo</title>
-  <!-- Corregido: espacio extra eliminado -->
+  <!-- CDN corregido: sin espacios -->
   <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
   <style>
     * {
@@ -274,12 +274,13 @@
       <h1>¡Bienvenido!</h1>
       <p class="subtitle">Sistema de Registro - Compradores y Vendedores</p>
       
-      <button class="btn btn-buyer" onclick="showRegister('buyer')">🛒 Soy Comprador</button>
-      <button class="btn btn-seller" onclick="showRegister('seller')">💼 Soy Vendedor</button>
+      <!-- Botones deshabilitados hasta que bcrypt esté listo -->
+      <button id="btn-buyer" class="btn btn-buyer" onclick="showRegister('buyer')" disabled>🛒 Soy Comprador</button>
+      <button id="btn-seller" class="btn btn-seller" onclick="showRegister('seller')" disabled>💼 Soy Vendedor</button>
       
       <div class="divider"><span>o</span></div>
       
-      <button class="btn btn-secondary" onclick="showPage('login-page')">🔐 Iniciar Sesión</button>
+      <button id="btn-login" class="btn btn-secondary" onclick="showPage('login-page')" disabled>🔐 Iniciar Sesión</button>
       
       <div style="margin-top: 30px; padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: center;">
         <p style="margin: 5px 0; font-weight: bold; color: #1976d2;">🔐 Usuarios de Prueba:</p>
@@ -429,7 +430,11 @@
       }
 
       static isBcryptAvailable() {
-        return typeof bcrypt !== 'undefined' && typeof bcrypt.hash === 'function';
+        return (
+          typeof bcrypt !== 'undefined' &&
+          typeof bcrypt.hash === 'function' &&
+          typeof bcrypt.compare === 'function'
+        );
       }
 
       static async register(userData) {
@@ -440,7 +445,7 @@
         }
 
         if (!this.isBcryptAvailable()) {
-          throw new Error('Error: bcrypt no está disponible. Recarga la página.');
+          throw new Error('Error interno: bcrypt no disponible. Recarga la página.');
         }
 
         const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -472,7 +477,7 @@
         }
 
         if (!this.isBcryptAvailable()) {
-          throw new Error('Error: bcrypt no está disponible. Recarga la página.');
+          throw new Error('Error interno: bcrypt no disponible. Recarga la página.');
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
@@ -500,17 +505,15 @@
       }
 
       static async initializeDemoUsers() {
-        if (this.areDemoUsersInitialized()) {
-          return;
-        }
+        if (this.areDemoUsersInitialized()) return;
 
         if (!this.isBcryptAvailable()) {
+          // Esto no debería ocurrir si se llama tras initApp(), pero por seguridad:
           setTimeout(() => this.initializeDemoUsers(), 100);
           return;
         }
 
         try {
-          // Contraseñas distintas para cada rol
           const buyerHash = await bcrypt.hash('comprador123', 10);
           const sellerHash = await bcrypt.hash('vendedor123', 10);
           
@@ -643,10 +646,6 @@
       }
       
       try {
-        if (!AuthService.isBcryptAvailable()) {
-          throw new Error('bcrypt no está disponible. Espera unos segundos y recarga.');
-        }
-        
         await AuthService.register(userData);
         showMessage('register-success', '¡Registro exitoso! Redirigiendo...', 'success');
         
@@ -671,10 +670,6 @@
       const password = document.getElementById('login-password').value;
       
       try {
-        if (!AuthService.isBcryptAvailable()) {
-          throw new Error('bcrypt no está disponible. Espera unos segundos y recarga.');
-        }
-        
         const user = await AuthService.login(email, password);
         showMessage('login-success', '¡Inicio de sesión exitoso!', 'success');
         
@@ -717,34 +712,47 @@
       }
     }
 
-    // ========== Inicialización ==========
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Esperar a que bcrypt esté disponible
-      const waitForBcrypt = () => {
-        return new Promise(resolve => {
-          const check = () => {
-            if (AuthService.isBcryptAvailable()) {
-              resolve();
-            } else {
-              setTimeout(check, 50);
-            }
-          };
-          check();
-        });
+    // ========== Inicialización robusta ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = {
+        buyer: document.getElementById('btn-buyer'),
+        seller: document.getElementById('btn-seller'),
+        login: document.getElementById('btn-login')
       };
-      
-      await waitForBcrypt();
-      console.log('%c✅ bcrypt.js cargado correctamente', 'color: green; font-weight: bold;');
-      
-      // Inicializar usuarios de prueba
-      await AuthService.initializeDemoUsers();
-      
-      // Verificar sesión existente
-      const currentUser = AuthService.getCurrentUser();
-      if (currentUser) {
-        renderDashboard(currentUser);
-        showPage('dashboard-page');
+
+      function isBcryptReady() {
+        return (
+          typeof bcrypt !== 'undefined' &&
+          typeof bcrypt.hash === 'function' &&
+          typeof bcrypt.compare === 'function'
+        );
       }
+
+      function initApp() {
+        if (!isBcryptReady()) {
+          setTimeout(initApp, 100); // Reintentar cada 100ms
+          return;
+        }
+
+        // Habilitar botones
+        buttons.buyer.disabled = false;
+        buttons.seller.disabled = false;
+        buttons.login.disabled = false;
+
+        console.log('%c✅ bcrypt.js cargado y listo', 'color: green; font-weight: bold;');
+
+        // Inicializar usuarios de prueba
+        AuthService.initializeDemoUsers().catch(console.error);
+
+        // Restaurar sesión si existe
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser) {
+          renderDashboard(currentUser);
+          showPage('dashboard-page');
+        }
+      }
+
+      initApp();
     });
   </script>
 </body>
