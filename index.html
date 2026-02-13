@@ -1,62 +1,751 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Marketplace</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Autenticación - Demo</title>
+  <!-- Corregido: espacio extra eliminado -->
+  <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .page {
+      display: none;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-button {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      color: #667eea;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      text-decoration: underline;
+    }
+
+    h1, h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      color: #666;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+
+    .checkbox-group label {
+      margin-bottom: 0;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+
+    .btn-buyer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-bottom: 15px;
+    }
+
+    .btn-seller {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #667eea;
+      margin-top: 15px;
+    }
+
+    .btn-logout {
+      background: #ff4444;
+      color: white;
+      width: auto;
+      padding: 10px 20px;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .divider {
+      position: relative;
+      margin: 25px 0;
+      text-align: center;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .divider span {
+      background: white;
+      padding: 0 15px;
+      color: #999;
+      position: relative;
+      font-size: 14px;
+    }
+
+    .message {
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #c62828;
+      border-left: 4px solid #f44336;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-left: 4px solid #4caf50;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .badge.buyer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .badge.seller {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .welcome-content {
+      text-align: center;
+      padding: 30px 0;
+    }
+
+    .welcome-content h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .welcome-content p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 25px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-card">
-            <div class="logo">
-                <h1>Marketplace</h1>
-                <p class="tagline">Conectando compradores y vendedores</p>
-            </div>
-            
-            <form id="loginForm" class="auth-form">
-                <h2>Iniciar Sesión</h2>
-                
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" required placeholder="tu@email.com">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" required placeholder="••••••••">
-                </div>
-                
-                <div id="errorMessage" class="error-message"></div>
-                
-                <button type="submit" class="btn btn-primary">Ingresar</button>
-                
-                <div class="form-footer">
-                    <p>¿No tienes cuenta? <a href="pages/register.html">Regístrate aquí</a></p>
-                </div>
-            </form>
-            
-            <div class="demo-users">
-                <h3>Usuarios de Prueba</h3>
-                <div class="demo-grid">
-                    <div class="demo-section">
-                        <h4>Compradores</h4>
-                        <p><strong>Email:</strong> comprador1@test.com</p>
-                        <p><strong>Email:</strong> comprador2@test.com</p>
-                        <p><strong>Email:</strong> comprador3@test.com</p>
-                    </div>
-                    <div class="demo-section">
-                        <h4>Vendedores</h4>
-                        <p><strong>Email:</strong> vendedor1@test.com</p>
-                        <p><strong>Email:</strong> vendedor2@test.com</p>
-                        <p><strong>Email:</strong> vendedor3@test.com</p>
-                    </div>
-                </div>
-                <p class="demo-note"><strong>Contraseña para todos:</strong> Test123!</p>
-            </div>
-        </div>
+  <div class="container">
+    <!-- Página Inicial -->
+    <div id="home-page" class="page active">
+      <h1>¡Bienvenido!</h1>
+      <p class="subtitle">Sistema de Registro - Compradores y Vendedores</p>
+      
+      <button class="btn btn-buyer" onclick="showRegister('buyer')">🛒 Soy Comprador</button>
+      <button class="btn btn-seller" onclick="showRegister('seller')">💼 Soy Vendedor</button>
+      
+      <div class="divider"><span>o</span></div>
+      
+      <button class="btn btn-secondary" onclick="showPage('login-page')">🔐 Iniciar Sesión</button>
+      
+      <div style="margin-top: 30px; padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: center;">
+        <p style="margin: 5px 0; font-weight: bold; color: #1976d2;">🔐 Usuarios de Prueba:</p>
+        <p style="margin: 5px 0; font-size: 14px;">• Comprador: <strong>comprador@test.com</strong> / <strong>comprador123</strong></p>
+        <p style="margin: 5px 0; font-size: 14px;">• Vendedor: <strong>vendedor@test.com</strong> / <strong>vendedor123</strong></p>
+      </div>
     </div>
-    
-    <script type="module" src="js/login.js"></script>
+
+    <!-- Página de Registro -->
+    <div id="register-page" class="page">
+      <div class="back-button" onclick="showPage('home-page')">← Volver</div>
+      
+      <h2 id="register-title">Registro de Comprador</h2>
+      <p class="subtitle" id="register-subtitle">Crea tu cuenta para comenzar</p>
+      
+      <form id="register-form" onsubmit="handleRegister(event)">
+        <input type="hidden" id="user-type" name="userType" value="buyer">
+        
+        <div class="form-group">
+          <label for="name">Nombre completo *</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo electrónico *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña *</label>
+          <input type="password" id="password" name="password" required minlength="6">
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirmar contraseña *</label>
+          <input type="password" id="confirm-password" name="confirmPassword" required minlength="6">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Teléfono</label>
+          <input type="tel" id="phone" name="phone">
+        </div>
+
+        <div id="seller-fields" style="display: none;">
+          <div class="form-group">
+            <label for="business-name">Nombre del negocio *</label>
+            <input type="text" id="business-name" name="businessName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tax-id">RUC / Número fiscal</label>
+            <input type="text" id="tax-id" name="taxId">
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms">Acepto los términos y condiciones *</label>
+        </div>
+
+        <div id="register-error" class="message error"></div>
+        <div id="register-success" class="message success"></div>
+
+        <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+      </form>
+    </div>
+
+    <!-- Página de Login -->
+    <div id="login-page" class="page">
+      <div class="back-button" onclick="showPage('home-page')">← Volver</div>
+      
+      <h2>Iniciar Sesión</h2>
+      <p class="subtitle">Ingresa tus credenciales para acceder</p>
+      
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">Correo electrónico *</label>
+          <input type="email" id="login-email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Contraseña *</label>
+          <input type="password" id="login-password" name="password" required>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember" name="remember">
+          <label for="remember">Recordarme</label>
+        </div>
+
+        <div id="login-error" class="message error"></div>
+        <div id="login-success" class="message success"></div>
+
+        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+      </form>
+
+      <div class="divider"><span>o</span></div>
+      
+      <button class="btn btn-secondary" onclick="showPage('home-page')">📝 Crear nueva cuenta</button>
+    </div>
+
+    <!-- Página de Inicio (Dashboard) -->
+    <div id="dashboard-page" class="page">
+      <button class="btn btn-logout" onclick="logout()">Cerrar Sesión</button>
+      
+      <h1>¡Bienvenido!</h1>
+      
+      <div class="user-info" id="user-info">
+        <!-- Se llenará con JS -->
+      </div>
+
+      <div class="welcome-content">
+        <h2>Tu Panel de Control</h2>
+        <p>¡Has iniciado sesión exitosamente! Este es tu panel de usuario.</p>
+        <div id="user-type-badge"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== AuthService ==========
+    class AuthService {
+      static USERS_KEY = 'app_users_demo';
+      static CURRENT_USER_KEY = 'current_user_demo';
+      static DEMO_USERS_INITIALIZED = 'demo_users_initialized_demo';
+
+      static getUsers() {
+        const users = localStorage.getItem(this.USERS_KEY);
+        return users ? JSON.parse(users) : [];
+      }
+
+      static saveUsers(users) {
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+      }
+
+      static getCurrentUser() {
+        const user = localStorage.getItem(this.CURRENT_USER_KEY);
+        return user ? JSON.parse(user) : null;
+      }
+
+      static setCurrentUser(user) {
+        localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
+      }
+
+      static clearCurrentUser() {
+        localStorage.removeItem(this.CURRENT_USER_KEY);
+      }
+
+      static isBcryptAvailable() {
+        return typeof bcrypt !== 'undefined' && typeof bcrypt.hash === 'function';
+      }
+
+      static async register(userData) {
+        const users = this.getUsers();
+        
+        if (users.some(u => u.email.toLowerCase() === userData.email.toLowerCase())) {
+          throw new Error('El correo electrónico ya está registrado');
+        }
+
+        if (!this.isBcryptAvailable()) {
+          throw new Error('Error: bcrypt no está disponible. Recarga la página.');
+        }
+
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+        const newUser = {
+          id: Date.now().toString(),
+          name: userData.name.trim(),
+          email: userData.email.trim().toLowerCase(),
+          password: hashedPassword,
+          phone: userData.phone?.trim() || '',
+          userType: userData.userType,
+          businessName: userData.businessName?.trim() || '',
+          taxId: userData.taxId?.trim() || '',
+          createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        this.saveUsers(users);
+        
+        return newUser;
+      }
+
+      static async login(email, password) {
+        const users = this.getUsers();
+        const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        
+        if (!user) {
+          throw new Error('Credenciales incorrectas');
+        }
+
+        if (!this.isBcryptAvailable()) {
+          throw new Error('Error: bcrypt no está disponible. Recarga la página.');
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        
+        if (!passwordMatch) {
+          throw new Error('Credenciales incorrectas');
+        }
+
+        const { password: _, ...userWithoutPassword } = user;
+        this.setCurrentUser(userWithoutPassword);
+        
+        return userWithoutPassword;
+      }
+
+      static logout() {
+        this.clearCurrentUser();
+      }
+
+      static isAuthenticated() {
+        return this.getCurrentUser() !== null;
+      }
+
+      static areDemoUsersInitialized() {
+        return localStorage.getItem(this.DEMO_USERS_INITIALIZED) === 'true';
+      }
+
+      static async initializeDemoUsers() {
+        if (this.areDemoUsersInitialized()) {
+          return;
+        }
+
+        if (!this.isBcryptAvailable()) {
+          setTimeout(() => this.initializeDemoUsers(), 100);
+          return;
+        }
+
+        try {
+          // Contraseñas distintas para cada rol
+          const buyerHash = await bcrypt.hash('comprador123', 10);
+          const sellerHash = await bcrypt.hash('vendedor123', 10);
+          
+          const demoUsers = [
+            {
+              id: '1',
+              name: 'Juan Pérez',
+              email: 'comprador@test.com',
+              password: buyerHash,
+              phone: '555-1234',
+              userType: 'buyer',
+              businessName: '',
+              taxId: '',
+              createdAt: new Date().toISOString()
+            },
+            {
+              id: '2',
+              name: 'María García',
+              email: 'vendedor@test.com',
+              password: sellerHash,
+              phone: '555-5678',
+              userType: 'seller',
+              businessName: 'Tienda María',
+              taxId: '123456789',
+              createdAt: new Date().toISOString()
+            }
+          ];
+
+          this.saveUsers(demoUsers);
+          localStorage.setItem(this.DEMO_USERS_INITIALIZED, 'true');
+          
+          console.log('%c✅ USUARIOS DE PRUEBA INICIALIZADOS', 'color: green; font-weight: bold;');
+          console.log('   - comprador@test.com / comprador123');
+          console.log('   - vendedor@test.com / vendedor123');
+        } catch (error) {
+          console.error('Error al inicializar usuarios:', error);
+        }
+      }
+    }
+
+    // ========== Funciones UI ==========
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    function showRegister(type) {
+      const title = document.getElementById('register-title');
+      const subtitle = document.getElementById('register-subtitle');
+      const sellerFields = document.getElementById('seller-fields');
+      const businessInput = document.getElementById('business-name');
+      
+      document.getElementById('user-type').value = type;
+      
+      if (type === 'buyer') {
+        title.textContent = 'Registro de Comprador';
+        subtitle.textContent = 'Crea tu cuenta para comenzar';
+        sellerFields.style.display = 'none';
+        businessInput.required = false;
+      } else {
+        title.textContent = 'Registro de Vendedor';
+        subtitle.textContent = 'Registra tu negocio y comienza a vender';
+        sellerFields.style.display = 'block';
+        businessInput.required = true;
+      }
+      
+      document.getElementById('register-form').reset();
+      document.getElementById('register-error').style.display = 'none';
+      document.getElementById('register-success').style.display = 'none';
+      
+      showPage('register-page');
+    }
+
+    function showMessage(elementId, message, type) {
+      const el = document.getElementById(elementId);
+      el.textContent = message;
+      el.className = `message ${type}`;
+      el.style.display = 'block';
+    }
+
+    function hideMessage(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) el.style.display = 'none';
+    }
+
+    // ========== Event Handlers ==========
+    async function handleRegister(event) {
+      event.preventDefault();
+      
+      hideMessage('register-error');
+      hideMessage('register-success');
+      
+      const form = event.target;
+      const userType = document.getElementById('user-type').value;
+      
+      const userData = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        password: form.password.value,
+        confirmPassword: form['confirm-password'].value,
+        phone: form.phone.value.trim(),
+        userType: userType
+      };
+      
+      if (userData.password !== userData.confirmPassword) {
+        showMessage('register-error', 'Las contraseñas no coinciden', 'error');
+        return;
+      }
+      
+      if (userData.password.length < 6) {
+        showMessage('register-error', 'La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+      }
+      
+      if (!form.terms.checked) {
+        showMessage('register-error', 'Debes aceptar los términos y condiciones', 'error');
+        return;
+      }
+      
+      if (userType === 'seller') {
+        const businessName = document.getElementById('business-name').value.trim();
+        if (!businessName) {
+          showMessage('register-error', 'El nombre del negocio es requerido', 'error');
+          return;
+        }
+        userData.businessName = businessName;
+        userData.taxId = document.getElementById('tax-id').value.trim();
+      }
+      
+      try {
+        if (!AuthService.isBcryptAvailable()) {
+          throw new Error('bcrypt no está disponible. Espera unos segundos y recarga.');
+        }
+        
+        await AuthService.register(userData);
+        showMessage('register-success', '¡Registro exitoso! Redirigiendo...', 'success');
+        
+        setTimeout(() => {
+          form.reset();
+          showPage('login-page');
+        }, 1500);
+        
+      } catch (error) {
+        showMessage('register-error', error.message || 'Error en el registro', 'error');
+        console.error('Error:', error);
+      }
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      
+      hideMessage('login-error');
+      hideMessage('login-success');
+      
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      
+      try {
+        if (!AuthService.isBcryptAvailable()) {
+          throw new Error('bcrypt no está disponible. Espera unos segundos y recarga.');
+        }
+        
+        const user = await AuthService.login(email, password);
+        showMessage('login-success', '¡Inicio de sesión exitoso!', 'success');
+        
+        setTimeout(() => {
+          renderDashboard(user);
+          showPage('dashboard-page');
+        }, 800);
+        
+      } catch (error) {
+        showMessage('login-error', error.message || 'Credenciales incorrectas', 'error');
+        console.error('Error de login:', error);
+      }
+    }
+
+    function renderDashboard(user) {
+      const userInfoEl = document.getElementById('user-info');
+      const badgeEl = document.getElementById('user-type-badge');
+      
+      userInfoEl.innerHTML = `
+        <p><strong>Nombre:</strong> ${user.name}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Teléfono:</strong> ${user.phone || 'No proporcionado'}</p>
+      `;
+      
+      if (user.userType === 'buyer') {
+        badgeEl.innerHTML = '<span class="badge buyer">🛒 Comprador</span>';
+      } else {
+        badgeEl.innerHTML = `
+          <span class="badge seller">💼 Vendedor</span>
+          <p style="margin-top:10px"><strong>Negocio:</strong> ${user.businessName || 'No especificado'}</p>
+          ${user.taxId ? `<p><strong>RUC:</strong> ${user.taxId}</p>` : ''}
+        `;
+      }
+    }
+
+    function logout() {
+      if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+        AuthService.logout();
+        showPage('home-page');
+      }
+    }
+
+    // ========== Inicialización ==========
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Esperar a que bcrypt esté disponible
+      const waitForBcrypt = () => {
+        return new Promise(resolve => {
+          const check = () => {
+            if (AuthService.isBcryptAvailable()) {
+              resolve();
+            } else {
+              setTimeout(check, 50);
+            }
+          };
+          check();
+        });
+      };
+      
+      await waitForBcrypt();
+      console.log('%c✅ bcrypt.js cargado correctamente', 'color: green; font-weight: bold;');
+      
+      // Inicializar usuarios de prueba
+      await AuthService.initializeDemoUsers();
+      
+      // Verificar sesión existente
+      const currentUser = AuthService.getCurrentUser();
+      if (currentUser) {
+        renderDashboard(currentUser);
+        showPage('dashboard-page');
+      }
+    });
+  </script>
 </body>
 </html>
